@@ -1,0 +1,30 @@
+//
+//  BaseTabBarController.swift
+//  Dictionary
+//
+//  Created by Renat Nazyrov on 18.10.2023.
+//
+
+import UIKit
+
+class BaseTabBarController: UITabBarController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        viewControllers = [
+            createNavController(viewController: DictionaryController(), title: "Dictionary", imageName: "character.book.closed.fill"),
+            createNavController(viewController: FavoritesController(), title: "Favorites", imageName: "star.fill")
+        ]
+    }
+    
+    fileprivate func createNavController(viewController: UIViewController, title: String, imageName: String) -> UIViewController {
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.navigationBar.prefersLargeTitles = true
+        viewController.navigationItem.title = title
+        viewController.view.backgroundColor = .white
+        navController.tabBarItem.title = title
+        navController.tabBarItem.image = UIImage(systemName: imageName)
+        return navController
+    }
+}
