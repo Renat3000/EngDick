@@ -9,13 +9,13 @@ import Foundation
 
 struct JSONStruct: Decodable {
     let word: String
-    let meanings: Meanings
+    let meanings: [Meanings]
 }
 
 struct Meanings: Decodable {
-    let partOfSpeech: String
+    let partOfSpeech: String?
     let definitions: [Definition]
-    let synonyms: [String]
+//    let synonyms: [String]
 }
 
 struct Definition: Decodable {
