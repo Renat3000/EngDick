@@ -9,18 +9,8 @@ import UIKit
 
 class DictionaryView: UIView {
     
-    let searchBar = {
-      let bar = UISearchBar()
-
-        bar.placeholder = "Search any words here"
-        bar.tintColor = .systemRed
-        bar.searchTextField.borderStyle = .line
-//        bar.layer.borderWidth = 1
-//        let whiteColor: UIColor = .white
-//        bar.layer.borderColor = [[UIColor whiteColor] CGColor];
-
-        return bar
-    }
+    let searchBar = UISearchBar()
+    let testTextLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,10 +23,16 @@ class DictionaryView: UIView {
     
     func setupViews(){
 //        backgroundColor = .black
+        searchBar.placeholder = "Search any words here"
+        searchBar.tintColor = .systemRed
+        searchBar.searchTextField.borderStyle = .line
+        testTextLabel.numberOfLines = 0
+        testTextLabel.text = "pi pi po po pu pu pa pa"
         
         let mainStack = UIStackView()
         mainStack.axis = .vertical
-        mainStack.addArrangedSubview(searchBar())
+        mainStack.addArrangedSubview(searchBar)
+        mainStack.addArrangedSubview(testTextLabel)
         
         addSubview(mainStack)
         mainStack.translatesAutoresizingMaskIntoConstraints = false

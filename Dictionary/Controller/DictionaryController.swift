@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DictionaryController: UIViewController {
+class DictionaryController: UIViewController, UISearchBarDelegate {
 
     let dictionaryView: DictionaryView
     
@@ -25,12 +25,19 @@ class DictionaryController: UIViewController {
         // Do any additional setup after loading the view.
         view.addSubview(dictionaryView)
         dictionaryView.fillSuperview()
-        
-        fetchDictionary()
+        dictionaryView.searchBar.delegate = self
     }
     
-    fileprivate func fetchDictionary() {
-        let urlString = "https://api.dictionaryapi.dev/api/v2/entries/en/hello"
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+          if let searchText = searchBar.text {
+              dictionaryView.testTextLabel.text = searchText
+              fetchDictionary(searchTerm: searchText)
+          }
+          searchBar.resignFirstResponder() // to hide the keyboard
+      }
+    
+    fileprivate func fetchDictionary(searchTerm: String) {
+        let urlString = "https://api.dictionaryapi.dev/api/v2/entries/en/\(searchTerm)"
         guard let url = URL(string: urlString) else { return }
         
         URLSession.shared.dataTask(with: url) { data, resp, err in
