@@ -45,7 +45,7 @@ class DictionaryController: UIViewController {
             
             do {
                 let searchResult = try
-                    JSONDecoder().decode(JSONStruct.self, from: data)
+                    JSONDecoder().decode([JSONStruct].self, from: data)
                 print(searchResult)
             } catch let jsonErr {
                 print("failed to decode", jsonErr)
