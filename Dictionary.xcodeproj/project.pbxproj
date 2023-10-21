@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE72C82E2AE42DBE0002B516 /* DictionaryEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */; };
 		CEBCDE9F2AE00819003E039C /* JSONStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDE9E2AE00819003E039C /* JSONStruct.swift */; };
 		CEBCDEA22AE01185003E039C /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA12AE01185003E039C /* BaseTabBarController.swift */; };
 		CEBCDEA52AE0158B003E039C /* FavoritesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA42AE0158B003E039C /* FavoritesController.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEntryCell.swift; sourceTree = "<group>"; };
 		CEBCDE9E2AE00819003E039C /* JSONStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStruct.swift; sourceTree = "<group>"; };
 		CEBCDEA12AE01185003E039C /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
 		CEBCDEA42AE0158B003E039C /* FavoritesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesController.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				CEBCDEA62AE01841003E039C /* DictionaryView.swift */,
+				CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -174,6 +177,7 @@
 				CEF48D302ADFF48800852997 /* DictionaryController.swift in Sources */,
 				CEBCDEAA2AE023B7003E039C /* Extension.swift in Sources */,
 				CEBCDEA52AE0158B003E039C /* FavoritesController.swift in Sources */,
+				CE72C82E2AE42DBE0002B516 /* DictionaryEntryCell.swift in Sources */,
 				CEF48D2C2ADFF48800852997 /* AppDelegate.swift in Sources */,
 				CEBCDEA72AE01841003E039C /* DictionaryView.swift in Sources */,
 				CEBCDE9F2AE00819003E039C /* JSONStruct.swift in Sources */,
