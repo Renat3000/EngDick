@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE06D65E2AE5715F00D12DCC /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE06D65D2AE5715F00D12DCC /* Service.swift */; };
 		CE72C82E2AE42DBE0002B516 /* DictionaryEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */; };
 		CEBCDE9F2AE00819003E039C /* JSONStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDE9E2AE00819003E039C /* JSONStruct.swift */; };
 		CEBCDEA22AE01185003E039C /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA12AE01185003E039C /* BaseTabBarController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE06D65D2AE5715F00D12DCC /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEntryCell.swift; sourceTree = "<group>"; };
 		CEBCDE9E2AE00819003E039C /* JSONStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStruct.swift; sourceTree = "<group>"; };
 		CEBCDEA12AE01185003E039C /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
@@ -45,6 +47,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE06D65C2AE5714D00D12DCC /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				CE06D65D2AE5715F00D12DCC /* Service.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 		CEBCDEA02AE00823003E039C /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -96,8 +106,9 @@
 				CEBCDEA82AE0185B003E039C /* View */,
 				CEBCDEA32AE01194003E039C /* Controller */,
 				CEBCDEA02AE00823003E039C /* Model */,
-				CEF48D342ADFF48900852997 /* Assets.xcassets */,
+				CE06D65C2AE5714D00D12DCC /* Service */,
 				CEF48D362ADFF48900852997 /* LaunchScreen.storyboard */,
+				CEF48D342ADFF48900852997 /* Assets.xcassets */,
 				CEF48D392ADFF48900852997 /* Info.plist */,
 			);
 			path = Dictionary;
@@ -178,6 +189,7 @@
 				CEBCDEAA2AE023B7003E039C /* Extension.swift in Sources */,
 				CEBCDEA52AE0158B003E039C /* FavoritesController.swift in Sources */,
 				CE72C82E2AE42DBE0002B516 /* DictionaryEntryCell.swift in Sources */,
+				CE06D65E2AE5715F00D12DCC /* Service.swift in Sources */,
 				CEF48D2C2ADFF48800852997 /* AppDelegate.swift in Sources */,
 				CEBCDEA72AE01841003E039C /* DictionaryView.swift in Sources */,
 				CEBCDE9F2AE00819003E039C /* JSONStruct.swift in Sources */,

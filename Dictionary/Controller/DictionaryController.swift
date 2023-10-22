@@ -11,6 +11,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
 
     let dictionaryView: DictionaryView
     fileprivate let cellId = "dictionaryCell"
+    fileprivate let searchController = UISearchController(searchResultsController: nil)
     
     init() {
         dictionaryView = DictionaryView()
@@ -23,45 +24,38 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchDictionary(searchTerm: "jump")
 //        view.addSubview(dictionaryView)
 //        dictionaryView.fillSuperview()
-        dictionaryView.searchBar.delegate = self
+        loadSearchBar()
         collectionView.register(DictionaryEntryCell.self, forCellWithReuseIdentifier: cellId)
+    }
+    
+    fileprivate func loadSearchBar() {
+        definesPresentationContext = true
+        navigationItem.searchController = self.searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.searchBar.delegate = self
     }
     
     fileprivate var JSONResult = [Meaning]()
     fileprivate var JSONTopResult = [JSONStruct]()
     fileprivate func fetchDictionary(searchTerm: String) {
-        let urlString = "https://api.dictionaryapi.dev/api/v2/entries/en/\(searchTerm)"
-        guard let url = URL(string: urlString) else { return }
+        //get back json-fetched data from the Service file
         
-        URLSession.shared.dataTask(with: url) { data, resp, err in
+        Service.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
             
             if let err = err {
-                print("failed to fetch", err)
+                print("failed to fetch dictionary entries", err)
                 return
             }
             
-            // success
-            guard let data = data else { return }
+            self.JSONResult = JSONStruct[0].meanings
+            self.JSONTopResult = JSONStruct
             
-            do {
-                let searchResult = try
-                    JSONDecoder().decode([JSONStruct].self, from: data)
-                self.JSONResult = searchResult[0].meanings
-                self.JSONTopResult = searchResult
-                
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
-                
-//                print(searchResult)
-            } catch let jsonErr {
-                print("failed to decode", jsonErr)
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
             }
-            
-        }.resume() //fire the request
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
