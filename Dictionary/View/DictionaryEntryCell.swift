@@ -45,7 +45,7 @@ class DictionaryEntryCell: UICollectionViewCell {
         
         addSubview(MainStack)
         
-        spacerView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        spacerView.widthAnchor.constraint(equalToConstant: 300).isActive = true //it's probably better to play around with CH value of spacerView... for now let's stick to thsi temporary solution
         MainStack.translatesAutoresizingMaskIntoConstraints = false
         
         MainStack.topAnchor.constraint(equalTo: topAnchor).isActive = true
