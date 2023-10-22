@@ -31,27 +31,29 @@ class DictionaryEntryCell: UICollectionViewCell {
         partOfSpeechLabel.font = .systemFont(ofSize: 20)
         spacerView.backgroundColor = .clear
         definitionLabel.font = .systemFont(ofSize: 18)
+        definitionLabel.numberOfLines = 0
         
         let firstStack = UIStackView(arrangedSubviews: [
             wordLabel, phoneticsLabel, spacerView])
         firstStack.axis = .horizontal
         firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
         
-        let MainStack = UIStackView(arrangedSubviews: [
+        let mainStack = UIStackView(arrangedSubviews: [
             firstStack, partOfSpeechLabel, definitionLabel
         ])
-        MainStack.axis = .vertical
-        MainStack.spacing = 12
+        mainStack.axis = .vertical
+        mainStack.spacing = 12
         
-        addSubview(MainStack)
+        addSubview(mainStack)
         
-        spacerView.widthAnchor.constraint(equalToConstant: 300).isActive = true //it's probably better to play around with CH value of spacerView... for now let's stick to thsi temporary solution
-        MainStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        MainStack.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        MainStack.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        MainStack.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-//        MainStack.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+//        spacerView.widthAnchor.constraint(equalToConstant: 200).isActive = true //it's probably better to play around with CH value of spacerView... for now let's stick to thsi temporary solution
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+//        mainStack.distribution = .equalSpacing
+        mainStack.alignment = .top
+        mainStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+        mainStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
+        mainStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
+//        mainStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
     }
     
     required init?(coder: NSCoder) {
