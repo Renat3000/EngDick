@@ -10,7 +10,7 @@ import Foundation
 struct JSONStruct: Decodable {
     let word: String
     let meanings: [Meaning]
-    let phonetic: String 
+    let phonetic: String?
 }
 
 struct Meaning: Decodable {

@@ -24,6 +24,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.collectionView.backgroundColor = .systemGray4
 //        view.addSubview(dictionaryView)
 //        dictionaryView.fillSuperview()
         loadSearchBar()
@@ -37,8 +38,9 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         searchController.searchBar.delegate = self
     }
     
-    fileprivate var JSONResult = [Meaning]()
     fileprivate var JSONTopResult = [JSONStruct]()
+    fileprivate var JSONMeanings = [Meaning]()
+    
     fileprivate func fetchDictionary(searchTerm: String) {
         //get back json-fetched data from the Service file
         print("firing off request, just wait!")
@@ -50,7 +52,6 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
                 return
             }
             
-            self.JSONResult = JSONStruct[0].meanings
             self.JSONTopResult = JSONStruct
             
             DispatchQueue.main.async {
@@ -60,24 +61,30 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return JSONResult.count
+        return JSONTopResult.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
 
-        let dictionaryEntryJSON = JSONResult[indexPath.item]
-        cell.wordLabel.text = JSONTopResult[0].word
-        cell.phoneticsLabel.text = JSONTopResult[0].phonetic
-        cell.partOfSpeechLabel.text = dictionaryEntryJSON.partOfSpeech
-        cell.definitionLabel.text = dictionaryEntryJSON.definitions[0].definition
+        cell.wordLabel.text = JSONTopResult[indexPath.item].word
+        cell.phoneticsLabel.text = JSONTopResult[indexPath.item].phonetic
         
+        cell.partOfSpeechLabel.text = JSONTopResult[indexPath.item].meanings[0].partOfSpeech
+        
+        self.JSONMeanings = JSONTopResult[indexPath.item].meanings
+        cell.definitionLabel.text = JSONMeanings[0].definitions[0].definition
+        JSONMeanings[0].definitions.forEach({
+            if cell.definitionLabel.text != $0.definition {
+                cell.definitionLabel.text?.append("\n\($0.definition)")
+            }
+        })
         return cell
     }
     
     //only available if we have UICollectionViewDelegateFlowLayout protocol
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width-10, height: 200)
+        return CGSize(width: view.frame.width-10, height: 300)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
