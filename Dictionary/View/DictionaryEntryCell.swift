@@ -19,6 +19,8 @@ class DictionaryEntryCell: UICollectionViewCell {
         super.init(frame: frame)
         
         backgroundColor = .systemGray5
+        layer.cornerRadius = min(frame.width, frame.height) / 10
+        clipsToBounds = true
         
         wordLabel.text = "word Label"
         phoneticsLabel.text = "phonetics Label"

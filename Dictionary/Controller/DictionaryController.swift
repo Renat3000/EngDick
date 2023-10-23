@@ -41,11 +41,12 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     fileprivate var JSONTopResult = [JSONStruct]()
     fileprivate func fetchDictionary(searchTerm: String) {
         //get back json-fetched data from the Service file
-        
+        print("firing off request, just wait!")
         Service.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
             
             if let err = err {
                 print("failed to fetch dictionary entries", err)
+                self.displayErrorAlert(message: "failed to fetch dictionary entries") // actually we can just use err.localizedDescription
                 return
             }
             
@@ -85,4 +86,15 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
           }
           searchBar.resignFirstResponder() // to hide the keyboard
       }
+    
+    //error message in case we don't have a word in the dictionary or there's no internet connection
+    func displayErrorAlert(message: String) {
+        let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(okAction)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }
