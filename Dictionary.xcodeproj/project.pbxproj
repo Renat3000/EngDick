@@ -15,6 +15,7 @@
 		CEBCDEA52AE0158B003E039C /* FavoritesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA42AE0158B003E039C /* FavoritesController.swift */; };
 		CEBCDEA72AE01841003E039C /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA62AE01841003E039C /* DictionaryView.swift */; };
 		CEBCDEAA2AE023B7003E039C /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA92AE023B7003E039C /* Extension.swift */; };
+		CEC7DADC2AE7F44300290575 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEC7DADA2AE7F44300290575 /* CoreDataModel.xcdatamodeld */; };
 		CEF48D2C2ADFF48800852997 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF48D2B2ADFF48800852997 /* AppDelegate.swift */; };
 		CEF48D302ADFF48800852997 /* DictionaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF48D2F2ADFF48800852997 /* DictionaryController.swift */; };
 		CEF48D352ADFF48900852997 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEF48D342ADFF48900852997 /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 		CEBCDEA42AE0158B003E039C /* FavoritesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesController.swift; sourceTree = "<group>"; };
 		CEBCDEA62AE01841003E039C /* DictionaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CEBCDEA92AE023B7003E039C /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		CEC7DADB2AE7F44300290575 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		CEF48D282ADFF48800852997 /* Dictionary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dictionary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF48D2B2ADFF48800852997 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEF48D2F2ADFF48800852997 /* DictionaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryController.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				CEBCDE9E2AE00819003E039C /* JSONStruct.swift */,
+				CEC7DADA2AE7F44300290575 /* CoreDataModel.xcdatamodeld */,
 				CE651A052AE6A2E700378430 /* ErrorDictionary.swift */,
 			);
 			path = Model;
@@ -189,6 +192,7 @@
 			files = (
 				CEBCDEA22AE01185003E039C /* BaseTabBarController.swift in Sources */,
 				CEF48D302ADFF48800852997 /* DictionaryController.swift in Sources */,
+				CEC7DADC2AE7F44300290575 /* CoreDataModel.xcdatamodeld in Sources */,
 				CE651A062AE6A2E700378430 /* ErrorDictionary.swift in Sources */,
 				CEBCDEAA2AE023B7003E039C /* Extension.swift in Sources */,
 				CEBCDEA52AE0158B003E039C /* FavoritesController.swift in Sources */,
@@ -404,6 +408,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		CEC7DADA2AE7F44300290575 /* CoreDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CEC7DADB2AE7F44300290575 /* CoreDataModel.xcdatamodel */,
+			);
+			currentVersion = CEC7DADB2AE7F44300290575 /* CoreDataModel.xcdatamodel */;
+			path = CoreDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = CEF48D202ADFF48800852997 /* Project object */;
 }
