@@ -87,6 +87,15 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         return CGSize(width: view.frame.width-10, height: 300)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let item = JSONTopResult[indexPath.item]
+        let wdController = WordDetailsController()
+        self.present(wdController, animated: true)
+
+        print(item)
+    }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
           if let searchText = searchBar.text {
               fetchDictionary(searchTerm: searchText)

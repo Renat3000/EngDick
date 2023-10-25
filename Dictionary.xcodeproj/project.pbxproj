@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CE06D65E2AE5715F00D12DCC /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE06D65D2AE5715F00D12DCC /* Service.swift */; };
+		CE15E8DF2AE951190031F0EE /* WordDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE15E8DE2AE951190031F0EE /* WordDetailsView.swift */; };
 		CE651A062AE6A2E700378430 /* ErrorDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE651A052AE6A2E700378430 /* ErrorDictionary.swift */; };
 		CE72C82E2AE42DBE0002B516 /* DictionaryEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */; };
 		CEBCDE9F2AE00819003E039C /* JSONStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDE9E2AE00819003E039C /* JSONStruct.swift */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		CE06D65D2AE5715F00D12DCC /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		CE15E8DE2AE951190031F0EE /* WordDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordDetailsView.swift; sourceTree = "<group>"; };
 		CE651A052AE6A2E700378430 /* ErrorDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDictionary.swift; sourceTree = "<group>"; };
 		CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEntryCell.swift; sourceTree = "<group>"; };
 		CEBCDE9E2AE00819003E039C /* JSONStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStruct.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				CEF48D2F2ADFF48800852997 /* DictionaryController.swift */,
+				CE15E8DE2AE951190031F0EE /* WordDetailsView.swift */,
 				CEBCDEA42AE0158B003E039C /* FavoritesController.swift */,
 				CEBCDEA12AE01185003E039C /* BaseTabBarController.swift */,
 			);
@@ -192,6 +195,7 @@
 			files = (
 				CEBCDEA22AE01185003E039C /* BaseTabBarController.swift in Sources */,
 				CEF48D302ADFF48800852997 /* DictionaryController.swift in Sources */,
+				CE15E8DF2AE951190031F0EE /* WordDetailsView.swift in Sources */,
 				CEC7DADC2AE7F44300290575 /* CoreDataModel.xcdatamodeld in Sources */,
 				CE651A062AE6A2E700378430 /* ErrorDictionary.swift in Sources */,
 				CEBCDEAA2AE023B7003E039C /* Extension.swift in Sources */,
