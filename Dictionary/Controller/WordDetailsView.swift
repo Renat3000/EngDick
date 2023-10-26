@@ -15,7 +15,7 @@ class WordDetailsController: UIViewController {
     let definitionLabel = UILabel()
     let spacerView = UIView()
     let favorites = FavoritesController()
-    
+    let item = FavoritesItem()
     var isBookmarked: Bool = false
     let starButton: UIButton = {
         let button = UIButton(type: .system)
@@ -64,7 +64,8 @@ class WordDetailsController: UIViewController {
         
         firstStack.translatesAutoresizingMaskIntoConstraints = false
         firstStack.axis = .horizontal
-        firstStack.distribution = .fillProportionally
+//        firstStack.distribution = .fillProportionally
+        firstStack.widthAnchor.constraint(equalToConstant: 398).isActive = true
         firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
         
         let mainStack = UIStackView(arrangedSubviews: [
@@ -79,8 +80,8 @@ class WordDetailsController: UIViewController {
         
         mainStack.alignment = .top
         mainStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
-        mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
-        mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
+        mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
     }
     
     @objc private func didTapStar() {

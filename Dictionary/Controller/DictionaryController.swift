@@ -84,7 +84,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     
     //only available if we have UICollectionViewDelegateFlowLayout protocol
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width-10, height: 300)
+        return CGSize(width: view.frame.width-10, height: 180)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -97,6 +97,11 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         wdController.partOfSpeechLabel.text = item.meanings[0].partOfSpeech
         wdController.definitionLabel.text = item.meanings[0].definitions[0].definition
         
+        JSONMeanings[0].definitions.forEach({
+            if wdController.definitionLabel.text != $0.definition {
+                wdController.definitionLabel.text?.append("\n\($0.definition)")
+            }
+        })
         print(item)
     }
     
