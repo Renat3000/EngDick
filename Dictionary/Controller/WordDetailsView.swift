@@ -9,6 +9,23 @@ import UIKit
 
 class WordDetailsController: UIViewController {
     
+    let wordLabel = UILabel()
+    let phoneticsLabel = UILabel()
+    let partOfSpeechLabel = UILabel()
+    let definitionLabel = UILabel()
+    let spacerView = UIView()
+    let favorites = FavoritesController()
+    
+    var isBookmarked: Bool = false
+    let starButton: UIButton = {
+        let button = UIButton(type: .system)
+        let starImage = UIImage(systemName: "star")
+        button.setImage(starImage, for: .normal)
+        button.tintColor = .systemBlue
+        button.addTarget(self, action: #selector(didTapStar), for: .touchUpInside)
+
+        return button
+    }()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -24,12 +41,6 @@ class WordDetailsController: UIViewController {
     
     func setupViews(){
         
-        let wordLabel = UILabel()
-        let phoneticsLabel = UILabel()
-        let partOfSpeechLabel = UILabel()
-        let definitionLabel = UILabel()
-        let spacerView = UIView()
-        
         view.backgroundColor = .systemGray5
         view.layer.cornerRadius = min(view.frame.width, view.frame.height) / 10
         view.clipsToBounds = true
@@ -44,28 +55,47 @@ class WordDetailsController: UIViewController {
         phoneticsLabel.textColor = .systemGray
         partOfSpeechLabel.font = .systemFont(ofSize: 20)
         spacerView.backgroundColor = .clear
+        spacerView.frame = .init(x: 0, y: 0, width: 100, height: 4)
         definitionLabel.font = .systemFont(ofSize: 18)
         definitionLabel.numberOfLines = 0
         
         let firstStack = UIStackView(arrangedSubviews: [
-            wordLabel, phoneticsLabel, spacerView])
+            wordLabel, phoneticsLabel, spacerView, starButton])
+        
+        firstStack.translatesAutoresizingMaskIntoConstraints = false
         firstStack.axis = .horizontal
+        firstStack.distribution = .fillProportionally
         firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
         
         let mainStack = UIStackView(arrangedSubviews: [
             firstStack, partOfSpeechLabel, definitionLabel
         ])
+        
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
         mainStack.axis = .vertical
         mainStack.spacing = 12
         
         view.addSubview(mainStack)
         
-        mainStack.translatesAutoresizingMaskIntoConstraints = false
-        
         mainStack.alignment = .top
-        mainStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+        mainStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
         mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
         mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
+    }
+    
+    @objc private func didTapStar() {
+        if let word = wordLabel.text {
+            isBookmarked.toggle()
+            
+            if isBookmarked {
+                starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+                favorites.createItem(name: word)
+            } else {
+                starButton.setImage(UIImage(systemName: "star"), for: .normal)
+                // need to delete the item/word from the list, don't know how yet
+//                favorites.deleteItem(item: word) - doesn't work. Cannot convert value of type 'String' to expected argument type 'FavoritesItem'
+            }
+        }
     }
 }
 

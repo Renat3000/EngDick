@@ -92,7 +92,11 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         let item = JSONTopResult[indexPath.item]
         let wdController = WordDetailsController()
         self.present(wdController, animated: true)
-
+        wdController.wordLabel.text = item.word
+        wdController.phoneticsLabel.text = item.phonetic
+        wdController.partOfSpeechLabel.text = item.meanings[0].partOfSpeech
+        wdController.definitionLabel.text = item.meanings[0].definitions[0].definition
+        
         print(item)
     }
     
