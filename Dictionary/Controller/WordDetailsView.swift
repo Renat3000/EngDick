@@ -9,8 +9,6 @@ import UIKit
 
 class WordDetailsController: UIViewController {
     
-    let scrollView = UIScrollView()
-    
     let wordLabel = UILabel()
     var word = String()
     
@@ -89,7 +87,7 @@ class WordDetailsController: UIViewController {
         definitionLabel2.numberOfLines = 0
         definitionLabel3.font = .systemFont(ofSize: 18)
         definitionLabel3.numberOfLines = 0
-    
+        
         let firstStack = UIStackView(arrangedSubviews: [
                   wordLabel, phoneticsLabel, spacerView, starButton
         ])
@@ -101,27 +99,15 @@ class WordDetailsController: UIViewController {
         let mainStack = UIStackView(arrangedSubviews: [
         firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel2, definitionLabel3
         ])
-        scrollView.addSubview(mainStack)
+        view.addSubview(mainStack)
         
         mainStack.translatesAutoresizingMaskIntoConstraints = false
         mainStack.axis = .vertical
         mainStack.spacing = 12
         mainStack.alignment = .top
-        mainStack.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-        mainStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8).isActive = true
-        mainStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8).isActive = true
-        
-        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height*2)
-
-        // Добавьте scrollView как подвидимость контроллера
-        view.addSubview(scrollView)
-
-        // Установите ограничения для scrollView, чтобы он занимал всю доступную область
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        mainStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
+        mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
     }
     
     @objc private func didTapStar() {
