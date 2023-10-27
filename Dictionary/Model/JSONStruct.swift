@@ -21,4 +21,5 @@ struct Meaning: Decodable {
 
 struct Definition: Decodable {
     let definition: String
+    let example: String?
 }

@@ -11,9 +11,14 @@ class DictionaryEntryCell: UICollectionViewCell {
     
     let wordLabel = UILabel()
     let phoneticsLabel = UILabel()
-    let partOfSpeechLabel = UILabel()
-    let definitionLabel = UILabel()
+    let partOfSpeechLabel1 = UILabel()
+    let definitionLabel1 = UILabel()
     let spacerView = UIView()
+    
+    let partOfSpeechLabel2 = UILabel()
+    let definitionLabel2 = UILabel()
+    let partOfSpeechLabel3 = UILabel()
+    let definitionLabel3 = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,16 +29,32 @@ class DictionaryEntryCell: UICollectionViewCell {
         
         wordLabel.text = "word Label"
         phoneticsLabel.text = "phonetics Label"
-        partOfSpeechLabel.text = "part Of Speech Label"
-        definitionLabel.text = "definition Label"
+        partOfSpeechLabel1.text = "part Of Speech Label"
+        definitionLabel1.text = "definition Label"
+        
+        partOfSpeechLabel2.text = "part Of Speech Label2"
+        definitionLabel2.text = "definition Label2"
+        
+        partOfSpeechLabel3.text = "part Of Speech Label3"
+        definitionLabel3.text = "definition Label3"
         
         wordLabel.font = .systemFont(ofSize: 30)
         phoneticsLabel.font = .systemFont(ofSize: 20)
         phoneticsLabel.textColor = .systemGray
-        partOfSpeechLabel.font = .systemFont(ofSize: 20)
+        
+        partOfSpeechLabel1.font = .systemFont(ofSize: 20)
+        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
+        partOfSpeechLabel3.font = .systemFont(ofSize: 20)
+        
         spacerView.backgroundColor = .clear
-        definitionLabel.font = .systemFont(ofSize: 18)
-        definitionLabel.numberOfLines = 0
+        definitionLabel1.font = .systemFont(ofSize: 18)
+        definitionLabel1.numberOfLines = 0
+        definitionLabel2.font = .systemFont(ofSize: 18)
+        definitionLabel2.numberOfLines = 0
+        definitionLabel3.font = .systemFont(ofSize: 18)
+        definitionLabel3.numberOfLines = 0
+        
+//        partOfSpeechLabel2.isHidden = true
         
         let firstStack = UIStackView(arrangedSubviews: [
             wordLabel, phoneticsLabel, spacerView])
@@ -41,7 +62,7 @@ class DictionaryEntryCell: UICollectionViewCell {
         firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
         
         let mainStack = UIStackView(arrangedSubviews: [
-            firstStack, partOfSpeechLabel, definitionLabel
+            firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel3, definitionLabel3
         ])
         mainStack.axis = .vertical
         mainStack.spacing = 12

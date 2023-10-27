@@ -70,15 +70,52 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         cell.wordLabel.text = JSONTopResult[indexPath.item].word
         cell.phoneticsLabel.text = JSONTopResult[indexPath.item].phonetic
         
-        cell.partOfSpeechLabel.text = JSONTopResult[indexPath.item].meanings[0].partOfSpeech
-        
         self.JSONMeanings = JSONTopResult[indexPath.item].meanings
-        cell.definitionLabel.text = JSONMeanings[0].definitions[0].definition
-        JSONMeanings[0].definitions.forEach({
-            if cell.definitionLabel.text != $0.definition {
-                cell.definitionLabel.text?.append("\n\($0.definition)")
+        let count = 0...JSONMeanings.count-1
+        
+        for number in count {
+            switch number {
+            case 0:
+                cell.partOfSpeechLabel1.text = JSONMeanings[number].partOfSpeech
+                
+                if JSONMeanings[number].definitions.count == 1 {
+                    cell.definitionLabel1.text = JSONMeanings[number].definitions[0].definition
+                } else {
+//                    var arrayOfDefinitions: [String] = []
+                    cell.definitionLabel1.text = String()
+                    JSONMeanings[number].definitions.forEach({
+                        cell.definitionLabel1.text?.append("\n\($0.definition)")
+                    })
+                }
+                
+//            case 1:
+//                cell.partOfSpeechLabel2.text = JSONMeanings[number].partOfSpeech
+//
+//                if JSONMeanings[number].definitions.count == 1 {
+//                    cell.definitionLabel2.text = JSONMeanings[number].definitions[0].definition
+//                } else {
+//                    cell.definitionLabel2.text = String()
+//                    JSONMeanings[number].definitions.forEach({
+//                        cell.definitionLabel2.text?.append("\n\($0.definition)")
+//                    })
+//                }
+//
+//            case 2:
+//                cell.partOfSpeechLabel3.text = JSONMeanings[number].partOfSpeech
+//
+//                if JSONMeanings[number].definitions.count == 1 {
+//                    cell.definitionLabel3.text = JSONMeanings[number].definitions[0].definition
+//                } else {
+//                    cell.definitionLabel3.text = String()
+//                    JSONMeanings[number].definitions.forEach({
+//                        cell.definitionLabel3.text?.append("\n\($0.definition)")
+//                    })
+//                }
+                
+            default:
+                break
             }
-        })
+        }
         return cell
     }
     
@@ -91,18 +128,57 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         
         let item = JSONTopResult[indexPath.item]
         let wdController = WordDetailsController()
-        self.present(wdController, animated: true)
-        wdController.wordLabel.text = item.word
-        wdController.phoneticsLabel.text = item.phonetic
-        wdController.partOfSpeechLabel.text = item.meanings[0].partOfSpeech
-        wdController.definitionLabel.text = item.meanings[0].definitions[0].definition
         
-        JSONMeanings[0].definitions.forEach({
-            if wdController.definitionLabel.text != $0.definition {
-                wdController.definitionLabel.text?.append("\n\($0.definition)")
+        wdController.word = item.word
+        wdController.phonetic = item.phonetic!
+        
+        self.JSONMeanings = item.meanings
+        let count = 0...JSONMeanings.count-1
+        for number in count {
+            switch number {
+            case 0:
+                wdController.partOfSpeech1 = JSONMeanings[number].partOfSpeech!
+                
+                if JSONMeanings[number].definitions.count == 1 {
+                    wdController.definition1 = JSONMeanings[number].definitions[0].definition
+                } else {
+                    //                    var arrayOfDefinitions: [String] = []
+                    wdController.definition1 = String()
+                    JSONMeanings[number].definitions.forEach({
+                        wdController.definition1.append("\n\($0.definition)")
+                    })
+                }
+                
+            case 1:
+                wdController.partOfSpeech2 = JSONMeanings[number].partOfSpeech!
+                
+                if JSONMeanings[number].definitions.count == 1 {
+                    wdController.definition2 = JSONMeanings[number].definitions[0].definition
+                } else {
+                    wdController.definition2 = String()
+                    JSONMeanings[number].definitions.forEach({
+                        wdController.definition2.append("\n\($0.definition)")
+                    })
+                }
+                
+            case 2:
+                wdController.partOfSpeech3 = JSONMeanings[number].partOfSpeech!
+                
+                if JSONMeanings[number].definitions.count == 1 {
+                    wdController.definition3 = JSONMeanings[number].definitions[0].definition
+                } else {
+                    wdController.definition3 = String()
+                    JSONMeanings[number].definitions.forEach({
+                        wdController.definition3.append("\n\($0.definition)")
+                    })
+                }
+                
+            default:
+                break
             }
-        })
-        print(item)
+        }
+        navigationController?.pushViewController(wdController, animated: true)
+//        print(item)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

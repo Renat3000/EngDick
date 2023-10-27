@@ -9,10 +9,28 @@ import UIKit
 
 class WordDetailsController: UIViewController {
     
+    let scrollView = UIScrollView()
+    
     let wordLabel = UILabel()
+    var word = String()
+    
     let phoneticsLabel = UILabel()
-    let partOfSpeechLabel = UILabel()
-    let definitionLabel = UILabel()
+    var phonetic = String()
+    
+    let partOfSpeechLabel1 = UILabel()
+    let partOfSpeechLabel2 = UILabel()
+    let partOfSpeechLabel3 = UILabel()
+    var partOfSpeech1 = String()
+    var partOfSpeech2 = String()
+    var partOfSpeech3 = String()
+    
+    let definitionLabel1 = UILabel()
+    let definitionLabel2 = UILabel()
+    let definitionLabel3 = UILabel()
+    var definition1 = String()
+    var definition2 = String()
+    var definition3 = String()
+    
     let spacerView = UIView()
     let favorites = FavoritesController()
     let item = FavoritesItem()
@@ -36,52 +54,74 @@ class WordDetailsController: UIViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.largeTitleDisplayMode = .never
+        
         setupViews()
     }
     
     func setupViews(){
         
         view.backgroundColor = .systemGray5
-        view.layer.cornerRadius = min(view.frame.width, view.frame.height) / 10
+//        view.layer.cornerRadius = min(view.frame.width, view.frame.height) / 10
         view.clipsToBounds = true
         
-        wordLabel.text = "word Label"
-        phoneticsLabel.text = "phonetics Label"
-        partOfSpeechLabel.text = "part Of Speech Label"
-        definitionLabel.text = "definition Label"
+        wordLabel.text = word
+        phoneticsLabel.text = phonetic
+        partOfSpeechLabel1.text = partOfSpeech1
+        definitionLabel1.text = definition1
+        partOfSpeechLabel2.text = partOfSpeech2
+        definitionLabel2.text = definition2
+        partOfSpeechLabel3.text = partOfSpeech3
+        definitionLabel3.text = definition3
         
         wordLabel.font = .systemFont(ofSize: 30)
         phoneticsLabel.font = .systemFont(ofSize: 20)
         phoneticsLabel.textColor = .systemGray
-        partOfSpeechLabel.font = .systemFont(ofSize: 20)
+        partOfSpeechLabel1.font = .systemFont(ofSize: 20)
+        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
+        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
         spacerView.backgroundColor = .clear
         spacerView.frame = .init(x: 0, y: 0, width: 100, height: 4)
-        definitionLabel.font = .systemFont(ofSize: 18)
-        definitionLabel.numberOfLines = 0
-        
+        definitionLabel1.font = .systemFont(ofSize: 18)
+        definitionLabel1.numberOfLines = 0
+        definitionLabel2.font = .systemFont(ofSize: 18)
+        definitionLabel2.numberOfLines = 0
+        definitionLabel3.font = .systemFont(ofSize: 18)
+        definitionLabel3.numberOfLines = 0
+    
         let firstStack = UIStackView(arrangedSubviews: [
-            wordLabel, phoneticsLabel, spacerView, starButton])
-        
-        firstStack.translatesAutoresizingMaskIntoConstraints = false
+                  wordLabel, phoneticsLabel, spacerView, starButton
+        ])
         firstStack.axis = .horizontal
-//        firstStack.distribution = .fillProportionally
-        firstStack.widthAnchor.constraint(equalToConstant: 398).isActive = true
+        firstStack.distribution = .fillProportionally
+        firstStack.translatesAutoresizingMaskIntoConstraints = false
         firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
         
         let mainStack = UIStackView(arrangedSubviews: [
-            firstStack, partOfSpeechLabel, definitionLabel
+        firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel2, definitionLabel3
         ])
+        scrollView.addSubview(mainStack)
         
         mainStack.translatesAutoresizingMaskIntoConstraints = false
         mainStack.axis = .vertical
         mainStack.spacing = 12
-        
-        view.addSubview(mainStack)
-        
         mainStack.alignment = .top
-        mainStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
-        mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        mainStack.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        mainStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8).isActive = true
+        mainStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -8).isActive = true
+        
+        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height*2)
+
+        // Добавьте scrollView как подвидимость контроллера
+        view.addSubview(scrollView)
+
+        // Установите ограничения для scrollView, чтобы он занимал всю доступную область
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
     @objc private func didTapStar() {
