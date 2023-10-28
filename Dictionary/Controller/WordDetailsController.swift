@@ -38,7 +38,7 @@ class WordDetailsController: UIViewController {
         let starImage = UIImage(systemName: "star")
         button.setImage(starImage, for: .normal)
         button.tintColor = .systemBlue
-        button.addTarget(self, action: #selector(didTapStar), for: .touchUpInside)
+        button.addTarget(WordDetailsController.self, action: #selector(didTapStar), for: .touchUpInside)
 
         return button
     }()

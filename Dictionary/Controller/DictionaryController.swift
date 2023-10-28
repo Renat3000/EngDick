@@ -142,11 +142,15 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
                 if JSONMeanings[number].definitions.count == 1 {
                     wdController.definition1 = JSONMeanings[number].definitions[0].definition
                 } else {
-                    //                    var arrayOfDefinitions: [String] = []
                     wdController.definition1 = String()
-                    JSONMeanings[number].definitions.forEach({
-                        wdController.definition1.append("\n\($0.definition)")
-                    })
+                    for (index, definition) in JSONMeanings[number].definitions.enumerated() {
+                        let content = "\(index + 1). \(definition.definition)"
+                        wdController.definition1.append("\n\(content)")
+                    }
+                    // old, not enumerated
+//                    JSONMeanings[number].definitions.forEach({
+//                        wdController.definition1.append("\n\($0.definition)")
+//                    })
                 }
                 
             case 1:
@@ -156,9 +160,10 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
                     wdController.definition2 = JSONMeanings[number].definitions[0].definition
                 } else {
                     wdController.definition2 = String()
-                    JSONMeanings[number].definitions.forEach({
-                        wdController.definition2.append("\n\($0.definition)")
-                    })
+                    for (index, definition) in JSONMeanings[number].definitions.enumerated() {
+                        let content = "\(index + 1). \(definition.definition)"
+                        wdController.definition2.append("\n\(content)")
+                    }
                 }
                 
             case 2:
@@ -168,9 +173,10 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
                     wdController.definition3 = JSONMeanings[number].definitions[0].definition
                 } else {
                     wdController.definition3 = String()
-                    JSONMeanings[number].definitions.forEach({
-                        wdController.definition3.append("\n\($0.definition)")
-                    })
+                    for (index, definition) in JSONMeanings[number].definitions.enumerated() {
+                        let content = "\(index + 1). \(definition.definition)"
+                        wdController.definition3.append("\n\(content)")
+                    }
                 }
                 
             default:
