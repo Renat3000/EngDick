@@ -9,6 +9,7 @@ import UIKit
 
 class WordDetailsController: UIViewController {
     
+    let scrollView = UIScrollView()
     let wordLabel = UILabel()
     var word = String()
     
@@ -29,7 +30,6 @@ class WordDetailsController: UIViewController {
     var definition2 = String()
     var definition3 = String()
     
-    let spacerView = UIView()
     let favorites = FavoritesController()
     let item = FavoritesItem()
     var isBookmarked: Bool = false
@@ -63,6 +63,7 @@ class WordDetailsController: UIViewController {
         view.backgroundColor = .systemGray5
 //        view.layer.cornerRadius = min(view.frame.width, view.frame.height) / 10
         view.clipsToBounds = true
+        view.addSubview(scrollView)
         
         wordLabel.text = word
         phoneticsLabel.text = phonetic
@@ -79,8 +80,7 @@ class WordDetailsController: UIViewController {
         partOfSpeechLabel1.font = .systemFont(ofSize: 20)
         partOfSpeechLabel2.font = .systemFont(ofSize: 20)
         partOfSpeechLabel2.font = .systemFont(ofSize: 20)
-        spacerView.backgroundColor = .clear
-        spacerView.frame = .init(x: 0, y: 0, width: 100, height: 4)
+
         definitionLabel1.font = .systemFont(ofSize: 18)
         definitionLabel1.numberOfLines = 0
         definitionLabel2.font = .systemFont(ofSize: 18)
@@ -88,26 +88,43 @@ class WordDetailsController: UIViewController {
         definitionLabel3.font = .systemFont(ofSize: 18)
         definitionLabel3.numberOfLines = 0
         
+        let wordStack = UIStackView(arrangedSubviews: [
+        wordLabel, phoneticsLabel
+        ])
+        wordStack.axis = .horizontal
+        wordStack.translatesAutoresizingMaskIntoConstraints = false
+        wordStack.alignment = .lastBaseline
+        
         let firstStack = UIStackView(arrangedSubviews: [
-                  wordLabel, phoneticsLabel, spacerView, starButton
+            wordStack, starButton
         ])
         firstStack.axis = .horizontal
-        firstStack.distribution = .fillProportionally
+        firstStack.distribution = .equalSpacing
         firstStack.translatesAutoresizingMaskIntoConstraints = false
         firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
         
         let mainStack = UIStackView(arrangedSubviews: [
         firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel2, definitionLabel3
         ])
-        view.addSubview(mainStack)
-        
+        scrollView.addSubview(mainStack)
+        firstStack.widthAnchor.constraint(equalTo: mainStack.widthAnchor).isActive = true
         mainStack.translatesAutoresizingMaskIntoConstraints = false
         mainStack.axis = .vertical
         mainStack.spacing = 12
         mainStack.alignment = .top
-        mainStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
-        mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
+    
+        mainStack.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        mainStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
+        mainStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+        mainStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        mainStack.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
     }
     
     @objc private func didTapStar() {

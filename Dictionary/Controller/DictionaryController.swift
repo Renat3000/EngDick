@@ -130,7 +130,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         let wdController = WordDetailsController()
         
         wdController.word = item.word
-        wdController.phonetic = item.phonetic!
+        wdController.phonetic = item.phonetic ?? "no phonetics"
         
         self.JSONMeanings = item.meanings
         let count = 0...JSONMeanings.count-1
