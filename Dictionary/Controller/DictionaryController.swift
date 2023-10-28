@@ -28,7 +28,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
 //        view.addSubview(dictionaryView)
 //        dictionaryView.fillSuperview()
         loadSearchBar()
-        collectionView.register(DictionaryEntryCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(DictionaryEntryPreviewCell.self, forCellWithReuseIdentifier: cellId)
     }
     
     fileprivate func loadSearchBar() {
@@ -65,68 +65,32 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryPreviewCell
 
         cell.wordLabel.text = JSONTopResult[indexPath.item].word
         cell.phoneticsLabel.text = JSONTopResult[indexPath.item].phonetic
         
         self.JSONMeanings = JSONTopResult[indexPath.item].meanings
-        let count = 0...JSONMeanings.count-1
+        cell.partOfSpeechLabel1.text = JSONMeanings[0].partOfSpeech
         
-        for number in count {
-            switch number {
-            case 0:
-                cell.partOfSpeechLabel1.text = JSONMeanings[number].partOfSpeech
-                
-                if JSONMeanings[number].definitions.count == 1 {
-                    cell.definitionLabel1.text = JSONMeanings[number].definitions[0].definition
-                } else {
-//                    var arrayOfDefinitions: [String] = []
-                    cell.definitionLabel1.text = String()
-                    JSONMeanings[number].definitions.forEach({
-                        cell.definitionLabel1.text?.append("\n\($0.definition)")
-                    })
-                }
-                
-//            case 1:
-//                cell.partOfSpeechLabel2.text = JSONMeanings[number].partOfSpeech
-//
-//                if JSONMeanings[number].definitions.count == 1 {
-//                    cell.definitionLabel2.text = JSONMeanings[number].definitions[0].definition
-//                } else {
-//                    cell.definitionLabel2.text = String()
-//                    JSONMeanings[number].definitions.forEach({
-//                        cell.definitionLabel2.text?.append("\n\($0.definition)")
-//                    })
-//                }
-//
-//            case 2:
-//                cell.partOfSpeechLabel3.text = JSONMeanings[number].partOfSpeech
-//
-//                if JSONMeanings[number].definitions.count == 1 {
-//                    cell.definitionLabel3.text = JSONMeanings[number].definitions[0].definition
-//                } else {
-//                    cell.definitionLabel3.text = String()
-//                    JSONMeanings[number].definitions.forEach({
-//                        cell.definitionLabel3.text?.append("\n\($0.definition)")
-//                    })
-//                }
-                
-            default:
-                break
-            }
+        cell.definitionLabel1.text = String()
+        cell.definitionLabel1.text = JSONMeanings[0].definitions[0].definition
+        
+        if JSONMeanings[0].definitions.count > 1 {
+            cell.definitionLabel1.text?.append(" ...")
         }
+    
         return cell
     }
     
     //only available if we have UICollectionViewDelegateFlowLayout protocol
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width-10, height: 180)
+        return CGSize(width: view.frame.width-10, height: 150)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let item = JSONTopResult[indexPath.item]
+        var item = JSONTopResult[indexPath.item]
         let wdController = WordDetailsController()
         
         wdController.word = item.word
@@ -137,15 +101,25 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         for number in count {
             switch number {
             case 0:
-                wdController.partOfSpeech1 = JSONMeanings[number].partOfSpeech!
+                wdController.partOfSpeech1 = JSONMeanings[number].partOfSpeech ?? "no info"
                 
                 if JSONMeanings[number].definitions.count == 1 {
                     wdController.definition1 = JSONMeanings[number].definitions[0].definition
+                    
+                    if let example = JSONMeanings[number].definitions[0].example {
+                        wdController.definition1.append("\nExample: \(example)")
+                    }
+                    
                 } else {
                     wdController.definition1 = String()
                     for (index, definition) in JSONMeanings[number].definitions.enumerated() {
                         let content = "\(index + 1). \(definition.definition)"
                         wdController.definition1.append("\n\(content)")
+                        
+                        if let example = definition.example {
+                            wdController.definition1.append("\nExample: \(example)")
+                        }
+                        
                     }
                     // old, not enumerated
 //                    JSONMeanings[number].definitions.forEach({
@@ -154,28 +128,45 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
                 }
                 
             case 1:
-                wdController.partOfSpeech2 = JSONMeanings[number].partOfSpeech!
-                
+                wdController.partOfSpeech2 = JSONMeanings[number].partOfSpeech ?? "no info"
+//                item = JSONTopResult[indexPath.item]
                 if JSONMeanings[number].definitions.count == 1 {
                     wdController.definition2 = JSONMeanings[number].definitions[0].definition
+                   
+                    if let example = JSONMeanings[number].definitions[0].example {
+                        wdController.definition2.append("\nExample: \(example)")
+                    }
+                    
                 } else {
                     wdController.definition2 = String()
                     for (index, definition) in JSONMeanings[number].definitions.enumerated() {
                         let content = "\(index + 1). \(definition.definition)"
                         wdController.definition2.append("\n\(content)")
+                        if let example = definition.example {
+                            wdController.definition2.append("\nExample: \(example)")
+                        }
                     }
                 }
                 
             case 2:
-                wdController.partOfSpeech3 = JSONMeanings[number].partOfSpeech!
-                
+                wdController.partOfSpeech3 = JSONMeanings[number].partOfSpeech ?? "no info"
+//                item = JSONTopResult[indexPath.item]
                 if JSONMeanings[number].definitions.count == 1 {
                     wdController.definition3 = JSONMeanings[number].definitions[0].definition
+                   
+                    if let example = JSONMeanings[number].definitions[0].example {
+                        wdController.definition3.append("\nExample: \(example)")
+                    }
+                    
                 } else {
                     wdController.definition3 = String()
                     for (index, definition) in JSONMeanings[number].definitions.enumerated() {
                         let content = "\(index + 1). \(definition.definition)"
                         wdController.definition3.append("\n\(content)")
+                        
+                        if let example = definition.example {
+                            wdController.definition3.append("\nExample: \(example)")
+                        }
                     }
                 }
                 

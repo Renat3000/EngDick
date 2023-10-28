@@ -1,5 +1,5 @@
 //
-//  InDepthScreen.swift
+//  WordDetailsController.swift
 //  Dictionary
 //
 //  Created by Renat Nazyrov on 25.10.2023.
@@ -104,7 +104,7 @@ class WordDetailsController: UIViewController {
         firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
         
         let mainStack = UIStackView(arrangedSubviews: [
-        firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel2, definitionLabel3
+        firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel3, definitionLabel3
         ])
         scrollView.addSubview(mainStack)
         firstStack.widthAnchor.constraint(equalTo: mainStack.widthAnchor).isActive = true
