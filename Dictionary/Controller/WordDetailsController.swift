@@ -26,9 +26,9 @@ class WordDetailsController: UIViewController {
     let definitionLabel1 = UILabel()
     let definitionLabel2 = UILabel()
     let definitionLabel3 = UILabel()
-    var definition1 = String()
-    var definition2 = String()
-    var definition3 = String()
+    var definition1 = NSMutableAttributedString()
+    var definition2 = NSMutableAttributedString()
+    var definition3 = NSMutableAttributedString()
     
     let favorites = FavoritesController()
     let item = FavoritesItem()
@@ -68,11 +68,11 @@ class WordDetailsController: UIViewController {
         wordLabel.text = word
         phoneticsLabel.text = phonetic
         partOfSpeechLabel1.text = partOfSpeech1
-        definitionLabel1.text = definition1
+        definitionLabel1.attributedText = definition1
         partOfSpeechLabel2.text = partOfSpeech2
-        definitionLabel2.text = definition2
+        definitionLabel2.attributedText = definition2
         partOfSpeechLabel3.text = partOfSpeech3
-        definitionLabel3.text = definition3
+        definitionLabel3.attributedText = definition3
         
         wordLabel.font = .systemFont(ofSize: 30)
         phoneticsLabel.font = .systemFont(ofSize: 20)
@@ -81,11 +81,8 @@ class WordDetailsController: UIViewController {
         partOfSpeechLabel2.font = .systemFont(ofSize: 20)
         partOfSpeechLabel2.font = .systemFont(ofSize: 20)
 
-        definitionLabel1.font = .systemFont(ofSize: 18)
         definitionLabel1.numberOfLines = 0
-        definitionLabel2.font = .systemFont(ofSize: 18)
         definitionLabel2.numberOfLines = 0
-        definitionLabel3.font = .systemFont(ofSize: 18)
         definitionLabel3.numberOfLines = 0
         
         let wordStack = UIStackView(arrangedSubviews: [

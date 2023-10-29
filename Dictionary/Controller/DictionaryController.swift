@@ -99,74 +99,97 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         self.JSONMeanings = item.meanings
         let count = 0...JSONMeanings.count-1
         for number in count {
+            
+            let lineBreak = NSAttributedString(string: "\n")
             switch number {
             case 0:
                 wdController.partOfSpeech1 = JSONMeanings[number].partOfSpeech ?? "no info"
                 
+//                the AGE of attributed text! an example how to do it
+//                let regularText = NSAttributedString(
+//                    string: JSONMeanings[number].definitions[0].definition,
+//                    attributes: nil // Не указываем дополнительные атрибуты, если хотим regular. если хотим italic:
+//                    attributes: [.font: UIFont.italicSystemFont(ofSize: 18)]
+//                )
+//                some label.attributedText = regularText
+//
+//                the olde style, just a regular string
+//                wdController.definition1 = JSONMeanings[number].definitions[0].definition
+                
                 if JSONMeanings[number].definitions.count == 1 {
-                    wdController.definition1 = JSONMeanings[number].definitions[0].definition
+                    
+                    wdController.definition1 = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
                     
                     if let example = JSONMeanings[number].definitions[0].example {
-                        wdController.definition1.append("\nExample: \(example)")
+                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                        wdController.definition1.append(exampleText)
                     }
-                    
                 } else {
-                    wdController.definition1 = String()
+                    
                     for (index, definition) in JSONMeanings[number].definitions.enumerated() {
                         let content = "\(index + 1). \(definition.definition)"
-                        wdController.definition1.append("\n\(content)")
+                        let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+                        wdController.definition1.append(contentText)
                         
                         if let example = definition.example {
-                            wdController.definition1.append("\nExample: \(example)")
+                            let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                            wdController.definition1.append(exampleText)
                         }
                         
+                        wdController.definition1.append(lineBreak)
                     }
-                    // old, not enumerated
-//                    JSONMeanings[number].definitions.forEach({
-//                        wdController.definition1.append("\n\($0.definition)")
-//                    })
                 }
                 
             case 1:
                 wdController.partOfSpeech2 = JSONMeanings[number].partOfSpeech ?? "no info"
-//                item = JSONTopResult[indexPath.item]
                 if JSONMeanings[number].definitions.count == 1 {
-                    wdController.definition2 = JSONMeanings[number].definitions[0].definition
-                   
-                    if let example = JSONMeanings[number].definitions[0].example {
-                        wdController.definition2.append("\nExample: \(example)")
-                    }
                     
+                    wdController.definition2 = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
+                    
+                    if let example = JSONMeanings[number].definitions[0].example {
+                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                        wdController.definition2.append(exampleText)
+                    }
                 } else {
-                    wdController.definition2 = String()
+                    
                     for (index, definition) in JSONMeanings[number].definitions.enumerated() {
                         let content = "\(index + 1). \(definition.definition)"
-                        wdController.definition2.append("\n\(content)")
-                        if let example = definition.example {
-                            wdController.definition2.append("\nExample: \(example)")
-                        }
-                    }
-                }
-                
-            case 2:
-                wdController.partOfSpeech3 = JSONMeanings[number].partOfSpeech ?? "no info"
-//                item = JSONTopResult[indexPath.item]
-                if JSONMeanings[number].definitions.count == 1 {
-                    wdController.definition3 = JSONMeanings[number].definitions[0].definition
-                   
-                    if let example = JSONMeanings[number].definitions[0].example {
-                        wdController.definition3.append("\nExample: \(example)")
-                    }
-                    
-                } else {
-                    wdController.definition3 = String()
-                    for (index, definition) in JSONMeanings[number].definitions.enumerated() {
-                        let content = "\(index + 1). \(definition.definition)"
-                        wdController.definition3.append("\n\(content)")
+                        let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+                        wdController.definition2.append(contentText)
                         
                         if let example = definition.example {
-                            wdController.definition3.append("\nExample: \(example)")
+                            let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                            wdController.definition2.append(exampleText)
                         }
+                        
+                        wdController.definition2.append(lineBreak)
+                    }
+                }
+
+            case 2:
+                wdController.partOfSpeech3 = JSONMeanings[number].partOfSpeech ?? "no info"
+
+                if JSONMeanings[number].definitions.count == 1 {
+                    
+                    wdController.definition3 = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
+                    
+                    if let example = JSONMeanings[number].definitions[0].example {
+                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                        wdController.definition3.append(exampleText)
+                    }
+                } else {
+                    
+                    for (index, definition) in JSONMeanings[number].definitions.enumerated() {
+                        let content = "\(index + 1). \(definition.definition)"
+                        let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+                        wdController.definition3.append(contentText)
+                        
+                        if let example = definition.example {
+                            let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                            wdController.definition3.append(exampleText)
+                        }
+                        
+                        wdController.definition3.append(lineBreak)
                     }
                 }
                 
