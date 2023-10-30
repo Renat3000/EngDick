@@ -93,6 +93,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         let item = JSONTopResult[indexPath.item]
         let wdController = WordDetailsController()
         
+        wdController.itemWasAtCell = Int16(indexPath.item)
         wdController.word = item.word
         wdController.phonetic = item.phonetic ?? "no phonetics"
         

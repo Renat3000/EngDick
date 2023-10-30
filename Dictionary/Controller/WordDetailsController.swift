@@ -29,6 +29,7 @@ class WordDetailsController: UIViewController {
     var definition1 = NSMutableAttributedString()
     var definition2 = NSMutableAttributedString()
     var definition3 = NSMutableAttributedString()
+    var itemWasAtCell = Int16()
     
     let favorites = FavoritesController()
     let item = FavoritesItem()
@@ -38,7 +39,7 @@ class WordDetailsController: UIViewController {
         let starImage = UIImage(systemName: "star")
         button.setImage(starImage, for: .normal)
         button.tintColor = .systemBlue
-        button.addTarget(WordDetailsController.self, action: #selector(didTapStar), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapStar), for: .touchUpInside)
 
         return button
     }()
@@ -130,7 +131,7 @@ class WordDetailsController: UIViewController {
             
             if isBookmarked {
                 starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-                favorites.createItem(name: word)
+                favorites.createItem(name: word, itemCell: itemWasAtCell)
             } else {
                 starButton.setImage(UIImage(systemName: "star"), for: .normal)
                 // need to delete the item/word from the list, don't know how yet
