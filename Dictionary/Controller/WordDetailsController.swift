@@ -32,7 +32,7 @@ class WordDetailsController: UIViewController {
     var itemWasAtCell = Int16()
     
     let favorites = FavoritesController()
-    let item = FavoritesItem()
+    let coreDataItem = FavoritesItem()
     var isBookmarked: Bool = false
     let starButton: UIButton = {
         let button = UIButton(type: .system)
@@ -66,6 +66,11 @@ class WordDetailsController: UIViewController {
         view.clipsToBounds = true
         view.addSubview(scrollView)
         
+        if isBookmarked {
+            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+        } else {
+            starButton.setImage(UIImage(systemName: "star"), for: .normal)
+        }
         wordLabel.text = word
         phoneticsLabel.text = phonetic
         partOfSpeechLabel1.text = partOfSpeech1
@@ -134,10 +139,10 @@ class WordDetailsController: UIViewController {
                 favorites.createItem(name: word, itemCell: itemWasAtCell)
             } else {
                 starButton.setImage(UIImage(systemName: "star"), for: .normal)
-                // need to delete the item/word from the list, don't know how yet
-//                favorites.deleteItem(item: word) - doesn't work. Cannot convert value of type 'String' to expected argument type 'FavoritesItem'
+                favorites.deleteItem(item: coreDataItem)
             }
         }
+            favorites.tableView.reloadData()
     }
 }
 

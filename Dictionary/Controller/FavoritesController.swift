@@ -35,6 +35,12 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap)) decided to ditch this function for a while
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+         super.viewWillAppear(animated)
+        getAllItems()
+        tableView.reloadData()
+     }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return models.count
     }
@@ -87,6 +93,8 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
                 let wdController = WordDetailsController()
                 wdController.word = item.word
                 wdController.phonetic = item.phonetic ?? "no phonetics"
+                wdController.isBookmarked = true
+                wdController.itemWasAtCell = self.coreDataItem.itemCell
                 for number in count {
                     switch number {
                     case 0:
