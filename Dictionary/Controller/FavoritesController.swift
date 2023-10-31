@@ -10,6 +10,7 @@ import UIKit
 class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var coreDataItem = FavoritesItem()
     
     let tableView: UITableView = {
         let table = UITableView()
@@ -46,16 +47,89 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         return cell
     }
     
+    fileprivate var JSONTopResult = [JSONStruct]() {
+        didSet {
+            
+            func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
+                wdPartOfSpeech = JSONMeanings[number].partOfSpeech ?? "no info"
+                
+                if JSONMeanings[number].definitions.count == 1 {
+                    wdDefinition = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
+                    
+                    if let example = JSONMeanings[number].definitions[0].example {
+                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                        wdDefinition.append(exampleText)
+                    }
+                } else {
+                    for (index, definition) in JSONMeanings[number].definitions.enumerated() {
+                        let content = "\(index + 1). \(definition.definition)"
+                        let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+                        wdDefinition.append(contentText)
+                        
+                        if let example = definition.example {
+                            let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                            wdDefinition.append(exampleText)
+                        }
+                        wdDefinition.append(lineBreak)
+                    }
+                }
+            }
+            
+            let path = Int(self.coreDataItem.itemCell)
+            
+            let item = self.JSONTopResult[path]
+            self.JSONMeanings = JSONTopResult[path].meanings
+            
+            let count = 0...self.JSONMeanings.count-1
+            let lineBreak = NSAttributedString(string: "\n")
+            
+            DispatchQueue.main.async {
+                let wdController = WordDetailsController()
+                wdController.word = item.word
+                wdController.phonetic = item.phonetic ?? "no phonetics"
+                for number in count {
+                    switch number {
+                    case 0:
+                        setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech1, wdDefinition: &wdController.definition1, number: number)
+                    case 1:
+                        setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech2, wdDefinition: &wdController.definition2, number: number)
+                    case 2:
+                        setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech3, wdDefinition: &wdController.definition3, number: number)
+                    default:
+                        break
+                    }
+                }
+                self.navigationController?.pushViewController(wdController, animated: true)
+            }
+        }
+    }
+
+    fileprivate var JSONMeanings = [Meaning]()
+    fileprivate func fetchDictionary(searchTerm: String) {
+        //get back json-fetched data from the Service file
+        print("firing off request, just wait!")
+        Service.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
+            
+            
+            if let err = err {
+                print("failed to fetch dictionary entries", err)
+                return
+            }
+            
+            self.JSONTopResult = JSONStruct
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let item = models[indexPath.row]
         
-        let actionSheet = UIAlertController(title: "Delete?", message: nil, preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        actionSheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [weak self] _ in
-            self?.deleteItem(item: item)
-        }))
-        present(actionSheet, animated: true)
+        coreDataItem = models[indexPath.row]
+        if let word = coreDataItem.word {
+            fetchDictionary(searchTerm: word)
+        }
     }
     // CoreData functions
     
