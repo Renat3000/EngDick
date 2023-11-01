@@ -8,9 +8,9 @@
 import UIKit
 
 class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var coreDataItem = FavoritesItem()
+    let wdController = WordDetailsController()
     
     let tableView: UITableView = {
         let table = UITableView()
@@ -20,7 +20,8 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     }()
     
     private var models = [FavoritesItem]()
-
+    var coreDataItem = FavoritesItem()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -34,12 +35,6 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap)) decided to ditch this function for a while
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-         super.viewWillAppear(animated)
-        getAllItems()
-        tableView.reloadData()
-     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return models.count
@@ -89,11 +84,11 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
             let count = 0...self.JSONMeanings.count-1
             let lineBreak = NSAttributedString(string: "\n")
             
-            DispatchQueue.main.async {
-                let wdController = WordDetailsController()
+            DispatchQueue.main.async { [self] in
                 wdController.word = item.word
                 wdController.phonetic = item.phonetic ?? "no phonetics"
                 wdController.isBookmarked = true
+                wdController.coreDataItem = self.coreDataItem
                 wdController.itemWasAtCell = self.coreDataItem.itemCell
                 for number in count {
                     switch number {
@@ -133,7 +128,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        wdController.delegate = self
         coreDataItem = models[indexPath.row]
         if let word = coreDataItem.word {
             fetchDictionary(searchTerm: word)
@@ -161,8 +156,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         do {
             try context.save()
             getAllItems()
-        }
-        catch {
+        } catch {
             
         }
     }
@@ -173,9 +167,29 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         do {
             try context.save()
             getAllItems()
-        }
-        catch {
+        } catch {
             
         }
+    }
+
+}
+
+extension FavoritesController: WordDetailsDelegate {
+    
+    func didToggleBookmark(item: Any, itemCell: Int16?, isBookmarked: Bool) {
+        if isBookmarked {
+            if let word = item as? String {
+                //  для добавления в Core Data
+                if let cell = itemCell {
+                    createItem(name: word, itemCell: cell)
+                }
+            }
+        } else {
+            if let coreDataItem = item as? FavoritesItem {
+                // для удаления из Core Data
+                deleteItem(item: coreDataItem)
+            }
+        }
+        tableView.reloadData()
     }
 }

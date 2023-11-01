@@ -9,6 +9,8 @@ import UIKit
 
 class WordDetailsController: UIViewController {
     
+    weak var delegate: WordDetailsDelegate?
+
     let scrollView = UIScrollView()
     let wordLabel = UILabel()
     var word = String()
@@ -31,8 +33,7 @@ class WordDetailsController: UIViewController {
     var definition3 = NSMutableAttributedString()
     var itemWasAtCell = Int16()
     
-    let favorites = FavoritesController()
-    let coreDataItem = FavoritesItem()
+    var coreDataItem = FavoritesItem()
     var isBookmarked: Bool = false
     let starButton: UIButton = {
         let button = UIButton(type: .system)
@@ -136,13 +137,16 @@ class WordDetailsController: UIViewController {
             
             if isBookmarked {
                 starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-                favorites.createItem(name: word, itemCell: itemWasAtCell)
+                delegate?.didToggleBookmark(item: word, itemCell: itemWasAtCell, isBookmarked: isBookmarked)
+                print(word,itemWasAtCell,isBookmarked)
             } else {
                 starButton.setImage(UIImage(systemName: "star"), for: .normal)
-                favorites.deleteItem(item: coreDataItem)
+                delegate?.didToggleBookmark(item: coreDataItem, itemCell: nil, isBookmarked: isBookmarked)
             }
         }
-            favorites.tableView.reloadData()
     }
 }
 
+protocol WordDetailsDelegate: AnyObject {
+    func didToggleBookmark(item: Any, itemCell: Int16?, isBookmarked: Bool)
+}
