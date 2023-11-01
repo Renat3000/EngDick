@@ -9,6 +9,7 @@ import UIKit
 
 class WordDetailsController: UIViewController {
     
+    let favoritesService = (UIApplication.shared.delegate as! AppDelegate).favoritesService
     public weak var delegate: WordDetailsDelegate?
 
     let scrollView = UIScrollView()
@@ -33,7 +34,7 @@ class WordDetailsController: UIViewController {
     var definition3 = NSMutableAttributedString()
     var itemWasAtCell = Int16()
     
-    var coreDataItem = FavoritesItem()
+    
     var isBookmarked: Bool = false
     let starButton: UIButton = {
         let button = UIButton(type: .system)
@@ -137,6 +138,7 @@ class WordDetailsController: UIViewController {
             
             if isBookmarked {
                 starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+                favoritesService.createItem(name: word, itemCell: itemWasAtCell)
                 if let delegate = delegate {
                     delegate.didToggleBookmark(item: word, itemCell: itemWasAtCell, isBookmarked: isBookmarked)
                 }
@@ -144,6 +146,9 @@ class WordDetailsController: UIViewController {
                 print(word,itemWasAtCell,isBookmarked)
             } else {
                 starButton.setImage(UIImage(systemName: "star"), for: .normal)
+                var coreDataItem = FavoritesItem()
+                coreDataItem.word = word
+                favoritesService.deleteItem(item: coreDataItem)
                 if let delegate = delegate {
                     delegate.didToggleBookmark(item: coreDataItem, itemCell: nil, isBookmarked: isBookmarked)
                 }
