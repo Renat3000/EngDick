@@ -31,6 +31,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.dataSource = self
         tableView.frame = view.bounds
         tableView.backgroundColor = .systemGray4
+        wdController.delegate = self
         getAllItems()
         
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap)) decided to ditch this function for a while
@@ -128,7 +129,6 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        wdController.delegate = self
         coreDataItem = models[indexPath.row]
         if let word = coreDataItem.word {
             fetchDictionary(searchTerm: word)

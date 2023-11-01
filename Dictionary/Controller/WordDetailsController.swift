@@ -9,7 +9,7 @@ import UIKit
 
 class WordDetailsController: UIViewController {
     
-    weak var delegate: WordDetailsDelegate?
+    public weak var delegate: WordDetailsDelegate?
 
     let scrollView = UIScrollView()
     let wordLabel = UILabel()
@@ -137,11 +137,16 @@ class WordDetailsController: UIViewController {
             
             if isBookmarked {
                 starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-                delegate?.didToggleBookmark(item: word, itemCell: itemWasAtCell, isBookmarked: isBookmarked)
+                if let delegate = delegate {
+                    delegate.didToggleBookmark(item: word, itemCell: itemWasAtCell, isBookmarked: isBookmarked)
+                }
+//                FavoritesController().createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
                 print(word,itemWasAtCell,isBookmarked)
             } else {
                 starButton.setImage(UIImage(systemName: "star"), for: .normal)
-                delegate?.didToggleBookmark(item: coreDataItem, itemCell: nil, isBookmarked: isBookmarked)
+                if let delegate = delegate {
+                    delegate.didToggleBookmark(item: coreDataItem, itemCell: nil, isBookmarked: isBookmarked)
+                }
             }
         }
     }

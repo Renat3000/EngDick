@@ -25,8 +25,6 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView.backgroundColor = .systemGray4
-//        view.addSubview(dictionaryView)
-//        dictionaryView.fillSuperview()
         loadSearchBar()
         collectionView.register(DictionaryEntryPreviewCell.self, forCellWithReuseIdentifier: cellId)
     }
