@@ -140,7 +140,7 @@ class WordDetailsController: UIViewController {
                 if let delegate = delegate {
                     delegate.didToggleBookmark(item: word, itemCell: itemWasAtCell, isBookmarked: isBookmarked)
                 }
-//                FavoritesController().createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
+                FavoritesService.shared.createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
                 print(word,itemWasAtCell,isBookmarked)
             } else {
                 starButton.setImage(UIImage(systemName: "star"), for: .normal)

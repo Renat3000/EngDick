@@ -9,7 +9,8 @@ import UIKit
 
 class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let favoritesService = FavoritesService.shared
+    let context = FavoritesService.shared.context
     let wdController = WordDetailsController()
     
     let tableView: UITableView = {
@@ -19,7 +20,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         return table
     }()
     
-    private var models = [FavoritesItem]()
+    private var models = FavoritesService.shared.models
     var coreDataItem = FavoritesItem()
     
     override func viewDidLoad() {
@@ -32,8 +33,8 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.frame = view.bounds
         tableView.backgroundColor = .systemGray4
         wdController.delegate = self
-        getAllItems()
-        
+        tableView.reloadData()
+        print(models)
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap)) decided to ditch this function for a while
     }
 
@@ -110,9 +111,9 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
 
     fileprivate var JSONMeanings = [Meaning]()
     fileprivate func fetchDictionary(searchTerm: String) {
-        //get back json-fetched data from the Service file
+        //get back json-fetched data from the JSONService file
         print("firing off request, just wait!")
-        Service.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
+        JSONService.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
             
             
             if let err = err {
@@ -134,44 +135,6 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
             fetchDictionary(searchTerm: word)
         }
     }
-    // CoreData functions
-    
-    func getAllItems(){
-        do {
-            models = try context.fetch(FavoritesItem.fetchRequest())
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        } catch {
-            
-        }
-    }
-    
-    func createItem(name: String, itemCell: Int16){
-        let newItem = FavoritesItem(context: context)
-        newItem.word = name
-        newItem.dateOfCreation = Date()
-        newItem.itemCell = itemCell
-        do {
-            try context.save()
-            getAllItems()
-        } catch {
-            
-        }
-    }
-    
-    func deleteItem(item: FavoritesItem) {
-        context.delete(item)
-        
-        do {
-            try context.save()
-            getAllItems()
-        } catch {
-            
-        }
-    }
-
 }
 
 extension FavoritesController: WordDetailsDelegate {
@@ -181,13 +144,13 @@ extension FavoritesController: WordDetailsDelegate {
             if let word = item as? String {
                 //  для добавления в Core Data
                 if let cell = itemCell {
-                    createItem(name: word, itemCell: cell)
+                    favoritesService.createItem(name: word, itemCell: cell)
                 }
             }
         } else {
             if let coreDataItem = item as? FavoritesItem {
                 // для удаления из Core Data
-                deleteItem(item: coreDataItem)
+                favoritesService.deleteItem(item: coreDataItem)
             }
         }
         tableView.reloadData()

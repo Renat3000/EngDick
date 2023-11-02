@@ -1,5 +1,5 @@
 //
-//  Service.swift
+//  JSONService.swift
 //  Dictionary
 //
 //  Created by Renat Nazyrov on 22.10.2023.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-class Service {
+class JSONService {
     
-    static let shared = Service() //singleton object
+    static let shared = JSONService() //singleton object
     
     func fetchJSON(searchTerm: String, completion: @escaping ([JSONStruct], Error?) -> ()) {
         let urlString = "https://api.dictionaryapi.dev/api/v2/entries/en/\(searchTerm)"

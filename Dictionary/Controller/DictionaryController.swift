@@ -40,9 +40,9 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     fileprivate var JSONMeanings = [Meaning]()
     
     fileprivate func fetchDictionary(searchTerm: String) {
-        //get back json-fetched data from the Service file
+        //get back json-fetched data from the JSONService file
         print("firing off request, just wait!")
-        Service.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
+        JSONService.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
             
             if let err = err {
                 print("failed to fetch dictionary entries", err)
