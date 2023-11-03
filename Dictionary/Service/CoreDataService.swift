@@ -1,5 +1,5 @@
 //
-//  FavoritesService.swift
+//  CoreDataService.swift
 //  Dictionary
 //
 //  Created by Renat Nazyrov on 02.11.2023.
@@ -8,16 +8,16 @@
 import Foundation
 import UIKit
 
-class FavoritesService {
+class CoreDataService {
     // CoreData functions
     
-    static let shared = FavoritesService() //singleton object?
+    static let shared = CoreDataService() //singleton object?
     private init() {}
     
     lazy var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var models = [FavoritesItem]()
     
-    func getAllItems(){
+    func getAllItems() -> [FavoritesItem] {
+        var models = [FavoritesItem]()
         do {
             models = try context.fetch(FavoritesItem.fetchRequest())
             
@@ -27,6 +27,7 @@ class FavoritesService {
         } catch {
             
         }
+        return models
     }
     
     func createItem(name: String, itemCell: Int16){
@@ -39,6 +40,7 @@ class FavoritesService {
         } catch {
             
         }
+        print(newItem)
     }
     
     func deleteItem(item: FavoritesItem) {

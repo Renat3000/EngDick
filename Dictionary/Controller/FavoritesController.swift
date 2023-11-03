@@ -9,8 +9,8 @@ import UIKit
 
 class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    let favoritesService = FavoritesService.shared
-    let context = FavoritesService.shared.context
+    let coreDataService = CoreDataService.shared
+    let context = CoreDataService.shared.context
     let wdController = WordDetailsController()
     
     let tableView: UITableView = {
@@ -20,7 +20,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         return table
     }()
     
-    private var models = FavoritesService.shared.models
+    private var models = CoreDataService.shared.getAllItems()
     var coreDataItem = FavoritesItem()
     
     override func viewDidLoad() {
@@ -32,9 +32,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.dataSource = self
         tableView.frame = view.bounds
         tableView.backgroundColor = .systemGray4
-        wdController.delegate = self
         tableView.reloadData()
-        print(models)
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap)) decided to ditch this function for a while
     }
 
@@ -45,7 +43,9 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = models[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "word:\(model.word!), cell \(model.itemCell)"
+        if let word = model.word {
+            cell.textLabel?.text = "word:\(word), cell \(model.itemCell)"
+        }
         cell.backgroundColor = .systemGray4
         return cell
     }
@@ -90,7 +90,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
                 wdController.word = item.word
                 wdController.phonetic = item.phonetic ?? "no phonetics"
                 wdController.isBookmarked = true
-                wdController.coreDataItem = self.coreDataItem
+//                wdController.coreDataItem = self.coreDataItem
                 wdController.itemWasAtCell = self.coreDataItem.itemCell
                 for number in count {
                     switch number {
@@ -134,25 +134,5 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         if let word = coreDataItem.word {
             fetchDictionary(searchTerm: word)
         }
-    }
-}
-
-extension FavoritesController: WordDetailsDelegate {
-    
-    func didToggleBookmark(item: Any, itemCell: Int16?, isBookmarked: Bool) {
-        if isBookmarked {
-            if let word = item as? String {
-                //  для добавления в Core Data
-                if let cell = itemCell {
-                    favoritesService.createItem(name: word, itemCell: cell)
-                }
-            }
-        } else {
-            if let coreDataItem = item as? FavoritesItem {
-                // для удаления из Core Data
-                favoritesService.deleteItem(item: coreDataItem)
-            }
-        }
-        tableView.reloadData()
     }
 }

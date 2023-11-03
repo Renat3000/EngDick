@@ -9,12 +9,12 @@ import UIKit
 
 class DictionaryController: UICollectionViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout {
 
-    let dictionaryView: DictionaryView
+//    let dictionaryView: DictionaryView
     fileprivate let cellId = "dictionaryCell"
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     
     init() {
-        dictionaryView = DictionaryView()
+//        dictionaryView = DictionaryView()
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
     
