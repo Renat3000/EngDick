@@ -10,7 +10,6 @@ import UIKit
 class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let coreDataService = CoreDataService.shared
-    let context = CoreDataService.shared.context
     let wdController = WordDetailsController()
     
     let tableView: UITableView = {
@@ -21,7 +20,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     }()
     
     private var models = CoreDataService.shared.getAllItems()
-    var coreDataItem = FavoritesItem()
+    var selectedCoreDataItem: FavoritesItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +54,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
             
             func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
                 wdPartOfSpeech = JSONMeanings[number].partOfSpeech ?? "no info"
+                let lineBreak = NSAttributedString(string: "\n")
                 
                 if JSONMeanings[number].definitions.count == 1 {
                     wdDefinition = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
@@ -78,33 +78,33 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
             }
             
-            let path = Int(self.coreDataItem.itemCell)
-            
-            let item = self.JSONTopResult[path]
-            self.JSONMeanings = JSONTopResult[path].meanings
-            
-            let count = 0...self.JSONMeanings.count-1
-            let lineBreak = NSAttributedString(string: "\n")
-            
-            DispatchQueue.main.async { [self] in
-                wdController.word = item.word
-                wdController.phonetic = item.phonetic ?? "no phonetics"
-                wdController.isBookmarked = true
-//                wdController.coreDataItem = self.coreDataItem
-                wdController.itemWasAtCell = self.coreDataItem.itemCell
-                for number in count {
-                    switch number {
-                    case 0:
-                        setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech1, wdDefinition: &wdController.definition1, number: number)
-                    case 1:
-                        setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech2, wdDefinition: &wdController.definition2, number: number)
-                    case 2:
-                        setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech3, wdDefinition: &wdController.definition3, number: number)
-                    default:
-                        break
+            if let coreDataItem = selectedCoreDataItem {
+                let path = Int(coreDataItem.itemCell)
+                let item = self.JSONTopResult[path]
+                self.JSONMeanings = JSONTopResult[path].meanings
+                
+                let count = 0...self.JSONMeanings.count-1
+                
+                DispatchQueue.main.async { [self] in
+                    wdController.word = item.word
+                    wdController.phonetic = item.phonetic ?? "no phonetics"
+                    wdController.isBookmarked = true
+                    //                wdController.coreDataItem = self.coreDataItem
+                    wdController.itemWasAtCell = coreDataItem.itemCell
+                    for number in count {
+                        switch number {
+                        case 0:
+                            setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech1, wdDefinition: &wdController.definition1, number: number)
+                        case 1:
+                            setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech2, wdDefinition: &wdController.definition2, number: number)
+                        case 2:
+                            setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech3, wdDefinition: &wdController.definition3, number: number)
+                        default:
+                            break
+                        }
                     }
+                    self.navigationController?.pushViewController(wdController, animated: true)
                 }
-                self.navigationController?.pushViewController(wdController, animated: true)
             }
         }
     }
@@ -130,8 +130,8 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        coreDataItem = models[indexPath.row]
-        if let word = coreDataItem.word {
+        selectedCoreDataItem = models[indexPath.row]
+        if let word = selectedCoreDataItem?.word {
             fetchDictionary(searchTerm: word)
         }
     }

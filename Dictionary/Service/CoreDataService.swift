@@ -5,29 +5,34 @@
 //  Created by Renat Nazyrov on 02.11.2023.
 //
 
-import Foundation
 import UIKit
+import CoreData
 
 class CoreDataService {
     // CoreData functions
     
     static let shared = CoreDataService() //singleton object?
-    private init() {}
-    
-    lazy var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    private let context: NSManagedObjectContext
+    private init() {
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("AppDelegate not found")
+        }
+        context = appDelegate.persistentContainer.viewContext
+    }
     
     func getAllItems() -> [FavoritesItem] {
-        var models = [FavoritesItem]()
+//        var models = [FavoritesItem]()
         do {
-            models = try context.fetch(FavoritesItem.fetchRequest())
+            return try context.fetch(FavoritesItem.fetchRequest())
             
-            DispatchQueue.main.async {
+//            DispatchQueue.main.async {
 //                FavoritesController().tableView.reloadData()
-            }
+//            }
         } catch {
-            
+            print("Error fetching items from Core Data: \(error)")
+            return []
         }
-        return models
     }
     
     func createItem(name: String, itemCell: Int16){
@@ -36,9 +41,8 @@ class CoreDataService {
         newItem.itemCell = itemCell
         do {
             try context.save()
-            getAllItems()
         } catch {
-            
+            print("Error creating item in Core Data: \(error)")
         }
         print(newItem)
     }
@@ -48,9 +52,8 @@ class CoreDataService {
         
         do {
             try context.save()
-            getAllItems()
         } catch {
-            
+            print("Error deleting item in Core Data: \(error)")
         }
     }
 }
