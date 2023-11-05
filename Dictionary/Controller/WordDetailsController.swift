@@ -26,9 +26,9 @@ class WordDetailsController: UIViewController {
     let definitionLabel1 = UILabel()
     let definitionLabel2 = UILabel()
     let definitionLabel3 = UILabel()
-    var definition1 = NSMutableAttributedString()
-    var definition2 = NSMutableAttributedString()
-    var definition3 = NSMutableAttributedString()
+    var wordDefinition1 = NSMutableAttributedString()
+    var wordDefinition2 = NSMutableAttributedString()
+    var wordDefinition3 = NSMutableAttributedString()
     var itemWasAtCell = Int16()
     
     var isBookmarked: Bool = false
@@ -42,7 +42,9 @@ class WordDetailsController: UIViewController {
         return button
     }()
     
-    init() {
+    private let item: JSONStruct
+    init(item: JSONStruct) {
+        self.item = item
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,9 +56,56 @@ class WordDetailsController: UIViewController {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
         
+        setupLabels()
         setupViews()
     }
     
+    func setupLabels(){
+        word = item.word
+        phonetic = item.phonetic ?? "no phonetics"
+        let meaning = item.meanings
+        print(meaning)
+        let lineBreak = NSAttributedString(string: "\n")
+        
+        func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
+            wdPartOfSpeech = meaning[number].partOfSpeech ?? "no info"
+            
+            if meaning[number].definitions.count == 1 {
+                wdDefinition = NSMutableAttributedString(string: meaning[number].definitions[0].definition)
+                
+                if let example = meaning[number].definitions[0].example {
+                    let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                    wdDefinition.append(exampleText)
+                }
+            } else {
+                for (index, definition) in meaning[number].definitions.enumerated() {
+                    let content = "\(index + 1). \(definition.definition)"
+                    let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+                    wdDefinition.append(contentText)
+                    
+                    if let example = definition.example {
+                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                        wdDefinition.append(exampleText)
+                    }
+                    wdDefinition.append(lineBreak)
+                }
+            }
+        }
+
+        let count = 0...meaning.count-1
+        for number in count {
+            switch number {
+            case 0:
+                setupDefinitions(wdPartOfSpeech: &partOfSpeech1, wdDefinition: &wordDefinition1, number: number)
+            case 1:
+                setupDefinitions(wdPartOfSpeech: &partOfSpeech2, wdDefinition: &wordDefinition2, number: number)
+            case 2:
+                setupDefinitions(wdPartOfSpeech: &partOfSpeech3, wdDefinition: &wordDefinition3, number: number)
+            default:
+                break
+            }
+        }
+    }
     func setupViews(){
         
         view.backgroundColor = .systemGray5
@@ -72,11 +121,11 @@ class WordDetailsController: UIViewController {
         wordLabel.text = word
         phoneticsLabel.text = phonetic
         partOfSpeechLabel1.text = partOfSpeech1
-        definitionLabel1.attributedText = definition1
+        definitionLabel1.attributedText = wordDefinition1
         partOfSpeechLabel2.text = partOfSpeech2
-        definitionLabel2.attributedText = definition2
+        definitionLabel2.attributedText = wordDefinition2
         partOfSpeechLabel3.text = partOfSpeech3
-        definitionLabel3.attributedText = definition3
+        definitionLabel3.attributedText = wordDefinition3
         
         wordLabel.font = .systemFont(ofSize: 30)
         phoneticsLabel.font = .systemFont(ofSize: 20)

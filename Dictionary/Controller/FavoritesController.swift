@@ -10,7 +10,6 @@ import UIKit
 class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let coreDataService = CoreDataService.shared
-    let wdController = WordDetailsController()
     
     let tableView: UITableView = {
         let table = UITableView()
@@ -20,11 +19,11 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     }()
     
     private var models = CoreDataService.shared.getAllItems()
+    private var theCell: Int?
     var selectedCoreDataItem: FavoritesItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         title = "Favorites"
         view.addSubview(tableView)
         tableView.delegate = self
@@ -51,58 +50,11 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
-            
-            func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
-                wdPartOfSpeech = JSONMeanings[number].partOfSpeech ?? "no info"
-                let lineBreak = NSAttributedString(string: "\n")
-                
-                if JSONMeanings[number].definitions.count == 1 {
-                    wdDefinition = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
-                    
-                    if let example = JSONMeanings[number].definitions[0].example {
-                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-                        wdDefinition.append(exampleText)
-                    }
-                } else {
-                    for (index, definition) in JSONMeanings[number].definitions.enumerated() {
-                        let content = "\(index + 1). \(definition.definition)"
-                        let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
-                        wdDefinition.append(contentText)
-                        
-                        if let example = definition.example {
-                            let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-                            wdDefinition.append(exampleText)
-                        }
-                        wdDefinition.append(lineBreak)
-                    }
-                }
-            }
-            
-            if let coreDataItem = selectedCoreDataItem {
-                let path = Int(coreDataItem.itemCell)
-                let item = self.JSONTopResult[path]
-                self.JSONMeanings = JSONTopResult[path].meanings
-                
-                let count = 0...self.JSONMeanings.count-1
+            if let cellNumber = theCell {
+                let selectedItem = self.JSONTopResult[cellNumber]
                 
                 DispatchQueue.main.async { [self] in
-                    wdController.word = item.word
-                    wdController.phonetic = item.phonetic ?? "no phonetics"
-                    wdController.isBookmarked = true
-                    //                wdController.coreDataItem = self.coreDataItem
-                    wdController.itemWasAtCell = coreDataItem.itemCell
-                    for number in count {
-                        switch number {
-                        case 0:
-                            setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech1, wdDefinition: &wdController.definition1, number: number)
-                        case 1:
-                            setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech2, wdDefinition: &wdController.definition2, number: number)
-                        case 2:
-                            setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech3, wdDefinition: &wdController.definition3, number: number)
-                        default:
-                            break
-                        }
-                    }
+                    let wdController = WordDetailsController(item: selectedItem)
                     self.navigationController?.pushViewController(wdController, animated: true)
                 }
             }
@@ -131,6 +83,9 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         selectedCoreDataItem = models[indexPath.row]
+        if let cell = selectedCoreDataItem?.itemCell {
+            theCell = Int(cell)
+        }
         if let word = selectedCoreDataItem?.word {
             fetchDictionary(searchTerm: word)
         }

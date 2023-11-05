@@ -9,12 +9,10 @@ import UIKit
 
 class DictionaryController: UICollectionViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout {
 
-//    let dictionaryView: DictionaryView
     fileprivate let cellId = "dictionaryCell"
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     
     init() {
-//        dictionaryView = DictionaryView()
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
     
@@ -88,56 +86,9 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let item = JSONTopResult[indexPath.item]
-        let wdController = WordDetailsController()
-        
-        wdController.itemWasAtCell = Int16(indexPath.item)
-        wdController.word = item.word
-        wdController.phonetic = item.phonetic ?? "no phonetics"
-        
-        self.JSONMeanings = item.meanings
-        let lineBreak = NSAttributedString(string: "\n")
-        
-        func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
-            wdPartOfSpeech = JSONMeanings[number].partOfSpeech ?? "no info"
-            
-            if JSONMeanings[number].definitions.count == 1 {
-                wdDefinition = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
-                
-                if let example = JSONMeanings[number].definitions[0].example {
-                    let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-                    wdDefinition.append(exampleText)
-                }
-            } else {
-                for (index, definition) in JSONMeanings[number].definitions.enumerated() {
-                    let content = "\(index + 1). \(definition.definition)"
-                    let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
-                    wdDefinition.append(contentText)
-                    
-                    if let example = definition.example {
-                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-                        wdDefinition.append(exampleText)
-                    }
-                    wdDefinition.append(lineBreak)
-                }
-            }
-        }
-
-        let count = 0...JSONMeanings.count-1
-        for number in count {
-            switch number {
-            case 0:
-                setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech1, wdDefinition: &wdController.definition1, number: number)
-            case 1:
-                setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech2, wdDefinition: &wdController.definition2, number: number)
-            case 2:
-                setupDefinitions(wdPartOfSpeech: &wdController.partOfSpeech3, wdDefinition: &wdController.definition3, number: number)
-            default:
-                break
-            }
-        }
+        let selectedItem = JSONTopResult[indexPath.item]
+        let wdController = WordDetailsController(item: selectedItem)
         navigationController?.pushViewController(wdController, animated: true)
-//        print(item)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -147,7 +98,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
           searchBar.resignFirstResponder() // to hide the keyboard
       }
     
-    //error message in case we don't have a word in the dictionary or there's no internet connection
+    //error message in case we don't have the word in the dictionary or there's no internet connection
     func displayErrorAlert(message: String) {
         let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)

@@ -44,7 +44,6 @@ class CoreDataService {
         } catch {
             print("Error creating item in Core Data: \(error)")
         }
-        print(newItem)
     }
     
     func deleteItem(item: FavoritesItem) {
