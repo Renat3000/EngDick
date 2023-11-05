@@ -19,8 +19,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     }()
     
     private var models = CoreDataService.shared.getAllItems()
-    private var theCell: Int?
-    var selectedCoreDataItem: FavoritesItem?
+    lazy private var theCell = Int()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,18 +49,15 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
-            if let cellNumber = theCell {
-                let selectedItem = self.JSONTopResult[cellNumber]
+                let selectedItem = self.JSONTopResult[theCell]
                 
                 DispatchQueue.main.async { [self] in
                     let wdController = WordDetailsController(item: selectedItem)
                     self.navigationController?.pushViewController(wdController, animated: true)
                 }
-            }
         }
-    }
-
-    fileprivate var JSONMeanings = [Meaning]()
+    } // need to study how I can get rid of it...
+    
     fileprivate func fetchDictionary(searchTerm: String) {
         //get back json-fetched data from the JSONService file
         print("firing off request, just wait!")
@@ -74,19 +70,14 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
             }
             
             self.JSONTopResult = JSONStruct
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        selectedCoreDataItem = models[indexPath.row]
-        if let cell = selectedCoreDataItem?.itemCell {
-            theCell = Int(cell)
-        }
-        if let word = selectedCoreDataItem?.word {
+        let selectedCoreDataItem = models[indexPath.row]
+        theCell = Int(selectedCoreDataItem.itemCell)
+        if let word = selectedCoreDataItem.word {
             fetchDictionary(searchTerm: word)
         }
     }
