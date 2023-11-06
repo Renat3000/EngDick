@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource, passInfoToFavorites {
 
     let coreDataService = CoreDataService.shared
     
@@ -20,6 +20,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     
     private var models = CoreDataService.shared.getAllItems()
     lazy private var theCell = Int()
+    lazy private var theCoreDataItem = FavoritesItem()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +33,12 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.reloadData()
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap)) decided to ditch this function for a while
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        models = CoreDataService.shared.getAllItems()
+        tableView.reloadData()
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return models.count
     }
@@ -52,7 +58,8 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
                 let selectedItem = self.JSONTopResult[theCell]
                 
                 DispatchQueue.main.async { [self] in
-                    let wdController = WordDetailsController(item: selectedItem)
+                    let wdController = WordDetailsController(item: selectedItem, isBookmarked: true)
+                    wdController.wordDetailsDelegate = self
                     self.navigationController?.pushViewController(wdController, animated: true)
                 }
         }
@@ -76,9 +83,18 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedCoreDataItem = models[indexPath.row]
+        theCoreDataItem = selectedCoreDataItem
         theCell = Int(selectedCoreDataItem.itemCell)
         if let word = selectedCoreDataItem.word {
             fetchDictionary(searchTerm: word)
         }
+    }
+    
+    func deleteCurrentCoreDataEntry() {
+        CoreDataService.shared.deleteItem(item: theCoreDataItem)
+        
+    }
+    func refreshList() { // just for the test, this function isn't called
+        print(models)
     }
 }

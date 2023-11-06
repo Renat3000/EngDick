@@ -9,6 +9,7 @@ import UIKit
 
 class WordDetailsController: UIViewController {
     
+    var wordDetailsDelegate: passInfoToFavorites?
     let scrollView = UIScrollView()
     let wordLabel = UILabel()
     var word = String()
@@ -43,8 +44,9 @@ class WordDetailsController: UIViewController {
     }()
     
     private let item: JSONStruct
-    init(item: JSONStruct) {
+    init(item: JSONStruct, isBookmarked: Bool) {
         self.item = item
+        self.isBookmarked = isBookmarked
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -64,7 +66,6 @@ class WordDetailsController: UIViewController {
         word = item.word
         phonetic = item.phonetic ?? "no phonetics"
         let meaning = item.meanings
-        print(meaning)
         let lineBreak = NSAttributedString(string: "\n")
         
         func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
@@ -183,11 +184,18 @@ class WordDetailsController: UIViewController {
             
             if isBookmarked {
                 starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-//                CoreDataService.shared.createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
+                CoreDataService.shared.createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
+                wordDetailsDelegate?.refreshList()
             } else {
                 starButton.setImage(UIImage(systemName: "star"), for: .normal)
+                wordDetailsDelegate?.deleteCurrentCoreDataEntry()
 //                CoreDataService.shared.deleteItem(item: coreDataItem)
             }
         }
     }
+}
+
+protocol passInfoToFavorites {
+    func deleteCurrentCoreDataEntry()
+    func refreshList()
 }

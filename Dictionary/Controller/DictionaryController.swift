@@ -87,7 +87,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let selectedItem = JSONTopResult[indexPath.item]
-        let wdController = WordDetailsController(item: selectedItem)
+        let wdController = WordDetailsController(item: selectedItem, isBookmarked: false)
         navigationController?.pushViewController(wdController, animated: true)
     }
     
