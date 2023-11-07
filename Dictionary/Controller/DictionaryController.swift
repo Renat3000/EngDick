@@ -73,7 +73,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         cell.definitionLabel1.text = JSONMeanings[0].definitions[0].definition
         
         if JSONMeanings[0].definitions.count > 1 {
-            cell.definitionLabel1.text?.append(" ...")
+            cell.definitionLabel1.text?.append("..")
         }
     
         return cell
@@ -81,7 +81,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     
     //only available if we have UICollectionViewDelegateFlowLayout protocol
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width-10, height: 150)
+        return CGSize(width: view.frame.width-10, height: 120)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

@@ -33,7 +33,7 @@ class DictionaryEntryPreviewCell: UICollectionViewCell {
         partOfSpeechLabel1.font = .systemFont(ofSize: 20)
         
         definitionLabel1.font = .systemFont(ofSize: 18)
-        definitionLabel1.numberOfLines = 2
+        definitionLabel1.numberOfLines = 1
         
         let firstStack = UIStackView(arrangedSubviews: [
             wordLabel, phoneticsLabel
