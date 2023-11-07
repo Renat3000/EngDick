@@ -93,7 +93,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
           if let searchText = searchBar.text {
-              fetchDictionary(searchTerm: searchText)
+              fetchDictionary(searchTerm: searchText.replacingOccurrences(of: " ", with: "%20"))
           }
           searchBar.resignFirstResponder() // to hide the keyboard
       }

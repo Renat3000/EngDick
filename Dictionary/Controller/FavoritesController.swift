@@ -86,7 +86,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         theCoreDataItem = selectedCoreDataItem
         theCell = Int(selectedCoreDataItem.itemCell)
         if let word = selectedCoreDataItem.word {
-            fetchDictionary(searchTerm: word)
+            fetchDictionary(searchTerm: word.replacingOccurrences(of: " ", with: "%20"))
         }
     }
     
