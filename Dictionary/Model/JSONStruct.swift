@@ -11,6 +11,7 @@ struct JSONStruct: Decodable {
     let word: String
     let meanings: [Meaning]
     let phonetic: String?
+    let phonetics: [TextAudio]
 }
 
 struct Meaning: Decodable {
@@ -22,4 +23,9 @@ struct Meaning: Decodable {
 struct Definition: Decodable {
     let definition: String
     let example: String?
+}
+
+struct TextAudio: Decodable {
+    let text: String?
+    let audio: String?
 }

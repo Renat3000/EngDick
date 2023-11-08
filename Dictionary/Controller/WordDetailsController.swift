@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import AVFoundation
 
 class WordDetailsController: UIViewController {
     
     var wordDetailsDelegate: passInfoToFavorites?
+    var audioPlayer: AVPlayer?
+
     let scrollView = UIScrollView()
     let wordLabel = UILabel()
     var word = String()
@@ -43,6 +46,17 @@ class WordDetailsController: UIViewController {
         return button
     }()
     
+    var soundButtonIsPressed: Bool = false
+    let soundButton: UIButton = {
+        let button = UIButton(type: .system)
+        let headphonesImage = UIImage(systemName: "headphones.circle")
+        button.setImage(headphonesImage, for: .normal)
+        button.tintColor = .systemBlue
+        button.addTarget(self, action: #selector(didTapHeadphones), for: .touchUpInside)
+
+        return button
+    }()
+    
     private let item: JSONStruct
     init(item: JSONStruct, isBookmarked: Bool) {
         self.item = item
@@ -57,7 +71,6 @@ class WordDetailsController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
-        
         setupLabels()
         setupViews()
     }
@@ -66,6 +79,13 @@ class WordDetailsController: UIViewController {
         word = item.word
         phonetic = item.phonetic ?? "no phonetics"
         let meaning = item.meanings
+        let phonetics = item.phonetics
+        
+//        audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out, for now the code below is commented because sometimes it throws an error, "the index if out of range"
+//        if let audio = item.phonetics[0].audio {
+//                setupAudioPlayer(urlString: audio)
+//        }
+        
         let lineBreak = NSAttributedString(string: "\n")
         
         func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
@@ -147,7 +167,7 @@ class WordDetailsController: UIViewController {
         wordStack.alignment = .lastBaseline
         
         let firstStack = UIStackView(arrangedSubviews: [
-            wordStack, starButton
+            wordStack, soundButton, starButton
         ])
         firstStack.axis = .horizontal
         firstStack.distribution = .equalSpacing
@@ -193,6 +213,32 @@ class WordDetailsController: UIViewController {
             }
         }
     }
+
+// MARK: Audio Functions
+    @objc private func didTapHeadphones() {
+        soundButtonIsPressed.toggle()
+        if soundButtonIsPressed {
+            soundButton.setImage(UIImage(systemName: "headphones.circle.fill"), for: .normal)
+            playAudio()
+        } else {
+            soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
+            stopAudio()
+        }
+    }
+    
+    func setupAudioPlayer(urlString: String) {
+        if let audioURL = URL(string: urlString) {
+            audioPlayer = AVPlayer(url: audioURL)
+        }
+    }
+    
+    func playAudio() {
+        audioPlayer?.play()
+    }
+    func stopAudio() {
+        audioPlayer?.pause()
+    }
+
 }
 
 protocol passInfoToFavorites {
