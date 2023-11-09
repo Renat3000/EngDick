@@ -57,7 +57,7 @@ class WordDetailsController: UIViewController {
         return button
     }()
     
-    private let item: JSONStruct
+    private let item: JSONStruct //maybe so? private var item: JSONStruct?
     init(item: JSONStruct, isBookmarked: Bool) {
         self.item = item
         self.isBookmarked = isBookmarked
@@ -76,15 +76,21 @@ class WordDetailsController: UIViewController {
     }
     
     func setupLabels(){
+        setSoundButtonEnabled(false)
         word = item.word
         phonetic = item.phonetic ?? "no phonetics"
         let meaning = item.meanings
         let phonetics = item.phonetics
         
-//        audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out, for now the code below is commented because sometimes it throws an error, "the index if out of range"
-//        if let audio = item.phonetics[0].audio {
-//                setupAudioPlayer(urlString: audio)
-//        }
+//        audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out
+        phonetics.forEach {
+            if $0.audio != "" {
+            if let audio = $0.audio {
+                setupAudioPlayer(urlString: audio)
+                setSoundButtonEnabled(true)
+                }
+            }
+        }
         
         let lineBreak = NSAttributedString(string: "\n")
         
@@ -238,6 +244,12 @@ class WordDetailsController: UIViewController {
     func stopAudio() {
         audioPlayer?.pause()
     }
+    
+    func setSoundButtonEnabled(_ isEnabled: Bool) {
+        soundButton.isEnabled = isEnabled
+        soundButton.tintColor = isEnabled ? .systemBlue : .systemGray
+    }
+
 
 }
 
