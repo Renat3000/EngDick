@@ -7,10 +7,12 @@
 
 import UIKit
 
-class DictionaryController: UICollectionViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout {
+class DictionaryController: UICollectionViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate {
 
     fileprivate let cellId = "dictionaryCell"
     fileprivate let searchController = UISearchController(searchResultsController: nil)
+    private var searchOptions: [String] = []
+    private var filteredSearchOptions: [String] = []
     
     init() {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
@@ -19,6 +21,13 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private let suggestionsTableView: UITableView = {
+            let tableView = UITableView()
+            tableView.translatesAutoresizingMaskIntoConstraints = false
+            tableView.isHidden = true
+            return tableView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +41,21 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         navigationItem.searchController = self.searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.delegate = self
+//        loadSearchOptions()
+        suggestionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "suggestionCell")
+//        searchController.searchBar.addSubview(suggestionsTableView)
+//
+//        NSLayoutConstraint.activate([
+//            suggestionsTableView.topAnchor.constraint(equalTo: searchController.searchBar.bottomAnchor),
+//               suggestionsTableView.leadingAnchor.constraint(equalTo: searchController.searchBar.leadingAnchor),
+//               suggestionsTableView.trailingAnchor.constraint(equalTo: searchController.searchBar.trailingAnchor),
+//               suggestionsTableView.bottomAnchor.constraint(equalTo: searchController.searchBar.bottomAnchor)
+//        ])
+//
+//        // Устанавливаем делегат и источник данных для таблицы
+//        suggestionsTableView.delegate = self
+//        suggestionsTableView.dataSource = self
+
     }
     
     fileprivate var JSONTopResult = [JSONStruct]()
@@ -91,13 +115,6 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
         navigationController?.pushViewController(wdController, animated: true)
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-          if let searchText = searchBar.text {
-              fetchDictionary(searchTerm: searchText.replacingOccurrences(of: " ", with: "%20"))
-          }
-          searchBar.resignFirstResponder() // to hide the keyboard
-      }
-    
     //error message in case we don't have the word in the dictionary or there's no internet connection
     func displayErrorAlert(message: String) {
         let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
@@ -108,4 +125,57 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    // search suggestions from english.txt file
+    private func loadSearchOptions() {
+          if let path = Bundle.main.path(forResource: "english", ofType: "txt"),
+             let contents = try? String(contentsOfFile: path) {
+              searchOptions = contents.components(separatedBy: .newlines)
+              print(searchOptions[0...4])
+          }
+    }
+ 
+    // MARK: - UISearchBarDelegate
+//
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if !searchText.isEmpty {
+//            // Фильтруем варианты поиска на основе введенного текста
+//            filteredSearchOptions = searchOptions.filter { $0.lowercased().contains(searchText.lowercased()) }
+//            // Показываем таблицу с подсказками
+//            suggestionsTableView.isHidden = false
+//            suggestionsTableView.reloadData()
+//        } else {
+//            // Если текст поиска пуст, скрываем таблицу
+//            suggestionsTableView.isHidden = true
+//        }
+//    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+          if let searchText = searchBar.text {
+              fetchDictionary(searchTerm: searchText.replacingOccurrences(of: " ", with: "%20"))
+          }
+          searchBar.resignFirstResponder() // to hide the keyboard
+    }
+    
+    // MARK: - UITableViewDataSource
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "suggestionCell?", for: indexPath)
+        cell.textLabel?.text = filteredSearchOptions[indexPath.row]
+        return cell
+    }
+
+    // MARK: - UITableViewDelegate
+
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let selectedSuggestion = filteredSearchOptions[indexPath.row]
+//        print("Selected suggestion: \(selectedSuggestion)")
+//
+//        // fire the api
+//    }
+    
 }
