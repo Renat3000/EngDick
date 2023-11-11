@@ -19,6 +19,7 @@
 		CEBCDEA72AE01841003E039C /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA62AE01841003E039C /* DictionaryView.swift */; };
 		CEBCDEAA2AE023B7003E039C /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA92AE023B7003E039C /* Extension.swift */; };
 		CEC7DADC2AE7F44300290575 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEC7DADA2AE7F44300290575 /* CoreDataModel.xcdatamodeld */; };
+		CED1207E2AFFC713005294EE /* ResultsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED1207D2AFFC713005294EE /* ResultsTableController.swift */; };
 		CEF48D2C2ADFF48800852997 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF48D2B2ADFF48800852997 /* AppDelegate.swift */; };
 		CEF48D302ADFF48800852997 /* DictionaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF48D2F2ADFF48800852997 /* DictionaryController.swift */; };
 		CEF48D352ADFF48900852997 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEF48D342ADFF48900852997 /* Assets.xcassets */; };
@@ -38,6 +39,7 @@
 		CEBCDEA62AE01841003E039C /* DictionaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CEBCDEA92AE023B7003E039C /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		CEC7DADB2AE7F44300290575 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
+		CED1207D2AFFC713005294EE /* ResultsTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsTableController.swift; sourceTree = "<group>"; };
 		CEF48D282ADFF48800852997 /* Dictionary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dictionary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF48D2B2ADFF48800852997 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEF48D2F2ADFF48800852997 /* DictionaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryController.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 			children = (
 				CEF48D2F2ADFF48800852997 /* DictionaryController.swift */,
 				CE15E8DE2AE951190031F0EE /* WordDetailsController.swift */,
+				CED1207D2AFFC713005294EE /* ResultsTableController.swift */,
 				CEBCDEA42AE0158B003E039C /* FavoritesController.swift */,
 				CEBCDEA12AE01185003E039C /* BaseTabBarController.swift */,
 			);
@@ -211,6 +214,7 @@
 				CE06D65E2AE5715F00D12DCC /* JSONService.swift in Sources */,
 				CEF48D2C2ADFF48800852997 /* AppDelegate.swift in Sources */,
 				CEBCDEA72AE01841003E039C /* DictionaryView.swift in Sources */,
+				CED1207E2AFFC713005294EE /* ResultsTableController.swift in Sources */,
 				CE1A60E32AF411D50057A427 /* CoreDataService.swift in Sources */,
 				CEBCDE9F2AE00819003E039C /* JSONStruct.swift in Sources */,
 			);
