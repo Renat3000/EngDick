@@ -7,56 +7,42 @@
 
 import UIKit
 
-class DictionaryController: UICollectionViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate {
+class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     fileprivate let cellId = "dictionaryCell"
-    var searchController: UISearchController!
+    var searchController = UISearchController(searchResultsController: nil)
     private var searchOptions: [String] = []
     private var filteredSearchOptions: [String] = []
-    
-    init() {
-        super.init(collectionViewLayout: UICollectionViewFlowLayout())
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     private let suggestionsTableView: UITableView = {
             let tableView = UITableView()
             tableView.translatesAutoresizingMaskIntoConstraints = false
-            tableView.isHidden = true
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: "suggestionCell")
+
             return tableView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView.backgroundColor = .systemGray4
+        view.backgroundColor = .systemGray4
+        view.addSubview(suggestionsTableView)
+        suggestionsTableView.delegate = self
+        suggestionsTableView.dataSource = self
         
-        searchController = UISearchController(searchResultsController: nil)
         loadSearchOptions()
         loadSearchBar()
-        collectionView.register(DictionaryEntryPreviewCell.self, forCellWithReuseIdentifier: cellId)
+        
+        suggestionsTableView.frame = view.bounds
+        suggestionsTableView.backgroundColor = .systemGray4
+        suggestionsTableView.reloadData()
     }
+    
     
     fileprivate func loadSearchBar() {
         definesPresentationContext = true
         navigationItem.searchController = self.searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.delegate = self
-        
-        
-        searchController.searchBar.addSubview(suggestionsTableView)
-//
-//        NSLayoutConstraint.activate([
-//            suggestionsTableView.topAnchor.constraint(equalTo: searchController.searchBar.bottomAnchor),
-//               suggestionsTableView.leadingAnchor.constraint(equalTo: searchController.searchBar.leadingAnchor),
-//               suggestionsTableView.trailingAnchor.constraint(equalTo: searchController.searchBar.trailingAnchor),
-//               suggestionsTableView.bottomAnchor.constraint(equalTo: searchController.searchBar.bottomAnchor)
-//        ])
-//
-        suggestionsTableView.delegate = self
-        suggestionsTableView.dataSource = self
     }
     
     fileprivate var JSONTopResult = [JSONStruct]()
@@ -76,44 +62,9 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
             self.JSONTopResult = JSONStruct
             
             DispatchQueue.main.async {
-                self.collectionView.reloadData()
+
             }
         }
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return JSONTopResult.count
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryPreviewCell
-
-        cell.wordLabel.text = JSONTopResult[indexPath.item].word
-        cell.phoneticsLabel.text = JSONTopResult[indexPath.item].phonetic
-        
-        self.JSONMeanings = JSONTopResult[indexPath.item].meanings
-        cell.partOfSpeechLabel1.text = JSONMeanings[0].partOfSpeech
-        
-        cell.definitionLabel1.text = String()
-        cell.definitionLabel1.text = JSONMeanings[0].definitions[0].definition
-        
-        if JSONMeanings[0].definitions.count > 1 {
-            cell.definitionLabel1.text?.append("..")
-        }
-    
-        return cell
-    }
-    
-    //only available if we have UICollectionViewDelegateFlowLayout protocol
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width-10, height: 120)
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let selectedItem = JSONTopResult[indexPath.item]
-        let wdController = WordDetailsController(item: selectedItem, isBookmarked: false)
-        navigationController?.pushViewController(wdController, animated: true)
     }
     
     //error message in case we don't have the word in the dictionary or there's no internet connection
@@ -142,7 +93,7 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
             // Фильтруем варианты поиска на основе введенного текста
             filteredSearchOptions = searchOptions.filter { $0.lowercased().contains(searchText.lowercased()) }
             // Показываем таблицу с подсказками
-            suggestionsTableView.isHidden = false
+//            suggestionsTableView.isHidden = false
             suggestionsTableView.reloadData()
         } else {
             // Если текст поиска пуст, скрываем таблицу
@@ -160,23 +111,25 @@ class DictionaryController: UICollectionViewController, UISearchBarDelegate, UIC
     // MARK: - UITableViewDataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return searchOptions.count-1
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "suggestionCell", for: indexPath)
-        cell.textLabel?.text = filteredSearchOptions[indexPath.row]
+        cell.textLabel?.text = searchOptions[indexPath.row]
+        cell.backgroundColor = .systemGray4
         return cell
     }
 
     // MARK: - UITableViewDelegate
 
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let selectedSuggestion = filteredSearchOptions[indexPath.row]
-//        print("Selected suggestion: \(selectedSuggestion)")
-//
-//        // fire the api
-//    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedSuggestion = searchOptions[indexPath.row]
+        print("Selected suggestion: \(selectedSuggestion)")
+        
+        // fire the api
+        fetchDictionary(searchTerm: selectedSuggestion.replacingOccurrences(of: " ", with: "%20"))
+    }
     
 }
 
