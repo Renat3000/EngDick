@@ -9,7 +9,6 @@ import UIKit
 
 class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
-    fileprivate let cellId = "dictionaryCell"
     var searchController = UISearchController(searchResultsController: nil)
     private var searchOptions: [String] = []
     private var filteredSearchOptions: [String] = []
@@ -61,9 +60,8 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             
             self.JSONTopResult = JSONStruct
-            
             DispatchQueue.main.async {
-
+                self.presentWordDetails(selectedItem: JSONStruct[0])
             }
         }
     }
@@ -135,16 +133,25 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedSuggestion = searchOptions[indexPath.row]
+        var selectedSuggestion = String()
+        if !filteredSearchOptions.isEmpty {
+            selectedSuggestion = filteredSearchOptions[indexPath.row]
+        } else {
+            selectedSuggestion = searchOptions[indexPath.row]
+        }
+        
         print("Selected suggestion: \(selectedSuggestion)")
         
         // fire the api
-//        fetchDictionary(searchTerm: selectedSuggestion.replacingOccurrences(of: " ", with: "%20"))
-//        let selectedItem = JSONTopResult[indexPath.item]
-//        let wdController = WordDetailsController(item: selectedItem, isBookmarked: false)
-//        navigationController?.pushViewController(wdController, animated: true)
+        fetchDictionary(searchTerm: selectedSuggestion.replacingOccurrences(of: " ", with: "%20"))
+  
     }
     
+    func presentWordDetails(selectedItem: JSONStruct) {
+        let wdController = WordDetailsController(item: selectedItem, isBookmarked: false)
+        navigationController?.pushViewController(wdController, animated: true)
+
+    }
 }
 
 //    fileprivate let cellId = "dictionaryCell"
