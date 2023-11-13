@@ -13,6 +13,7 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
     var searchController = UISearchController(searchResultsController: nil)
     private var searchOptions: [String] = []
     private var filteredSearchOptions: [String] = []
+    var filtered = false
     
     private let suggestionsTableView: UITableView = {
             let tableView = UITableView()
@@ -89,16 +90,10 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - UISearchBarDelegate
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if !searchText.isEmpty {
-            // Фильтруем варианты поиска на основе введенного текста
-            filteredSearchOptions = searchOptions.filter { $0.lowercased().contains(searchText.lowercased()) }
-            // Показываем таблицу с подсказками
-//            suggestionsTableView.isHidden = false
-            suggestionsTableView.reloadData()
-        } else {
-            // Если текст поиска пуст, скрываем таблицу
-            suggestionsTableView.isHidden = true
-        }
+        filteredSearchOptions.removeAll()
+        filteredSearchOptions = searchOptions.filter { $0.lowercased().starts(with: searchText.lowercased()) }
+        suggestionsTableView.reloadData()
+        filtered = true
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -108,16 +103,32 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
           searchBar.resignFirstResponder() // to hide the keyboard
     }
     
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        filteredSearchOptions.removeAll()
+        filtered = false
+        suggestionsTableView.reloadData()
+    }
+    
     // MARK: - UITableViewDataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchOptions.count-1
+        if !filteredSearchOptions.isEmpty {
+            return filteredSearchOptions.count
+        }
+        return filtered ? 0 : searchOptions.count-1
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "suggestionCell", for: indexPath)
-        cell.textLabel?.text = searchOptions[indexPath.row]
         cell.backgroundColor = .systemGray4
+        
+        if !filteredSearchOptions.isEmpty {
+            cell.textLabel?.text = filteredSearchOptions[indexPath.row]
+        } else {
+            cell.textLabel?.text = searchOptions[indexPath.row]
+        }
+        
+        
         return cell
     }
 
@@ -128,7 +139,10 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
         print("Selected suggestion: \(selectedSuggestion)")
         
         // fire the api
-        fetchDictionary(searchTerm: selectedSuggestion.replacingOccurrences(of: " ", with: "%20"))
+//        fetchDictionary(searchTerm: selectedSuggestion.replacingOccurrences(of: " ", with: "%20"))
+//        let selectedItem = JSONTopResult[indexPath.item]
+//        let wdController = WordDetailsController(item: selectedItem, isBookmarked: false)
+//        navigationController?.pushViewController(wdController, animated: true)
     }
     
 }
