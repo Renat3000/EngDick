@@ -46,7 +46,7 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     fileprivate var JSONTopResult = [JSONStruct]()
-    fileprivate var JSONMeanings = [Meaning]()
+//    fileprivate var JSONMeanings = [Meaning]()
     
     fileprivate func fetchDictionary(searchTerm: String) {
         //get back json-fetched data from the JSONService file
@@ -61,7 +61,7 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
             
             self.JSONTopResult = JSONStruct
             DispatchQueue.main.async {
-                self.presentWordDetails(selectedItem: JSONStruct[0])
+                self.presentWordDetails(selectedItem: self.JSONTopResult)
             }
         }
     }
@@ -147,8 +147,8 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
   
     }
     
-    func presentWordDetails(selectedItem: JSONStruct) {
-        let wdController = WordDetailsController(item: selectedItem, isBookmarked: false)
+    func presentWordDetails(selectedItem: [JSONStruct]) {
+        let wdController = WordDetailsController(items: selectedItem, isBookmarked: false)
         navigationController?.pushViewController(wdController, animated: true)
 
     }
@@ -171,7 +171,7 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
 //    }
 //
 //    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryPreviewCell
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
 //
 //        cell.wordLabel.text = JSONTopResult[indexPath.item].word
 //        cell.phoneticsLabel.text = JSONTopResult[indexPath.item].phonetic

@@ -8,9 +8,10 @@
 import UIKit
 import AVFoundation
 
-class WordDetailsController: UIViewController {
+class WordDetailsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var wordDetailsDelegate: passInfoToFavorites?
+    fileprivate let cellId = "dictionaryCell"
     var audioPlayer: AVPlayer?
 
     let scrollView = UIScrollView()
@@ -57,83 +58,119 @@ class WordDetailsController: UIViewController {
         return button
     }()
     
-    private let item: JSONStruct //maybe so? private var item: JSONStruct?
-    init(item: JSONStruct, isBookmarked: Bool) {
-        self.item = item
+    private let items: [JSONStruct] //maybe so: private var item: JSONStruct?
+    init(items: [JSONStruct], isBookmarked: Bool) {
+        
+        self.items = items
         self.isBookmarked = isBookmarked
-        super.init(nibName: nil, bundle: nil)
+        super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
     
-    required init?(coder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.collectionView.backgroundColor = .systemGray4
         navigationItem.largeTitleDisplayMode = .never
-        setupLabels()
-        setupViews()
+        collectionView.register(DictionaryEntryCell.self, forCellWithReuseIdentifier: cellId)
+//        setupLabels()
+//        setupViews()
     }
     
-    func setupLabels(){
-        setSoundButtonEnabled(false)
-        word = item.word
-        phonetic = item.phonetic ?? "no phonetics"
-        let meaning = item.meanings
-        let phonetics = item.phonetics
-        
-//        audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out
-        phonetics.forEach {
-            if $0.audio != "" {
-            if let audio = $0.audio {
-                setupAudioPlayer(urlString: audio)
-                setSoundButtonEnabled(true)
-                }
-            }
-        }
-        
-        let lineBreak = NSAttributedString(string: "\n")
-        
-        func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
-            wdPartOfSpeech = meaning[number].partOfSpeech ?? "no info"
-            
-            if meaning[number].definitions.count == 1 {
-                wdDefinition = NSMutableAttributedString(string: meaning[number].definitions[0].definition)
-                
-                if let example = meaning[number].definitions[0].example {
-                    let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-                    wdDefinition.append(exampleText)
-                }
-            } else {
-                for (index, definition) in meaning[number].definitions.enumerated() {
-                    let content = "\(index + 1). \(definition.definition)"
-                    let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
-                    wdDefinition.append(contentText)
-                    
-                    if let example = definition.example {
-                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-                        wdDefinition.append(exampleText)
-                    }
-                    wdDefinition.append(lineBreak)
-                }
-            }
-        }
-
-        let count = 0...meaning.count-1
-        for number in count {
-            switch number {
-            case 0:
-                setupDefinitions(wdPartOfSpeech: &partOfSpeech1, wdDefinition: &wordDefinition1, number: number)
-            case 1:
-                setupDefinitions(wdPartOfSpeech: &partOfSpeech2, wdDefinition: &wordDefinition2, number: number)
-            case 2:
-                setupDefinitions(wdPartOfSpeech: &partOfSpeech3, wdDefinition: &wordDefinition3, number: number)
-            default:
-                break
-            }
-        }
+    // MARK: collectionView methods
+    //  if we use collectionView: UICollectionViewController, UICollectionViewDelegateFlowLayout
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//            return JSONTopResult.count
+        return items.count
     }
-    func setupViews(){
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
+        
+        cell.wordLabel.text = items[indexPath.item].word
+        cell.phoneticsLabel.text = items[indexPath.item].phonetic
+        
+        let JSONMeanings = items[indexPath.item].meanings
+        cell.partOfSpeechLabel1.text = JSONMeanings[0].partOfSpeech
+        
+        cell.definitionLabel1.text = String()
+        cell.definitionLabel1.text = JSONMeanings[0].definitions[0].definition
+        
+        if JSONMeanings[0].definitions.count > 1 {
+            cell.definitionLabel1.text?.append("..")
+        }
+        
+        return cell
+    }
+    
+    // MARK:  UICollectionViewDelegateFlowLayout protocol
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width-10, height: 300)
+    }
+    
+//    func setupLabels() {
+//        setSoundButtonEnabled(false)
+//        word = items.word
+//        phonetic = items.phonetic ?? "no phonetics"
+//        let meaning = items.meanings
+//        let phonetics = items.phonetics
+//
+////        audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out
+//        phonetics.forEach {
+//            if $0.audio != "" {
+//            if let audio = $0.audio {
+//                setupAudioPlayer(urlString: audio)
+//                setSoundButtonEnabled(true)
+//                }
+//            }
+//        }
+//
+//        let lineBreak = NSAttributedString(string: "\n")
+//
+//        func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
+//            wdPartOfSpeech = meaning[number].partOfSpeech ?? "no info"
+//
+//            if meaning[number].definitions.count == 1 {
+//                wdDefinition = NSMutableAttributedString(string: meaning[number].definitions[0].definition)
+//
+//                if let example = meaning[number].definitions[0].example {
+//                    let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+//                    wdDefinition.append(exampleText)
+//                }
+//            } else {
+//                for (index, definition) in meaning[number].definitions.enumerated() {
+//                    let content = "\(index + 1). \(definition.definition)"
+//                    let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+//                    wdDefinition.append(contentText)
+//
+//                    if let example = definition.example {
+//                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+//                        wdDefinition.append(exampleText)
+//                    }
+//                    wdDefinition.append(lineBreak)
+//                }
+//            }
+//        }
+//
+//        let count = 0...meaning.count-1
+//        for number in count {
+//            switch number {
+//            case 0:
+//                setupDefinitions(wdPartOfSpeech: &partOfSpeech1, wdDefinition: &wordDefinition1, number: number)
+//            case 1:
+//                setupDefinitions(wdPartOfSpeech: &partOfSpeech2, wdDefinition: &wordDefinition2, number: number)
+//            case 2:
+//                setupDefinitions(wdPartOfSpeech: &partOfSpeech3, wdDefinition: &wordDefinition3, number: number)
+//            default:
+//                break
+//            }
+//        }
+//    }
+    
+    func setupViews() {
         
         view.backgroundColor = .systemGray5
 //        view.layer.cornerRadius = min(view.frame.width, view.frame.height) / 10
@@ -221,6 +258,7 @@ class WordDetailsController: UIViewController {
     }
 
 // MARK: Audio Functions
+    
     @objc private func didTapHeadphones() {
         soundButtonIsPressed.toggle()
         if soundButtonIsPressed {
@@ -252,7 +290,7 @@ class WordDetailsController: UIViewController {
 
 
 }
-
+// MARK: passInfoToFavorites protocol
 protocol passInfoToFavorites {
     func deleteCurrentCoreDataEntry()
     func refreshList()

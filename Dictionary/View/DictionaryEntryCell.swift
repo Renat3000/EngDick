@@ -1,5 +1,5 @@
 //
-//  DictionaryEntryPreviewCell.swift
+//  DictionaryEntryCell.swift
 //  Dictionary
 //
 //  Created by Renat Nazyrov on 21.10.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DictionaryEntryPreviewCell: UICollectionViewCell {
+class DictionaryEntryCell: UICollectionViewCell {
     
     let wordLabel = UILabel()
     let phoneticsLabel = UILabel()

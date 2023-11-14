@@ -55,10 +55,10 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
-                let selectedItem = self.JSONTopResult[theCell]
-                
+//                let selectedItem = self.JSONTopResult[theCell]
+                let selectedItem = self.JSONTopResult
                 DispatchQueue.main.async { [self] in
-                    let wdController = WordDetailsController(item: selectedItem, isBookmarked: true)
+                    let wdController = WordDetailsController(items: selectedItem, isBookmarked: true)
                     wdController.wordDetailsDelegate = self
                     self.navigationController?.pushViewController(wdController, animated: true)
                 }
