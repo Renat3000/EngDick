@@ -14,29 +14,13 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     fileprivate let cellId = "dictionaryCell"
     var audioPlayer: AVPlayer?
 
-    let scrollView = UIScrollView()
     let wordLabel = UILabel()
-    var word = String()
+    let word = String()
     
-    let phoneticsLabel = UILabel()
-    var phonetic = String()
-    
-    let partOfSpeechLabel1 = UILabel()
-    let partOfSpeechLabel2 = UILabel()
-    let partOfSpeechLabel3 = UILabel()
-    var partOfSpeech1 = String()
-    var partOfSpeech2 = String()
-    var partOfSpeech3 = String()
-    
-    let definitionLabel1 = UILabel()
-    let definitionLabel2 = UILabel()
-    let definitionLabel3 = UILabel()
-    var wordDefinition1 = NSMutableAttributedString()
-    var wordDefinition2 = NSMutableAttributedString()
-    var wordDefinition3 = NSMutableAttributedString()
+    let scrollView = UIScrollView()
     var itemWasAtCell = Int16()
-    
     var isBookmarked: Bool = false
+    
     let starButton: UIButton = {
         let button = UIButton(type: .system)
         let starImage = UIImage(systemName: "star")
@@ -99,7 +83,10 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         cell.definitionLabel1.text = JSONMeanings[0].definitions[0].definition
         
         if JSONMeanings[0].definitions.count > 1 {
-            cell.definitionLabel1.text?.append("..")
+            cell.definitionLabel2.text = JSONMeanings[0].definitions[1].definition
+//            if JSONMeanings[0].definitions[2] != nil {
+//                cell.definitionLabel3.text = JSONMeanings[0].definitions[2].definition
+//            }
         }
         
         return cell
@@ -170,76 +157,76 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 //        }
 //    }
     
-    func setupViews() {
-        
-        view.backgroundColor = .systemGray5
-//        view.layer.cornerRadius = min(view.frame.width, view.frame.height) / 10
-        view.clipsToBounds = true
-        view.addSubview(scrollView)
-        
-        if isBookmarked {
-            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-        } else {
-            starButton.setImage(UIImage(systemName: "star"), for: .normal)
-        }
-        wordLabel.text = word
-        phoneticsLabel.text = phonetic
-        partOfSpeechLabel1.text = partOfSpeech1
-        definitionLabel1.attributedText = wordDefinition1
-        partOfSpeechLabel2.text = partOfSpeech2
-        definitionLabel2.attributedText = wordDefinition2
-        partOfSpeechLabel3.text = partOfSpeech3
-        definitionLabel3.attributedText = wordDefinition3
-        
-        wordLabel.font = .systemFont(ofSize: 30)
-        phoneticsLabel.font = .systemFont(ofSize: 20)
-        phoneticsLabel.textColor = .systemGray
-        partOfSpeechLabel1.font = .systemFont(ofSize: 20)
-        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
-        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
-
-        definitionLabel1.numberOfLines = 0
-        definitionLabel2.numberOfLines = 0
-        definitionLabel3.numberOfLines = 0
-        
-        let wordStack = UIStackView(arrangedSubviews: [
-        wordLabel, phoneticsLabel
-        ])
-        wordStack.axis = .horizontal
-        wordStack.translatesAutoresizingMaskIntoConstraints = false
-        wordStack.alignment = .lastBaseline
-        
-        let firstStack = UIStackView(arrangedSubviews: [
-            wordStack, soundButton, starButton
-        ])
-        firstStack.axis = .horizontal
-        firstStack.distribution = .equalSpacing
-        firstStack.translatesAutoresizingMaskIntoConstraints = false
-        firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
-        
-        let mainStack = UIStackView(arrangedSubviews: [
-        firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel3, definitionLabel3
-        ])
-        scrollView.addSubview(mainStack)
-        firstStack.widthAnchor.constraint(equalTo: mainStack.widthAnchor).isActive = true
-        mainStack.translatesAutoresizingMaskIntoConstraints = false
-        mainStack.axis = .vertical
-        mainStack.spacing = 12
-        mainStack.alignment = .top
-    
-        mainStack.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-        mainStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
-        mainStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
-        mainStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        mainStack.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
-    }
+//    func setupViews() {
+//
+//        view.backgroundColor = .systemGray5
+////        view.layer.cornerRadius = min(view.frame.width, view.frame.height) / 10
+//        view.clipsToBounds = true
+//        view.addSubview(scrollView)
+//
+//        if isBookmarked {
+//            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+//        } else {
+//            starButton.setImage(UIImage(systemName: "star"), for: .normal)
+//        }
+//        wordLabel.text = word
+//        phoneticsLabel.text = phonetic
+//        partOfSpeechLabel1.text = partOfSpeech1
+//        definitionLabel1.attributedText = wordDefinition1
+//        partOfSpeechLabel2.text = partOfSpeech2
+//        definitionLabel2.attributedText = wordDefinition2
+//        partOfSpeechLabel3.text = partOfSpeech3
+//        definitionLabel3.attributedText = wordDefinition3
+//
+//        wordLabel.font = .systemFont(ofSize: 30)
+//        phoneticsLabel.font = .systemFont(ofSize: 20)
+//        phoneticsLabel.textColor = .systemGray
+//        partOfSpeechLabel1.font = .systemFont(ofSize: 20)
+//        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
+//        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
+//
+//        definitionLabel1.numberOfLines = 0
+//        definitionLabel2.numberOfLines = 0
+//        definitionLabel3.numberOfLines = 0
+//
+//        let wordStack = UIStackView(arrangedSubviews: [
+//        wordLabel, phoneticsLabel
+//        ])
+//        wordStack.axis = .horizontal
+//        wordStack.translatesAutoresizingMaskIntoConstraints = false
+//        wordStack.alignment = .lastBaseline
+//
+//        let firstStack = UIStackView(arrangedSubviews: [
+//            wordStack, soundButton, starButton
+//        ])
+//        firstStack.axis = .horizontal
+//        firstStack.distribution = .equalSpacing
+//        firstStack.translatesAutoresizingMaskIntoConstraints = false
+//        firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
+//
+//        let mainStack = UIStackView(arrangedSubviews: [
+//        firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel3, definitionLabel3
+//        ])
+//        scrollView.addSubview(mainStack)
+//        firstStack.widthAnchor.constraint(equalTo: mainStack.widthAnchor).isActive = true
+//        mainStack.translatesAutoresizingMaskIntoConstraints = false
+//        mainStack.axis = .vertical
+//        mainStack.spacing = 12
+//        mainStack.alignment = .top
+//
+//        mainStack.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+//        mainStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
+//        mainStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+//        mainStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+//        mainStack.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+//
+//        scrollView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
+//        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+//        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+//        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
+//    }
     
     @objc private func didTapStar() {
         if let word = wordLabel.text {
