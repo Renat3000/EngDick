@@ -24,7 +24,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     var wordDefinition2 = NSMutableAttributedString()
     var wordDefinition3 = NSMutableAttributedString()
     
-    let scrollView = UIScrollView()
     var itemWasAtCell = Int16()
     var isBookmarked: Bool = false
     
@@ -66,8 +65,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         self.collectionView.backgroundColor = .systemGray4
         navigationItem.largeTitleDisplayMode = .never
         collectionView.register(DictionaryEntryCell.self, forCellWithReuseIdentifier: cellId)
-//        setupLabels()
-//        setupViews()
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -83,21 +80,21 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         return items.count
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
-        
-        cell.wordLabel.text = items[indexPath.item].word
-        cell.phoneticsLabel.text = items[indexPath.item].phonetic ?? "no phonetics"
-        
-        let JSONMeanings = items[indexPath.item].meanings
+    private func configureCell(_ cell: DictionaryEntryCell, forItemAt indexPath: IndexPath) {
+        let item = items[indexPath.item]
+
+        cell.wordLabel.text = item.word
+        cell.phoneticsLabel.text = item.phonetic ?? "no phonetics"
+
+        let JSONMeanings = item.meanings
         let lineBreak = NSAttributedString(string: "\n")
-       
+
         func setupDefinitions(partOfSpeech: inout String, NSMutableText: inout NSMutableAttributedString, number: Int) {
             partOfSpeech = JSONMeanings[number].partOfSpeech ?? "no info"
-            
+
             if JSONMeanings[number].definitions.count == 1 {
                 NSMutableText = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
-                
+
                 if let example = JSONMeanings[number].definitions[0].example {
                     let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
                     NSMutableText.append(exampleText)
@@ -107,7 +104,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
                     let content = "\(index + 1). \(definition.definition)"
                     let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
                     NSMutableText.append(contentText)
-                    
+
                     if let example = definition.example {
                         let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
                         NSMutableText.append(exampleText)
@@ -116,7 +113,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
                 }
             }
         }
-        
+
         let count = 0...JSONMeanings.count-1
         for number in count {
             switch number {
@@ -132,14 +129,18 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
                 setupDefinitions(partOfSpeech: &partOfSpeech3, NSMutableText: &wordDefinition3, number: number)
                 cell.definitionLabel3.attributedText = wordDefinition3
                 cell.partOfSpeechLabel3.text = partOfSpeech3
-
             default:
                 break
             }
         }
-        
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
+        configureCell(cell, forItemAt: indexPath)
         return cell
     }
+
     
     // MARK:  UICollectionViewDelegateFlowLayout protocol
         
@@ -147,35 +148,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 //        return CGSize(width: view.frame.width-10, height: 300)
 //    }
 
-    
-//    func setupLabels() {
-//        setSoundButtonEnabled(false)
-//        word = items.word
-//        phonetic = items.phonetic ?? "no phonetics"
-//        let meaning = items.meanings
-//        let phonetics = items.phonetics
-//
-////        audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out
-//        phonetics.forEach {
-//            if $0.audio != "" {
-//            if let audio = $0.audio {
-//                setupAudioPlayer(urlString: audio)
-//                setSoundButtonEnabled(true)
-//                }
-//            }
-//        }
-//
-//
-//    }
-    
-//    func setupViews() {
-//        if isBookmarked {
-//            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-//        } else {
-//            starButton.setImage(UIImage(systemName: "star"), for: .normal)
-//        }
-//    }
-    
+// MARK: star button Functions
     @objc private func didTapStar() {
         if let word = wordLabel.text {
             isBookmarked.toggle()
@@ -225,8 +198,37 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 
 
 }
+
 // MARK: passInfoToFavorites protocol
 protocol passInfoToFavorites {
     func deleteCurrentCoreDataEntry()
     func refreshList()
 }
+
+//    func setupLabels() {
+//        setSoundButtonEnabled(false)
+//        word = items.word
+//        phonetic = items.phonetic ?? "no phonetics"
+//        let meaning = items.meanings
+//        let phonetics = items.phonetics
+//
+////        audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out
+//        phonetics.forEach {
+//            if $0.audio != "" {
+//            if let audio = $0.audio {
+//                setupAudioPlayer(urlString: audio)
+//                setSoundButtonEnabled(true)
+//                }
+//            }
+//        }
+//
+//
+//    }
+    
+//    func setupViews() {
+//        if isBookmarked {
+//            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+//        } else {
+//            starButton.setImage(UIImage(systemName: "star"), for: .normal)
+//        }
+//    }
