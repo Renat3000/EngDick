@@ -17,6 +17,13 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     let wordLabel = UILabel()
     let word = String()
     
+    var partOfSpeech1 = String()
+    var partOfSpeech2 = String()
+    var partOfSpeech3 = String()
+    var wordDefinition1 = NSMutableAttributedString()
+    var wordDefinition2 = NSMutableAttributedString()
+    var wordDefinition3 = NSMutableAttributedString()
+    
     let scrollView = UIScrollView()
     var itemWasAtCell = Int16()
     var isBookmarked: Bool = false
@@ -61,6 +68,12 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         collectionView.register(DictionaryEntryCell.self, forCellWithReuseIdentifier: cellId)
 //        setupLabels()
 //        setupViews()
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        }
     }
     
     // MARK: collectionView methods
@@ -74,29 +87,66 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
         
         cell.wordLabel.text = items[indexPath.item].word
-        cell.phoneticsLabel.text = items[indexPath.item].phonetic
+        cell.phoneticsLabel.text = items[indexPath.item].phonetic ?? "no phonetics"
         
         let JSONMeanings = items[indexPath.item].meanings
-        cell.partOfSpeechLabel1.text = JSONMeanings[0].partOfSpeech
+        let lineBreak = NSAttributedString(string: "\n")
+       
+        func setupDefinitions(partOfSpeech: inout String, NSMutableText: inout NSMutableAttributedString, number: Int) {
+            partOfSpeech = JSONMeanings[number].partOfSpeech ?? "no info"
+            
+            if JSONMeanings[number].definitions.count == 1 {
+                NSMutableText = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
+                
+                if let example = JSONMeanings[number].definitions[0].example {
+                    let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                    NSMutableText.append(exampleText)
+                }
+            } else {
+                for (index, definition) in JSONMeanings[number].definitions.enumerated() {
+                    let content = "\(index + 1). \(definition.definition)"
+                    let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+                    NSMutableText.append(contentText)
+                    
+                    if let example = definition.example {
+                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
+                        NSMutableText.append(exampleText)
+                    }
+                    NSMutableText.append(lineBreak)
+                }
+            }
+        }
         
-        cell.definitionLabel1.text = String()
-        cell.definitionLabel1.text = JSONMeanings[0].definitions[0].definition
-        
-        if JSONMeanings[0].definitions.count > 1 {
-            cell.definitionLabel2.text = JSONMeanings[0].definitions[1].definition
-//            if JSONMeanings[0].definitions[2] != nil {
-//                cell.definitionLabel3.text = JSONMeanings[0].definitions[2].definition
-//            }
+        let count = 0...JSONMeanings.count-1
+        for number in count {
+            switch number {
+            case 0:
+                setupDefinitions(partOfSpeech: &partOfSpeech1, NSMutableText: &wordDefinition1, number: number)
+                cell.definitionLabel1.attributedText = wordDefinition1
+                cell.partOfSpeechLabel1.text = partOfSpeech1
+            case 1:
+                setupDefinitions(partOfSpeech: &partOfSpeech2, NSMutableText: &wordDefinition2, number: number)
+                cell.definitionLabel2.attributedText = wordDefinition2
+                cell.partOfSpeechLabel2.text = partOfSpeech2
+            case 2:
+                setupDefinitions(partOfSpeech: &partOfSpeech3, NSMutableText: &wordDefinition3, number: number)
+                cell.definitionLabel3.attributedText = wordDefinition3
+                cell.partOfSpeechLabel3.text = partOfSpeech3
+
+            default:
+                break
+            }
         }
         
         return cell
     }
     
     // MARK:  UICollectionViewDelegateFlowLayout protocol
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width-10, height: 300)
-    }
+        
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: view.frame.width-10, height: 300)
+//    }
+
     
 //    func setupLabels() {
 //        setSoundButtonEnabled(false)
@@ -115,117 +165,15 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 //            }
 //        }
 //
-//        let lineBreak = NSAttributedString(string: "\n")
 //
-//        func setupDefinitions(wdPartOfSpeech: inout String, wdDefinition: inout NSMutableAttributedString, number: Int) {
-//            wdPartOfSpeech = meaning[number].partOfSpeech ?? "no info"
-//
-//            if meaning[number].definitions.count == 1 {
-//                wdDefinition = NSMutableAttributedString(string: meaning[number].definitions[0].definition)
-//
-//                if let example = meaning[number].definitions[0].example {
-//                    let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-//                    wdDefinition.append(exampleText)
-//                }
-//            } else {
-//                for (index, definition) in meaning[number].definitions.enumerated() {
-//                    let content = "\(index + 1). \(definition.definition)"
-//                    let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
-//                    wdDefinition.append(contentText)
-//
-//                    if let example = definition.example {
-//                        let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-//                        wdDefinition.append(exampleText)
-//                    }
-//                    wdDefinition.append(lineBreak)
-//                }
-//            }
-//        }
-//
-//        let count = 0...meaning.count-1
-//        for number in count {
-//            switch number {
-//            case 0:
-//                setupDefinitions(wdPartOfSpeech: &partOfSpeech1, wdDefinition: &wordDefinition1, number: number)
-//            case 1:
-//                setupDefinitions(wdPartOfSpeech: &partOfSpeech2, wdDefinition: &wordDefinition2, number: number)
-//            case 2:
-//                setupDefinitions(wdPartOfSpeech: &partOfSpeech3, wdDefinition: &wordDefinition3, number: number)
-//            default:
-//                break
-//            }
-//        }
 //    }
     
 //    func setupViews() {
-//
-//        view.backgroundColor = .systemGray5
-////        view.layer.cornerRadius = min(view.frame.width, view.frame.height) / 10
-//        view.clipsToBounds = true
-//        view.addSubview(scrollView)
-//
 //        if isBookmarked {
 //            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
 //        } else {
 //            starButton.setImage(UIImage(systemName: "star"), for: .normal)
 //        }
-//        wordLabel.text = word
-//        phoneticsLabel.text = phonetic
-//        partOfSpeechLabel1.text = partOfSpeech1
-//        definitionLabel1.attributedText = wordDefinition1
-//        partOfSpeechLabel2.text = partOfSpeech2
-//        definitionLabel2.attributedText = wordDefinition2
-//        partOfSpeechLabel3.text = partOfSpeech3
-//        definitionLabel3.attributedText = wordDefinition3
-//
-//        wordLabel.font = .systemFont(ofSize: 30)
-//        phoneticsLabel.font = .systemFont(ofSize: 20)
-//        phoneticsLabel.textColor = .systemGray
-//        partOfSpeechLabel1.font = .systemFont(ofSize: 20)
-//        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
-//        partOfSpeechLabel2.font = .systemFont(ofSize: 20)
-//
-//        definitionLabel1.numberOfLines = 0
-//        definitionLabel2.numberOfLines = 0
-//        definitionLabel3.numberOfLines = 0
-//
-//        let wordStack = UIStackView(arrangedSubviews: [
-//        wordLabel, phoneticsLabel
-//        ])
-//        wordStack.axis = .horizontal
-//        wordStack.translatesAutoresizingMaskIntoConstraints = false
-//        wordStack.alignment = .lastBaseline
-//
-//        let firstStack = UIStackView(arrangedSubviews: [
-//            wordStack, soundButton, starButton
-//        ])
-//        firstStack.axis = .horizontal
-//        firstStack.distribution = .equalSpacing
-//        firstStack.translatesAutoresizingMaskIntoConstraints = false
-//        firstStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
-//
-//        let mainStack = UIStackView(arrangedSubviews: [
-//        firstStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel3, definitionLabel3
-//        ])
-//        scrollView.addSubview(mainStack)
-//        firstStack.widthAnchor.constraint(equalTo: mainStack.widthAnchor).isActive = true
-//        mainStack.translatesAutoresizingMaskIntoConstraints = false
-//        mainStack.axis = .vertical
-//        mainStack.spacing = 12
-//        mainStack.alignment = .top
-//
-//        mainStack.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-//        mainStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
-//        mainStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
-//        mainStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-//        mainStack.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-//
-//        scrollView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
-//        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-//        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-//        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
 //    }
     
     @objc private func didTapStar() {
