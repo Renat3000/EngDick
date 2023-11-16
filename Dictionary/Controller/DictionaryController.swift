@@ -45,7 +45,7 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
         searchController.searchBar.delegate = self
     }
     
-    fileprivate var JSONTopResult = [JSONStruct]()
+//    fileprivate var JSONTopResult = [JSONStruct]()
 //    fileprivate var JSONMeanings = [Meaning]()
     
     fileprivate func fetchDictionary(searchTerm: String) {
@@ -59,9 +59,9 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
                 return
             }
             
-            self.JSONTopResult = JSONStruct
+//            self.JSONTopResult = JSONStruct
             DispatchQueue.main.async {
-                self.presentWordDetails(selectedItem: self.JSONTopResult)
+                self.presentWordDetails(selectedItem: JSONStruct)
             }
         }
     }

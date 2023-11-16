@@ -60,15 +60,19 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         fatalError("init(coder:) has not been implemented")
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView.backgroundColor = .systemGray4
         navigationItem.largeTitleDisplayMode = .never
+        configureCells()
         collectionView.register(DictionaryEntryCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.delegate = self
         collectionView.dataSource = self
-        
+//        collectionView.isPrefetchingEnabled = false
+
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+//        layout.itemSize = .init(width: view.frame.width-10, height: 300)
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
     }
@@ -80,11 +84,15 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         return items.count
     }
     
-    private func configureCell(_ cell: DictionaryEntryCell, forItemAt indexPath: IndexPath) {
-        let item = items[indexPath.item]
-
-        cell.wordLabel.text = item.word
-        cell.phoneticsLabel.text = item.phonetic ?? "no phonetics"
+    private func configureCells() {
+        let count = 0...items.count-1
+        for i in count {
+            configureCell(index: i)
+        }
+    }
+    
+    private func configureCell(index: Int) {
+        let item = items[index]
 
         let JSONMeanings = item.meanings
         let lineBreak = NSAttributedString(string: "\n")
@@ -119,16 +127,10 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             switch number {
             case 0:
                 setupDefinitions(partOfSpeech: &partOfSpeech1, NSMutableText: &wordDefinition1, number: number)
-                cell.definitionLabel1.attributedText = wordDefinition1
-                cell.partOfSpeechLabel1.text = partOfSpeech1
             case 1:
                 setupDefinitions(partOfSpeech: &partOfSpeech2, NSMutableText: &wordDefinition2, number: number)
-                cell.definitionLabel2.attributedText = wordDefinition2
-                cell.partOfSpeechLabel2.text = partOfSpeech2
             case 2:
                 setupDefinitions(partOfSpeech: &partOfSpeech3, NSMutableText: &wordDefinition3, number: number)
-                cell.definitionLabel3.attributedText = wordDefinition3
-                cell.partOfSpeechLabel3.text = partOfSpeech3
             default:
                 break
             }
@@ -137,7 +139,26 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
-        configureCell(cell, forItemAt: indexPath)
+        
+        cell.wordLabel.text = items[indexPath.item].word
+        cell.phoneticsLabel.text = items[indexPath.item].phonetic ?? "no phonetics"
+        
+        let count = 0...items[indexPath.item].meanings.count-1
+        for number in count {
+            switch number {
+            case 0:
+                cell.definitionLabel1.attributedText = wordDefinition1
+                cell.partOfSpeechLabel1.text = partOfSpeech1
+            case 1:
+                cell.definitionLabel2.attributedText = wordDefinition2
+                cell.partOfSpeechLabel2.text = partOfSpeech2
+            case 2:
+                cell.definitionLabel3.attributedText = wordDefinition3
+                cell.partOfSpeechLabel3.text = partOfSpeech3
+            default:
+                break
+            }
+        }
         return cell
     }
 
