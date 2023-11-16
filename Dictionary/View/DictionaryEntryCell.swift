@@ -50,6 +50,7 @@ class DictionaryEntryCell: UICollectionViewCell {
         wordStack.translatesAutoresizingMaskIntoConstraints = false
         wordStack.axis = .horizontal
         wordStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
+        wordStack.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         let mainStack = UIStackView(arrangedSubviews: [
             wordStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel3, definitionLabel3
@@ -64,7 +65,7 @@ class DictionaryEntryCell: UICollectionViewCell {
         mainStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         mainStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         mainStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
-        mainStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        mainStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -8).isActive = true
         mainStack.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width - 16).isActive = true
     }
     
