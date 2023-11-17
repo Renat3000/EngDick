@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-class WordDetailsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class WordDetailsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, HeaderDelegate {
     
     var wordDetailsDelegate: passInfoToFavorites?
     fileprivate let cellId = "dictionaryCell"
@@ -16,9 +16,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 
     var audioPlayer: AVPlayer?
 
-    let wordLabel = UILabel()
     let word = String()
-    
     var partOfSpeech1 = String()
     var partOfSpeech2 = String()
     var partOfSpeech3 = String()
@@ -29,7 +27,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     var itemWasAtCell = Int16()
     var isBookmarked: Bool = false
     
-    private let items: [JSONStruct] //maybe so: private var item: JSONStruct?
+    private let items: [JSONStruct] //maybe: private var item: JSONStruct?
     init(items: [JSONStruct], isBookmarked: Bool) {
         
         self.items = items
@@ -40,7 +38,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+// MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView.backgroundColor = .systemGray4
@@ -157,6 +155,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! WordDetailsHeaderView
             
+            headerView.delegate = self
             headerView.wordLabel.text = items[0].word
             headerView.phoneticsLabel.text = items[0].phonetic ?? "no phonetics"
             
@@ -172,10 +171,10 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     }
     
 // MARK: star button Functions
-//    @objc private func didTapStar() {
+    @objc func didTapStar() {
 //        if let word = wordLabel.text {
 //            isBookmarked.toggle()
-//
+
 //            if isBookmarked {
 //                starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
 //                CoreDataService.shared.createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
@@ -183,26 +182,24 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 //            } else {
 //                starButton.setImage(UIImage(systemName: "star"), for: .normal)
 //                wordDetailsDelegate?.deleteCurrentCoreDataEntry()
-////                CoreDataService.shared.deleteItem(item: coreDataItem)
+//                CoreDataService.shared.deleteItem(item: coreDataItem)
 //            }
-//        }
+        print("tapped the star")
+        
+        }
 //    }
 // MARK: Audio UICollectionViewHeader
-//    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        <#code#>
-//    }
+
 // MARK: Audio Functions
     
-//    @objc private func didTapHeadphones() {
-//        soundButtonIsPressed.toggle()
-//        if soundButtonIsPressed {
-//            soundButton.setImage(UIImage(systemName: "headphones.circle.fill"), for: .normal)
-//            playAudio()
+    @objc internal func didTapHeadphones() {
+
+//        if soundButtonIsPressed {//
+            playAudio()
 //        } else {
-//            soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
 //            stopAudio()
 //        }
-//    }
+    }
     
     func setupAudioPlayer(urlString: String) {
         if let audioURL = URL(string: urlString) {

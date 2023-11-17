@@ -8,27 +8,29 @@
 import UIKit
 
 class WordDetailsHeaderView: UICollectionReusableView {
-        
+
+    weak var delegate: HeaderDelegate?
     let wordLabel = UILabel()
     let phoneticsLabel = UILabel()
+    var isBookmarked: Bool = false
+    var soundButtonIsPressed: Bool = false
     
     let starButton: UIButton = {
         let button = UIButton(type: .system)
         let starImage = UIImage(systemName: "star")
         button.setImage(starImage, for: .normal)
         button.tintColor = .systemBlue
-//        button.addTarget(self, action: #selector(didTapStar), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapStar), for: .touchUpInside)
 
         return button
     }()
     
-    var soundButtonIsPressed: Bool = false
     let soundButton: UIButton = {
         let button = UIButton(type: .system)
         let headphonesImage = UIImage(systemName: "headphones.circle")
         button.setImage(headphonesImage, for: .normal)
         button.tintColor = .systemBlue
-//        button.addTarget(self, action: #selector(didTapHeadphones), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapHeadphones), for: .touchUpInside)
 
         return button
     }()
@@ -41,15 +43,8 @@ class WordDetailsHeaderView: UICollectionReusableView {
           wordLabel.textColor = .white
           phoneticsLabel.textColor = .systemGray
           
-          let wordStack = UIStackView(arrangedSubviews: [
-            wordLabel, phoneticsLabel
-          ])
-          wordStack.axis = .horizontal
-          wordStack.translatesAutoresizingMaskIntoConstraints = false
-          wordStack.alignment = .lastBaseline
-          
           let firstStack = UIStackView(arrangedSubviews: [
-            wordStack, soundButton, starButton
+            wordLabel, phoneticsLabel, soundButton, starButton
           ])
           
           firstStack.axis = .horizontal
@@ -70,4 +65,31 @@ class WordDetailsHeaderView: UICollectionReusableView {
       required init?(coder aDecoder: NSCoder) {
           fatalError("init(coder:) has not been implemented")
       }
+    
+    @objc private func didTapStar() {
+        isBookmarked.toggle()
+        
+        if isBookmarked {
+            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+        } else {
+            starButton.setImage(UIImage(systemName: "star"), for: .normal)
+        }
+        
+        delegate?.didTapStar()
+    }
+    
+    @objc private func didTapHeadphones() {
+        soundButtonIsPressed.toggle()
+        if soundButtonIsPressed {
+            soundButton.setImage(UIImage(systemName: "headphones.circle.fill"), for: .normal)
+        } else {
+            soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
+        }
+        delegate?.didTapHeadphones()
+    }
+}
+
+protocol HeaderDelegate: AnyObject {
+    func didTapStar()
+    func didTapHeadphones()
 }
