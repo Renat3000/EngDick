@@ -12,6 +12,8 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
     var wordDetailsDelegate: passInfoToFavorites?
     fileprivate let cellId = "dictionaryCell"
+    fileprivate let headerReuseIdentifier = "WordDetailsHeaderReuseIdentifier"
+
     var audioPlayer: AVPlayer?
 
     let wordLabel = UILabel()
@@ -27,27 +29,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     var itemWasAtCell = Int16()
     var isBookmarked: Bool = false
     
-    let starButton: UIButton = {
-        let button = UIButton(type: .system)
-        let starImage = UIImage(systemName: "star")
-        button.setImage(starImage, for: .normal)
-        button.tintColor = .systemBlue
-        button.addTarget(self, action: #selector(didTapStar), for: .touchUpInside)
-
-        return button
-    }()
-    
-    var soundButtonIsPressed: Bool = false
-    let soundButton: UIButton = {
-        let button = UIButton(type: .system)
-        let headphonesImage = UIImage(systemName: "headphones.circle")
-        button.setImage(headphonesImage, for: .normal)
-        button.tintColor = .systemBlue
-        button.addTarget(self, action: #selector(didTapHeadphones), for: .touchUpInside)
-
-        return button
-    }()
-    
     private let items: [JSONStruct] //maybe so: private var item: JSONStruct?
     init(items: [JSONStruct], isBookmarked: Bool) {
         
@@ -60,19 +41,20 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView.backgroundColor = .systemGray4
         navigationItem.largeTitleDisplayMode = .never
         configureCells()
         collectionView.register(DictionaryEntryCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(WordDetailsHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
+        
         collectionView.delegate = self
         collectionView.dataSource = self
 //        collectionView.isPrefetchingEnabled = false
 
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-//        layout.itemSize = .init(width: view.frame.width-10, height: 300)
+//        layout.sectionHeadersPinToVisibleBounds = true // to make the header stick to the top, future challenge, doesn't work now, crashes the cells layout
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
     }
@@ -80,7 +62,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     // MARK: collectionView methods
     //  if we use collectionView: UICollectionViewController, UICollectionViewDelegateFlowLayout
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//            return JSONTopResult.count
         return items.count
     }
     
@@ -140,9 +121,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
         
-        cell.wordLabel.text = items[indexPath.item].word
-        cell.phoneticsLabel.text = items[indexPath.item].phonetic ?? "no phonetics"
-        
         let count = 0...items[indexPath.item].meanings.count-1
         for number in count {
             switch number {
@@ -168,36 +146,63 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 //        return CGSize(width: view.frame.width-10, height: 300)
 //    }
-
-// MARK: star button Functions
-    @objc private func didTapStar() {
-        if let word = wordLabel.text {
-            isBookmarked.toggle()
+    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        return CGSize(width: view.frame.width-10, height: 40)
+//    }
+//
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if kind == UICollectionView.elementKindSectionHeader {
             
-            if isBookmarked {
-                starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-                CoreDataService.shared.createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
-                wordDetailsDelegate?.refreshList()
-            } else {
-                starButton.setImage(UIImage(systemName: "star"), for: .normal)
-                wordDetailsDelegate?.deleteCurrentCoreDataEntry()
-//                CoreDataService.shared.deleteItem(item: coreDataItem)
-            }
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! WordDetailsHeaderView
+            
+            headerView.wordLabel.text = items[0].word
+            headerView.phoneticsLabel.text = items[0].phonetic ?? "no phonetics"
+            
+            return headerView
         }
+        
+        // Возвращаем пустую ячейку, если это не заголовок
+        return UICollectionReusableView()
     }
-
+    
+     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 40) // Задайте размер ваших заголовков
+    }
+    
+// MARK: star button Functions
+//    @objc private func didTapStar() {
+//        if let word = wordLabel.text {
+//            isBookmarked.toggle()
+//
+//            if isBookmarked {
+//                starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+//                CoreDataService.shared.createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
+//                wordDetailsDelegate?.refreshList()
+//            } else {
+//                starButton.setImage(UIImage(systemName: "star"), for: .normal)
+//                wordDetailsDelegate?.deleteCurrentCoreDataEntry()
+////                CoreDataService.shared.deleteItem(item: coreDataItem)
+//            }
+//        }
+//    }
+// MARK: Audio UICollectionViewHeader
+//    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        <#code#>
+//    }
 // MARK: Audio Functions
     
-    @objc private func didTapHeadphones() {
-        soundButtonIsPressed.toggle()
-        if soundButtonIsPressed {
-            soundButton.setImage(UIImage(systemName: "headphones.circle.fill"), for: .normal)
-            playAudio()
-        } else {
-            soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
-            stopAudio()
-        }
-    }
+//    @objc private func didTapHeadphones() {
+//        soundButtonIsPressed.toggle()
+//        if soundButtonIsPressed {
+//            soundButton.setImage(UIImage(systemName: "headphones.circle.fill"), for: .normal)
+//            playAudio()
+//        } else {
+//            soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
+//            stopAudio()
+//        }
+//    }
     
     func setupAudioPlayer(urlString: String) {
         if let audioURL = URL(string: urlString) {
@@ -213,8 +218,8 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     }
     
     func setSoundButtonEnabled(_ isEnabled: Bool) {
-        soundButton.isEnabled = isEnabled
-        soundButton.tintColor = isEnabled ? .systemBlue : .systemGray
+//        soundButton.isEnabled = isEnabled
+//        soundButton.tintColor = isEnabled ? .systemBlue : .systemGray
     }
 
 

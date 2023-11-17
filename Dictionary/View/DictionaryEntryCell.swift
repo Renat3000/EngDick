@@ -9,9 +9,6 @@ import UIKit
 
 class DictionaryEntryCell: UICollectionViewCell {
     
-    let wordLabel = UILabel()
-    let phoneticsLabel = UILabel()
-    
     let partOfSpeechLabel1 = UILabel()
     let partOfSpeechLabel2 = UILabel()
     let partOfSpeechLabel3 = UILabel()
@@ -27,11 +24,6 @@ class DictionaryEntryCell: UICollectionViewCell {
 //        layer.cornerRadius = min(frame.width, frame.height) / 10
         clipsToBounds = true
         
-        wordLabel.text = "word Label"
-        wordLabel.font = .systemFont(ofSize: 30)
-        phoneticsLabel.font = .systemFont(ofSize: 20)
-        phoneticsLabel.textColor = .systemGray
-        
         definitionLabel1.font = .systemFont(ofSize: 18)
         definitionLabel2.font = .systemFont(ofSize: 18)
         definitionLabel3.font = .systemFont(ofSize: 18)
@@ -44,16 +36,8 @@ class DictionaryEntryCell: UICollectionViewCell {
         definitionLabel2.numberOfLines = 0
         definitionLabel3.numberOfLines = 0
         
-        let wordStack = UIStackView(arrangedSubviews: [
-            wordLabel, phoneticsLabel
-        ])
-        wordStack.translatesAutoresizingMaskIntoConstraints = false
-        wordStack.axis = .horizontal
-        wordStack.alignment = .lastBaseline // 🙏🏻 I spent so much time with constraints and baselines, thanks GOD I found this command
-        wordStack.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
         let mainStack = UIStackView(arrangedSubviews: [
-            wordStack, partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel3, definitionLabel3
+            partOfSpeechLabel1, definitionLabel1, partOfSpeechLabel2, definitionLabel2, partOfSpeechLabel3, definitionLabel3
         ])
         mainStack.translatesAutoresizingMaskIntoConstraints = false
         mainStack.alignment = .top
