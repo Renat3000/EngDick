@@ -11,10 +11,12 @@ import AVFoundation
 class WordDetailsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, HeaderDelegate {
     
     var wordDetailsDelegate: passInfoToFavorites?
+    weak var controllerDelegate: ControllerDelegate?
     fileprivate let cellId = "dictionaryCell"
     fileprivate let headerReuseIdentifier = "WordDetailsHeaderReuseIdentifier"
 
     var audioPlayer: AVPlayer?
+    var playerItem : AVPlayerItem?
 
     let word = String()
     var partOfSpeech1 = String()
@@ -27,6 +29,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     var itemWasAtCell = Int16()
     var isBookmarked: Bool = false
     var audioIsAvailable: Bool = false
+    
     private let items: [JSONStruct] //maybe: private var item: JSONStruct?
     init(items: [JSONStruct], isBookmarked: Bool) {
         
@@ -55,12 +58,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 //        layout.sectionHeadersPinToVisibleBounds = true // to make the header stick to the top, future challenge, doesn't work now, crashes the cells layout
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
-    }
-    
-    // MARK: collectionView methods
-    //  if we use collectionView: UICollectionViewController, UICollectionViewDelegateFlowLayout
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
     }
     
     private func configureCells() {
@@ -125,7 +122,13 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             }
         }
     }
-
+    
+    // MARK: collectionView methods
+    //  if we use collectionView: UICollectionViewController, UICollectionViewDelegateFlowLayout
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return items.count
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
         
@@ -190,9 +193,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         
         }
 //    }
-// MARK: Audio UICollectionViewHeader
-
-// MARK: Audio Functions
+// MARK: Audio UICollectionViewHeader & Audio Functions
     
     @objc internal func didTapHeadphones(soundButtonIsPressed: Bool) {
 
@@ -205,7 +206,9 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
     func setupAudioPlayer(urlString: String) {
         if let audioURL = URL(string: urlString) {
-            audioPlayer = AVPlayer(url: audioURL)
+            playerItem = AVPlayerItem(url: audioURL)
+            audioPlayer = AVPlayer(playerItem: playerItem)
+            NotificationCenter.default.addObserver(self, selector: #selector(audioDidFinishPlaying(_:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         }
     }
     
@@ -216,6 +219,10 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         audioPlayer?.pause()
     }
     
+    @objc func audioDidFinishPlaying(_ notification: Notification) {
+        print("Audio finished playing.")
+        controllerDelegate?.stopAudio()
+    }
 }
 
 // MARK: passInfoToFavorites protocol
@@ -223,11 +230,7 @@ protocol passInfoToFavorites {
     func deleteCurrentCoreDataEntry()
     func refreshList()
 }
-    
-//    func setupViews() {
-//        if isBookmarked {
-//            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-//        } else {
-//            starButton.setImage(UIImage(systemName: "star"), for: .normal)
-//        }
-//    }
+
+protocol ControllerDelegate: AnyObject {
+    func stopAudio()
+}

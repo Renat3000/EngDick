@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WordDetailsHeaderView: UICollectionReusableView {
+class WordDetailsHeaderView: UICollectionReusableView, ControllerDelegate {
 
     weak var delegate: HeaderDelegate?
     let wordLabel = UILabel()
@@ -69,6 +69,12 @@ class WordDetailsHeaderView: UICollectionReusableView {
     func setAudioButtonEnabled(_ isEnabled: Bool) {
         soundButton.isEnabled = isEnabled
         soundButton.tintColor = isEnabled ? .systemBlue : .gray
+    }
+    
+    func stopAudio() {
+        soundButtonIsPressed = false
+        soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
+        print("lallalalallalala")
     }
     
     @objc private func didTapStar() {

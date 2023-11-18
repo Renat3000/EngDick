@@ -149,6 +149,9 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func presentWordDetails(selectedItem: [JSONStruct]) {
         let wdController = WordDetailsController(items: selectedItem, isBookmarked: false)
+//        let wordDetailsHeaderView = WordDetailsHeaderView()
+//        wdController.controllerDelegate = wordDetailsHeaderView
+//    controllerDelegate: ControllerDelegate
         navigationController?.pushViewController(wdController, animated: true)
 
     }
