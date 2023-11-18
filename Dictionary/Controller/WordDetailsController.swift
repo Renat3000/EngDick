@@ -26,7 +26,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
     var itemWasAtCell = Int16()
     var isBookmarked: Bool = false
-    
+    var audioIsAvailable: Bool = false
     private let items: [JSONStruct] //maybe: private var item: JSONStruct?
     init(items: [JSONStruct], isBookmarked: Bool) {
         
@@ -38,6 +38,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
 // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +50,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         
         collectionView.delegate = self
         collectionView.dataSource = self
-//        collectionView.isPrefetchingEnabled = false
 
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
 //        layout.sectionHeadersPinToVisibleBounds = true // to make the header stick to the top, future challenge, doesn't work now, crashes the cells layout
@@ -72,7 +72,17 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
     private func configureCell(index: Int) {
         let item = items[index]
-
+        let phonetics = item.phonetics
+//      audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out
+        phonetics.forEach {
+            if $0.audio != "" {
+                if let audio = $0.audio {
+                    setupAudioPlayer(urlString: audio)
+                    audioIsAvailable = true
+                }
+            }
+        }
+        
         let JSONMeanings = item.meanings
         let lineBreak = NSAttributedString(string: "\n")
 
@@ -140,15 +150,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 
     
     // MARK:  UICollectionViewDelegateFlowLayout protocol
-        
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: view.frame.width-10, height: 300)
-//    }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        return CGSize(width: view.frame.width-10, height: 40)
-//    }
-//
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         if kind == UICollectionView.elementKindSectionHeader {
@@ -158,16 +160,16 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             headerView.delegate = self
             headerView.wordLabel.text = items[0].word
             headerView.phoneticsLabel.text = items[0].phonetic ?? "no phonetics"
+            headerView.setAudioButtonEnabled(audioIsAvailable)
             
             return headerView
         }
         
-        // Возвращаем пустую ячейку, если это не заголовок
         return UICollectionReusableView()
     }
     
      func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 40) // Задайте размер ваших заголовков
+        return CGSize(width: collectionView.frame.width, height: 40)
     }
     
 // MARK: star button Functions
@@ -192,13 +194,13 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 
 // MARK: Audio Functions
     
-    @objc internal func didTapHeadphones() {
+    @objc internal func didTapHeadphones(soundButtonIsPressed: Bool) {
 
-//        if soundButtonIsPressed {//
+        if soundButtonIsPressed {
             playAudio()
-//        } else {
-//            stopAudio()
-//        }
+        } else {
+            stopAudio()
+        }
     }
     
     func setupAudioPlayer(urlString: String) {
@@ -214,12 +216,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         audioPlayer?.pause()
     }
     
-    func setSoundButtonEnabled(_ isEnabled: Bool) {
-//        soundButton.isEnabled = isEnabled
-//        soundButton.tintColor = isEnabled ? .systemBlue : .systemGray
-    }
-
-
 }
 
 // MARK: passInfoToFavorites protocol
@@ -227,26 +223,6 @@ protocol passInfoToFavorites {
     func deleteCurrentCoreDataEntry()
     func refreshList()
 }
-
-//    func setupLabels() {
-//        setSoundButtonEnabled(false)
-//        word = items.word
-//        phonetic = items.phonetic ?? "no phonetics"
-//        let meaning = items.meanings
-//        let phonetics = items.phonetics
-//
-////        audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out
-//        phonetics.forEach {
-//            if $0.audio != "" {
-//            if let audio = $0.audio {
-//                setupAudioPlayer(urlString: audio)
-//                setSoundButtonEnabled(true)
-//                }
-//            }
-//        }
-//
-//
-//    }
     
 //    func setupViews() {
 //        if isBookmarked {

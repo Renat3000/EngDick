@@ -66,6 +66,11 @@ class WordDetailsHeaderView: UICollectionReusableView {
           fatalError("init(coder:) has not been implemented")
       }
     
+    func setAudioButtonEnabled(_ isEnabled: Bool) {
+        soundButton.isEnabled = isEnabled
+        soundButton.tintColor = isEnabled ? .systemBlue : .gray
+    }
+    
     @objc private func didTapStar() {
         isBookmarked.toggle()
         
@@ -85,11 +90,11 @@ class WordDetailsHeaderView: UICollectionReusableView {
         } else {
             soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
         }
-        delegate?.didTapHeadphones()
+        delegate?.didTapHeadphones(soundButtonIsPressed: soundButtonIsPressed)
     }
 }
 
 protocol HeaderDelegate: AnyObject {
     func didTapStar()
-    func didTapHeadphones()
+    func didTapHeadphones(soundButtonIsPressed: Bool)
 }
