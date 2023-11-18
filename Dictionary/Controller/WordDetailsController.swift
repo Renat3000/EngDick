@@ -221,7 +221,12 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
     @objc func audioDidFinishPlaying(_ notification: Notification) {
         print("Audio finished playing.")
-        controllerDelegate?.stopAudio()
+        audioDidFinishNotification()
+//        controllerDelegate?.stopAudio()
+    }
+    
+    func audioDidFinishNotification() {
+            NotificationCenter.default.post(name: NSNotification.Name("AudioDidFinishPlaying"), object: nil)
     }
 }
 

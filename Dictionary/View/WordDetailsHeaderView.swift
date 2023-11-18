@@ -37,7 +37,7 @@ class WordDetailsHeaderView: UICollectionReusableView, ControllerDelegate {
     
       override init(frame: CGRect) {
           super.init(frame: frame)
-
+          NotificationCenter.default.addObserver(self, selector: #selector(stopAudio), name: Notification.Name("AudioDidFinishPlaying"), object: nil)
           wordLabel.font = .systemFont(ofSize: 30)
           phoneticsLabel.font = .systemFont(ofSize: 20)
           wordLabel.textColor = .white
@@ -71,7 +71,7 @@ class WordDetailsHeaderView: UICollectionReusableView, ControllerDelegate {
         soundButton.tintColor = isEnabled ? .systemBlue : .gray
     }
     
-    func stopAudio() {
+    @objc func stopAudio() {
         soundButtonIsPressed = false
         soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
         print("lallalalallalala")
@@ -97,6 +97,10 @@ class WordDetailsHeaderView: UICollectionReusableView, ControllerDelegate {
             soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
         }
         delegate?.didTapHeadphones(soundButtonIsPressed: soundButtonIsPressed)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
