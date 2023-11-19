@@ -11,7 +11,6 @@ import AVFoundation
 class WordDetailsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, HeaderDelegate {
     
     var wordDetailsDelegate: passInfoToFavorites?
-    weak var controllerDelegate: ControllerDelegate?
     fileprivate let cellId = "dictionaryCell"
     fileprivate let headerReuseIdentifier = "WordDetailsHeaderReuseIdentifier"
 
@@ -213,6 +212,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     }
     
     func playAudio() {
+        audioPlayer?.seek(to: CMTime.zero)
         audioPlayer?.play()
     }
     func stopAudio() {
@@ -222,7 +222,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     @objc func audioDidFinishPlaying(_ notification: Notification) {
         print("Audio finished playing.")
         audioDidFinishNotification()
-//        controllerDelegate?.stopAudio()
     }
     
     func audioDidFinishNotification() {
@@ -234,8 +233,4 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 protocol passInfoToFavorites {
     func deleteCurrentCoreDataEntry()
     func refreshList()
-}
-
-protocol ControllerDelegate: AnyObject {
-    func stopAudio()
 }

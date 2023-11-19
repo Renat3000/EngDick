@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WordDetailsHeaderView: UICollectionReusableView, ControllerDelegate {
+class WordDetailsHeaderView: UICollectionReusableView {
 
     weak var delegate: HeaderDelegate?
     let wordLabel = UILabel()
