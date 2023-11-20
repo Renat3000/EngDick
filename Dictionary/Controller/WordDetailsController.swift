@@ -84,26 +84,31 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 
         func setupDefinitions(partOfSpeech: inout String, NSMutableText: inout NSMutableAttributedString, number: Int) {
             partOfSpeech = JSONMeanings[number].partOfSpeech ?? "no info"
-
-            if JSONMeanings[number].definitions.count == 1 {
-                NSMutableText = NSMutableAttributedString(string: JSONMeanings[number].definitions[0].definition)
-
-                if let example = JSONMeanings[number].definitions[0].example {
-                    let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
-                    NSMutableText.append(exampleText)
-                }
-            } else {
+            
                 for (index, definition) in JSONMeanings[number].definitions.enumerated() {
                     let content = "\(index + 1). \(definition.definition)"
                     let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
                     NSMutableText.append(contentText)
-
+                    
                     if let example = definition.example {
                         let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
                         NSMutableText.append(exampleText)
                     }
                     NSMutableText.append(lineBreak)
-                }
+                    
+                    let synonyms = definition.synonyms
+                    if !synonyms.isEmpty {
+                        let synonymsText = NSAttributedString(string: "SYNONYMS: \(synonyms.joined(separator: ", "))", attributes: [.font: UIFont.monospacedSystemFont(ofSize: 18, weight: .medium)])
+                        NSMutableText.append(synonymsText)
+                        NSMutableText.append(lineBreak)
+                    }
+                    
+                    let antonyms = definition.antonyms
+                    if !antonyms.isEmpty {
+                        let antonymsText = NSAttributedString(string: "ANTONYMS: \(antonyms.joined(separator: ", "))", attributes: [.font: UIFont.monospacedSystemFont(ofSize: 18, weight: .medium)])
+                        NSMutableText.append(antonymsText)
+                        NSMutableText.append(lineBreak)
+                    }
             }
         }
 

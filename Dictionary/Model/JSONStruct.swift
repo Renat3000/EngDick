@@ -22,6 +22,8 @@ struct Meaning: Decodable {
 
 struct Definition: Decodable {
     let definition: String
+    let synonyms: [String]
+    let antonyms: [String]
     let example: String?
 }
 
