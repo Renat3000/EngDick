@@ -63,12 +63,15 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         let count = 0...items.count-1
         for i in count {
             configureCell(index: i)
+            print(wordDefinition1)
         }
     }
     
     private func configureCell(index: Int) {
         let item = items[index]
         let phonetics = item.phonetics
+        let JSONMeanings = item.meanings
+        
 //      audio. the thing is, we don't know where in json there's a working audio, so somehow we have to figure it out
         phonetics.forEach {
             if $0.audio != "" {
@@ -79,7 +82,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             }
         }
         
-        let JSONMeanings = item.meanings
         let lineBreak = NSAttributedString(string: "\n")
 
         func setupDefinitions(partOfSpeech: inout String, NSMutableText: inout NSMutableAttributedString, number: Int) {
@@ -125,6 +127,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
                 break
             }
         }
+        
     }
     
     // MARK: collectionView methods
@@ -136,22 +139,13 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
         
-        let count = 0...items[indexPath.item].meanings.count-1
-        for number in count {
-            switch number {
-            case 0:
-                cell.definitionLabel1.attributedText = wordDefinition1
-                cell.partOfSpeechLabel1.text = partOfSpeech1
-            case 1:
-                cell.definitionLabel2.attributedText = wordDefinition2
-                cell.partOfSpeechLabel2.text = partOfSpeech2
-            case 2:
-                cell.definitionLabel3.attributedText = wordDefinition3
-                cell.partOfSpeechLabel3.text = partOfSpeech3
-            default:
-                break
-            }
-        }
+        cell.partOfSpeechLabel1.text = partOfSpeech1
+        cell.definitionLabel1.attributedText = wordDefinition1
+        cell.partOfSpeechLabel2.text = partOfSpeech2
+        cell.definitionLabel2.attributedText = wordDefinition2
+        cell.partOfSpeechLabel3.text = partOfSpeech3
+        cell.definitionLabel3.attributedText = wordDefinition3
+        
         return cell
     }
 
