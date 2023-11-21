@@ -18,18 +18,21 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     var playerItem : AVPlayerItem?
 
     let word = String()
-    var partOfSpeech1 = String()
-    var partOfSpeech2 = String()
-    var partOfSpeech3 = String()
-    var wordDefinition1 = NSMutableAttributedString()
-    var wordDefinition2 = NSMutableAttributedString()
-    var wordDefinition3 = NSMutableAttributedString()
+//    var partOfSpeech1 = String()
+//    var partOfSpeech2 = String()
+//    var partOfSpeech3 = String()
+//    var wordDefinition1 = NSMutableAttributedString()
+//    var wordDefinition2 = NSMutableAttributedString()
+//    var wordDefinition3 = NSMutableAttributedString()
+    
+    private let items: [JSONStruct] //maybe: private var item: JSONStruct?
+    private var partOfSpeechArray = [String]()
+    private var wordDefinitionArray = [NSMutableAttributedString]()
     
     var itemWasAtCell = Int16()
     var isBookmarked: Bool = false
     var audioIsAvailable: Bool = false
     
-    private let items: [JSONStruct] //maybe: private var item: JSONStruct?
     init(items: [JSONStruct], isBookmarked: Bool) {
         
         self.items = items
@@ -57,13 +60,15 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 //        layout.sectionHeadersPinToVisibleBounds = true // to make the header stick to the top, future challenge, doesn't work now, crashes the cells layout
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
+        
+//        print(partOfSpeechArray)
+//        print(wordDefinitionArray)
     }
     
     private func configureCells() {
         let count = 0...items.count-1
         for i in count {
             configureCell(index: i)
-            print(wordDefinition1)
         }
     }
     
@@ -113,20 +118,22 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
                     }
             }
         }
-
+        
+        var partOfSpeechArrayLocal = [String]()
+        var wordDefinitionArrayLocal = [NSMutableAttributedString]()
+        
         let count = 0...JSONMeanings.count-1
         for number in count {
-            switch number {
-            case 0:
-                setupDefinitions(partOfSpeech: &partOfSpeech1, NSMutableText: &wordDefinition1, number: number)
-            case 1:
-                setupDefinitions(partOfSpeech: &partOfSpeech2, NSMutableText: &wordDefinition2, number: number)
-            case 2:
-                setupDefinitions(partOfSpeech: &partOfSpeech3, NSMutableText: &wordDefinition3, number: number)
-            default:
-                break
-            }
+            var partOfSpeech = ""
+            var wordDefinition = NSMutableAttributedString()
+            setupDefinitions(partOfSpeech: &partOfSpeech, NSMutableText: &wordDefinition, number: number)
+            
+            partOfSpeechArrayLocal.append(partOfSpeech)
+            wordDefinitionArrayLocal.append(wordDefinition)
         }
+        
+        partOfSpeechArray.append(contentsOf: partOfSpeechArrayLocal)
+        wordDefinitionArray.append(contentsOf: wordDefinitionArrayLocal)
         
     }
     
@@ -139,12 +146,43 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
         
-        cell.partOfSpeechLabel1.text = partOfSpeech1
-        cell.definitionLabel1.attributedText = wordDefinition1
-        cell.partOfSpeechLabel2.text = partOfSpeech2
-        cell.definitionLabel2.attributedText = wordDefinition2
-        cell.partOfSpeechLabel3.text = partOfSpeech3
-        cell.definitionLabel3.attributedText = wordDefinition3
+        if items.count > 1 {
+            let startIndex = indexPath.item * 3
+            
+            if startIndex < partOfSpeechArray.count {
+                cell.partOfSpeechLabel1.text = partOfSpeechArray[startIndex]
+                cell.definitionLabel1.attributedText = wordDefinitionArray[startIndex]
+            } else {
+                // Очистите ячейку, если данных нет
+                cell.partOfSpeechLabel1.text = nil
+                cell.definitionLabel1.text = nil
+            }
+            
+            if startIndex + 1 < partOfSpeechArray.count {
+                cell.partOfSpeechLabel2.text = partOfSpeechArray[startIndex + 1]
+                cell.definitionLabel2.attributedText = wordDefinitionArray[startIndex + 1]
+            } else {
+                // Очистите ячейку, если данных нет
+                cell.partOfSpeechLabel2.text = nil
+                cell.definitionLabel2.text = nil
+            }
+            
+            if startIndex + 2 < partOfSpeechArray.count {
+                cell.partOfSpeechLabel3.text = partOfSpeechArray[startIndex + 2]
+                cell.definitionLabel3.attributedText = wordDefinitionArray[startIndex + 2]
+            } else {
+                // Очистите ячейку, если данных нет
+                cell.partOfSpeechLabel3.text = nil
+                cell.definitionLabel3.text = nil
+            }
+        } else {
+            
+            let startIndex = indexPath.item
+            let endIndex = min(startIndex + 1, partOfSpeechArray.count)
+            let partOfSpeechRange = startIndex..<endIndex
+            cell.partOfSpeechLabel1.text = partOfSpeechRange.upperBound > startIndex ? partOfSpeechArray[partOfSpeechRange].joined(separator: "\n") : "No information"
+            cell.definitionLabel1.attributedText = wordDefinitionArray[startIndex]
+        }
         
         return cell
     }
