@@ -18,12 +18,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     var playerItem : AVPlayerItem?
 
     let word = String()
-//    var partOfSpeech1 = String()
-//    var partOfSpeech2 = String()
-//    var partOfSpeech3 = String()
-//    var wordDefinition1 = NSMutableAttributedString()
-//    var wordDefinition2 = NSMutableAttributedString()
-//    var wordDefinition3 = NSMutableAttributedString()
     
     private let items: [JSONStruct] //maybe: private var item: JSONStruct?
     private var partOfSpeechArray = [String]()
@@ -127,11 +121,9 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             var partOfSpeech = ""
             var wordDefinition = NSMutableAttributedString()
             setupDefinitions(partOfSpeech: &partOfSpeech, NSMutableText: &wordDefinition, number: number)
-            
             partOfSpeechArrayLocal.append(partOfSpeech)
             wordDefinitionArrayLocal.append(wordDefinition)
         }
-        
         partOfSpeechArray.append(contentsOf: partOfSpeechArrayLocal)
         wordDefinitionArray.append(contentsOf: wordDefinitionArrayLocal)
         
@@ -146,14 +138,13 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
         
-        if items.count > 1 {
+        if items.count > 0 {
             let startIndex = indexPath.item * 3
             
             if startIndex < partOfSpeechArray.count {
                 cell.partOfSpeechLabel1.text = partOfSpeechArray[startIndex]
                 cell.definitionLabel1.attributedText = wordDefinitionArray[startIndex]
             } else {
-                // Очистите ячейку, если данных нет
                 cell.partOfSpeechLabel1.text = nil
                 cell.definitionLabel1.text = nil
             }
@@ -162,7 +153,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
                 cell.partOfSpeechLabel2.text = partOfSpeechArray[startIndex + 1]
                 cell.definitionLabel2.attributedText = wordDefinitionArray[startIndex + 1]
             } else {
-                // Очистите ячейку, если данных нет
                 cell.partOfSpeechLabel2.text = nil
                 cell.definitionLabel2.text = nil
             }
@@ -171,7 +161,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
                 cell.partOfSpeechLabel3.text = partOfSpeechArray[startIndex + 2]
                 cell.definitionLabel3.attributedText = wordDefinitionArray[startIndex + 2]
             } else {
-                // Очистите ячейку, если данных нет
                 cell.partOfSpeechLabel3.text = nil
                 cell.definitionLabel3.text = nil
             }
