@@ -123,21 +123,13 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             setupDefinitions(partOfSpeech: &partOfSpeech, NSMutableText: &wordDefinition, number: number)
             partOfSpeechArrayLocal.append(partOfSpeech)
             wordDefinitionArrayLocal.append(wordDefinition)
-            
-            var countVar = JSONMeanings.count
-            if count == 0..<1 {
-                while countVar < 3 {
-                    partOfSpeechArrayLocal.append("")
-                    wordDefinitionArrayLocal.append(NSMutableAttributedString(string: ""))
-                    countVar += 1
-                }
-            } else {
-                if countVar < 3 {
-                    partOfSpeechArrayLocal.append("")
-                    wordDefinitionArrayLocal.append(NSMutableAttributedString(string: ""))
-                    countVar += 1
-                }
-            }
+        }
+        
+        var countVar = JSONMeanings.count
+        while countVar < 3 {
+            partOfSpeechArrayLocal.append("")
+            wordDefinitionArrayLocal.append(NSMutableAttributedString(string: ""))
+            countVar += 1
         }
         
         partOfSpeechArray.append(contentsOf: partOfSpeechArrayLocal)
