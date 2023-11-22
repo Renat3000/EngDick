@@ -116,17 +116,33 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         var partOfSpeechArrayLocal = [String]()
         var wordDefinitionArrayLocal = [NSMutableAttributedString]()
         
-        let count = 0...JSONMeanings.count-1
+        let count = 0..<(JSONMeanings.count > 1 ? JSONMeanings.count : 1)
         for number in count {
             var partOfSpeech = ""
-            var wordDefinition = NSMutableAttributedString()
+            var wordDefinition = NSMutableAttributedString(string: "")
             setupDefinitions(partOfSpeech: &partOfSpeech, NSMutableText: &wordDefinition, number: number)
             partOfSpeechArrayLocal.append(partOfSpeech)
             wordDefinitionArrayLocal.append(wordDefinition)
+            
+            var countVar = JSONMeanings.count
+            if count == 0..<1 {
+                while countVar < 3 {
+                    partOfSpeechArrayLocal.append("")
+                    wordDefinitionArrayLocal.append(NSMutableAttributedString(string: ""))
+                    countVar += 1
+                }
+            } else {
+                if countVar < 3 {
+                    partOfSpeechArrayLocal.append("")
+                    wordDefinitionArrayLocal.append(NSMutableAttributedString(string: ""))
+                    countVar += 1
+                }
+            }
         }
+        
         partOfSpeechArray.append(contentsOf: partOfSpeechArrayLocal)
         wordDefinitionArray.append(contentsOf: wordDefinitionArrayLocal)
-        
+        print(partOfSpeechArray)
     }
     
     // MARK: collectionView methods
@@ -138,39 +154,21 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
         
-        if items.count > 0 {
-            let startIndex = indexPath.item * 3
-            
-            if startIndex < partOfSpeechArray.count {
-                cell.partOfSpeechLabel1.text = partOfSpeechArray[startIndex]
-                cell.definitionLabel1.attributedText = wordDefinitionArray[startIndex]
-            } else {
-                cell.partOfSpeechLabel1.text = nil
-                cell.definitionLabel1.text = nil
-            }
-            
-            if startIndex + 1 < partOfSpeechArray.count {
-                cell.partOfSpeechLabel2.text = partOfSpeechArray[startIndex + 1]
-                cell.definitionLabel2.attributedText = wordDefinitionArray[startIndex + 1]
-            } else {
-                cell.partOfSpeechLabel2.text = nil
-                cell.definitionLabel2.text = nil
-            }
-            
-            if startIndex + 2 < partOfSpeechArray.count {
-                cell.partOfSpeechLabel3.text = partOfSpeechArray[startIndex + 2]
-                cell.definitionLabel3.attributedText = wordDefinitionArray[startIndex + 2]
-            } else {
-                cell.partOfSpeechLabel3.text = nil
-                cell.definitionLabel3.text = nil
-            }
-        } else {
-            
-            let startIndex = indexPath.item
-            let endIndex = min(startIndex + 1, partOfSpeechArray.count)
-            let partOfSpeechRange = startIndex..<endIndex
-            cell.partOfSpeechLabel1.text = partOfSpeechRange.upperBound > startIndex ? partOfSpeechArray[partOfSpeechRange].joined(separator: "\n") : "No information"
-            cell.definitionLabel1.attributedText = wordDefinitionArray[startIndex]
+        print(partOfSpeechArray)
+        print(wordDefinitionArray)
+        
+        let startIndex = indexPath.item * 3
+        
+        cell.partOfSpeechLabel1.text = partOfSpeechArray[startIndex]
+        cell.definitionLabel1.attributedText = wordDefinitionArray[startIndex]
+        
+        if partOfSpeechArray.count > Int(startIndex + 1) && !partOfSpeechArray[startIndex + 1].isEmpty {
+            cell.partOfSpeechLabel2.text = partOfSpeechArray[startIndex + 1]
+            cell.definitionLabel2.attributedText = wordDefinitionArray[startIndex + 1]
+        }
+        if partOfSpeechArray.count > Int(startIndex + 2) && !partOfSpeechArray[startIndex + 2].isEmpty {
+            cell.partOfSpeechLabel3.text = partOfSpeechArray[startIndex + 2]
+            cell.definitionLabel3.attributedText = wordDefinitionArray[startIndex + 2]
         }
         
         return cell
