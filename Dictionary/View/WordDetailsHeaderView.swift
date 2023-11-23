@@ -12,7 +12,12 @@ class WordDetailsHeaderView: UICollectionReusableView {
     weak var delegate: HeaderDelegate?
     let wordLabel = UILabel()
     let phoneticsLabel = UILabel()
-    var isBookmarked: Bool = false
+    var isBookmarked: Bool = false {
+           didSet {
+               updateBookmarkButton()
+           }
+       }
+
     var soundButtonIsPressed: Bool = false
     
     let starButton: UIButton = {
@@ -75,6 +80,14 @@ class WordDetailsHeaderView: UICollectionReusableView {
         soundButtonIsPressed = false
         soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
         print("lallalalallalala")
+    }
+    
+    private func updateBookmarkButton() {
+        if isBookmarked {
+            starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+        } else {
+            starButton.setImage(UIImage(systemName: "star"), for: .normal)
+        }
     }
     
     @objc private func didTapStar() {

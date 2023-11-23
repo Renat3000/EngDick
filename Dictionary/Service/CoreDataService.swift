@@ -35,10 +35,9 @@ class CoreDataService {
         }
     }
     
-    func createItem(name: String, itemCell: Int16){
+    func createItem(name: String){
         let newItem = FavoritesItem(context: context)
         newItem.word = name
-        newItem.itemCell = itemCell
         do {
             try context.save()
         } catch {
@@ -48,11 +47,26 @@ class CoreDataService {
     
     func deleteItem(item: FavoritesItem) {
         context.delete(item)
-        
         do {
             try context.save()
         } catch {
             print("Error deleting item in Core Data: \(error)")
         }
     }
+    
+    func deleteItem(withName name: String) {
+        let fetchRequest: NSFetchRequest<FavoritesItem> = FavoritesItem.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "word == %@", name)
+
+        do {
+            let items = try context.fetch(fetchRequest)
+            for item in items {
+                context.delete(item)
+            }
+            try context.save()
+        } catch {
+            print("Error deleting item from Core Data: \(error)")
+        }
+    }
+
 }

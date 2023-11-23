@@ -47,7 +47,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         let model = models[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         if let word = model.word {
-            cell.textLabel?.text = "word:\(word), cell \(model.itemCell)"
+            cell.textLabel?.text = "\(word)"
         }
         cell.backgroundColor = .systemGray4
         return cell
@@ -83,8 +83,6 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedCoreDataItem = models[indexPath.row]
-        theCoreDataItem = selectedCoreDataItem
-        theCell = Int(selectedCoreDataItem.itemCell)
         if let word = selectedCoreDataItem.word {
             fetchDictionary(searchTerm: word.replacingOccurrences(of: " ", with: "%20"))
         }

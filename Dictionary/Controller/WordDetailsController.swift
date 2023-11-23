@@ -16,14 +16,11 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 
     var audioPlayer: AVPlayer?
     var playerItem : AVPlayerItem?
-
-    let word = String()
     
     private let items: [JSONStruct] //maybe: private var item: JSONStruct?
     private var partOfSpeechArray = [String]()
     private var wordDefinitionArray = [NSMutableAttributedString]()
     
-    var itemWasAtCell = Int16()
     var isBookmarked: Bool = false
     var audioIsAvailable: Bool = false
     
@@ -54,9 +51,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
 //        layout.sectionHeadersPinToVisibleBounds = true // to make the header stick to the top, future challenge, doesn't work now, crashes the cells layout
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
-        
-//        print(partOfSpeechArray)
-//        print(wordDefinitionArray)
     }
     
     private func configureCells() {
@@ -134,7 +128,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         
         partOfSpeechArray.append(contentsOf: partOfSpeechArrayLocal)
         wordDefinitionArray.append(contentsOf: wordDefinitionArrayLocal)
-        print(partOfSpeechArray)
     }
     
     // MARK: collectionView methods
@@ -145,9 +138,6 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DictionaryEntryCell
-        
-        print(partOfSpeechArray)
-        print(wordDefinitionArray)
         
         let startIndex = indexPath.item * 3
         
@@ -179,6 +169,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             headerView.wordLabel.text = items[0].word
             headerView.phoneticsLabel.text = items[0].phonetic ?? "no phonetics"
             headerView.setAudioButtonEnabled(audioIsAvailable)
+            headerView.isBookmarked = isBookmarked
             
             return headerView
         }
@@ -192,22 +183,18 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
 // MARK: star button Functions
     @objc func didTapStar() {
-//        if let word = wordLabel.text {
-//            isBookmarked.toggle()
-
-//            if isBookmarked {
-//                starButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-//                CoreDataService.shared.createItem(name: word, itemCell: itemWasAtCell) // а так работает мразь!
-//                wordDetailsDelegate?.refreshList()
-//            } else {
-//                starButton.setImage(UIImage(systemName: "star"), for: .normal)
-//                wordDetailsDelegate?.deleteCurrentCoreDataEntry()
-//                CoreDataService.shared.deleteItem(item: coreDataItem)
-//            }
+        isBookmarked.toggle()
+        let word = items[0].word
+        
+        if isBookmarked {
+            CoreDataService.shared.createItem(name: word) // а так работает мразь!
+        } else {
+            CoreDataService.shared.deleteItem(withName: word)
+        }
         print("tapped the star")
         
-        }
-//    }
+    }
+    
 // MARK: Audio UICollectionViewHeader & Audio Functions
     
     @objc internal func didTapHeadphones(soundButtonIsPressed: Bool) {
