@@ -14,8 +14,8 @@ class BaseTabBarController: UITabBarController {
         
         viewControllers = [
             createNavController(viewController: DictionaryController(), title: "Dictionary", imageName: "character.book.closed.fill"),
-            createNavController(viewController: FavoritesController(), title: "Favorites", imageName: "star.fill")
-//            , createNavController(viewController: WordDetailsController(), title: "Word Details", imageName: "info.circle.fill")
+            createNavController(viewController: FavoritesController(), title: "Favorites", imageName: "star.fill"),
+            createNavController(viewController: SetsController(), title: "FlashCards", imageName: "menucard")
         ]
     }
     // should fix this problem with UIViewController when I actually use 1 UICollectionViewController and plan to use tableViewController

@@ -79,7 +79,6 @@ class WordDetailsHeaderView: UICollectionReusableView {
     @objc func stopAudio() {
         soundButtonIsPressed = false
         soundButton.setImage(UIImage(systemName: "headphones.circle"), for: .normal)
-        print("lallalalallalala")
     }
     
     private func updateBookmarkButton() {
