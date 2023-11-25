@@ -30,9 +30,10 @@ class SetsController: UIViewController {
 
         let playButton: UIButton = {
             let button = UIButton(type: .system)
-            let playImage = UIImage(systemName: "play.fill")
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 140, weight: .bold, scale: .large)
+            let playImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
             button.setImage(playImage, for: .normal)
-            button.tintColor = .systemBlue
+            button.tintColor = .systemGray
             button.addTarget(self, action: #selector(didTapPlay), for: .touchUpInside)
 
             return button
@@ -42,10 +43,10 @@ class SetsController: UIViewController {
             let label = UILabel()
             
             label.numberOfLines = 2
-            label.textColor = .black
-            label.backgroundColor = .white
+            label.textColor = .white
+            label.backgroundColor = .systemGray4
             label.font = .systemFont(ofSize: 24)
-            
+            label.textAlignment = .center
             return label
         }()
         
@@ -54,7 +55,7 @@ class SetsController: UIViewController {
         view.addSubview(stackView)
 
         // Pinning to the sides of view
-        stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         // Padding and spacing
@@ -65,7 +66,7 @@ class SetsController: UIViewController {
 
     
     @objc private func didTapPlay() {
-        print("lmao you ARE played!")
+//        print("lmao you ARE played!")
     }
 
 }
