@@ -8,22 +8,64 @@
 import UIKit
 
 class SetsController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        setupView()
     }
     
+    func setupView() {
+        
+        let stackView: UIStackView = {
+            let view = UIStackView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.axis = .vertical
+            view.distribution = .fill
+            view.alignment = .fill
+            view.spacing = 8.0
+            
+            return view
+        }()
 
-    /*
-    // MARK: - Navigation
+        let playButton: UIButton = {
+            let button = UIButton(type: .system)
+            let playImage = UIImage(systemName: "play.fill")
+            button.setImage(playImage, for: .normal)
+            button.tintColor = .systemBlue
+            button.addTarget(self, action: #selector(didTapPlay), for: .touchUpInside)
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+            return button
+        }()
+        
+        let noteLabel: UILabel = {
+            let label = UILabel()
+            
+            label.numberOfLines = 2
+            label.textColor = .black
+            label.backgroundColor = .white
+            label.font = .systemFont(ofSize: 24)
+            
+            return label
+        }()
+        
+        stackView.addArrangedSubview(noteLabel)
+        stackView.addArrangedSubview(playButton)
+        view.addSubview(stackView)
+
+        // Pinning to the sides of view
+        stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        // Padding and spacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+    
+        noteLabel.text = "Practice Active Learning with the spaced repetition method!"
     }
-    */
+
+    
+    @objc private func didTapPlay() {
+        print("lmao you ARE played!")
+    }
 
 }
