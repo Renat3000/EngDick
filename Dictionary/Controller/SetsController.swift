@@ -66,7 +66,9 @@ class SetsController: UIViewController {
 
     
     @objc private func didTapPlay() {
-//        print("lmao you ARE played!")
+
+        let cardVC = CardViewController()
+        self.present(cardVC, animated: true)
     }
 
 }

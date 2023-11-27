@@ -20,6 +20,7 @@
 		CEBCDEA52AE0158B003E039C /* FavoritesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA42AE0158B003E039C /* FavoritesController.swift */; };
 		CEBCDEA72AE01841003E039C /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA62AE01841003E039C /* DictionaryView.swift */; };
 		CEBCDEAA2AE023B7003E039C /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCDEA92AE023B7003E039C /* Extension.swift */; };
+		CEBD8BB72B14C120002B6DAF /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBD8BB62B14C120002B6DAF /* CardViewController.swift */; };
 		CEC7DADC2AE7F44300290575 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEC7DADA2AE7F44300290575 /* CoreDataModel.xcdatamodeld */; };
 		CEF48D2C2ADFF48800852997 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF48D2B2ADFF48800852997 /* AppDelegate.swift */; };
 		CEF48D302ADFF48800852997 /* DictionaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF48D2F2ADFF48800852997 /* DictionaryController.swift */; };
@@ -41,6 +42,7 @@
 		CEBCDEA42AE0158B003E039C /* FavoritesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesController.swift; sourceTree = "<group>"; };
 		CEBCDEA62AE01841003E039C /* DictionaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CEBCDEA92AE023B7003E039C /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		CEBD8BB62B14C120002B6DAF /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		CEC7DADB2AE7F44300290575 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		CEF48D282ADFF48800852997 /* Dictionary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dictionary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF48D2B2ADFF48800852997 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				CE15E8DE2AE951190031F0EE /* WordDetailsController.swift */,
 				CEBCDEA42AE0158B003E039C /* FavoritesController.swift */,
 				CE23883A2B10EBA900CA5F03 /* SetsController.swift */,
+				CEBD8BB62B14C120002B6DAF /* CardViewController.swift */,
 				CEBCDEA12AE01185003E039C /* BaseTabBarController.swift */,
 			);
 			path = Controller;
@@ -218,6 +221,7 @@
 				CE06D65E2AE5715F00D12DCC /* JSONService.swift in Sources */,
 				CE23883B2B10EBA900CA5F03 /* SetsController.swift in Sources */,
 				CEF48D2C2ADFF48800852997 /* AppDelegate.swift in Sources */,
+				CEBD8BB72B14C120002B6DAF /* CardViewController.swift in Sources */,
 				CEBCDEA72AE01841003E039C /* DictionaryView.swift in Sources */,
 				CE1A60E32AF411D50057A427 /* CoreDataService.swift in Sources */,
 				CEBCDE9F2AE00819003E039C /* JSONStruct.swift in Sources */,

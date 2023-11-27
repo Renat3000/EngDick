@@ -45,9 +45,6 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
         searchController.searchBar.delegate = self
     }
     
-//    fileprivate var JSONTopResult = [JSONStruct]()
-//    fileprivate var JSONMeanings = [Meaning]()
-    
     fileprivate func fetchDictionary(searchTerm: String) {
         //get back json-fetched data from the JSONService file
         print("firing off request, just wait!")
@@ -59,7 +56,6 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
                 return
             }
             
-//            self.JSONTopResult = JSONStruct
             DispatchQueue.main.async {
                 self.presentWordDetails(selectedItem: JSONStruct)
             }
@@ -126,7 +122,6 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.textLabel?.text = searchOptions[indexPath.row]
         }
         
-        
         return cell
     }
 
@@ -149,10 +144,6 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func presentWordDetails(selectedItem: [JSONStruct]) {
         let wdController = WordDetailsController(items: selectedItem, isBookmarked: false)
-//        let wordDetailsHeaderView = WordDetailsHeaderView()
-//        wdController.controllerDelegate = wordDetailsHeaderView
-//    controllerDelegate: ControllerDelegate
         navigationController?.pushViewController(wdController, animated: true)
-
     }
 }
