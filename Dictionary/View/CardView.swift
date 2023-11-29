@@ -58,7 +58,8 @@ class CardView: UIView {
     let showAnswerButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Show Answers", for: .normal)
+        button.layer.cornerRadius = 10
+        button.setTitle("Show Answer", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
         button.backgroundColor = .white
@@ -70,6 +71,7 @@ class CardView: UIView {
     let easyButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
         button.setTitle("Easy", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -82,6 +84,7 @@ class CardView: UIView {
     let goodButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
         button.setTitle("Good", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -94,6 +97,7 @@ class CardView: UIView {
     let hardButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
         button.setTitle("Hard", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -106,6 +110,7 @@ class CardView: UIView {
     let againButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
         button.setTitle("Again", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -138,34 +143,78 @@ class CardView: UIView {
     func setupView() {
         backgroundColor = .systemGray5
         //old
-        wordLabel.text = "some words"
+//        wordLabel.text = "some words"
+//        buttonStackView.addArrangedSubview(easyButton)
+//        buttonStackView.addArrangedSubview(goodButton)
+//        buttonStackView.addArrangedSubview(hardButton)
+//        buttonStackView.addArrangedSubview(againButton)
+//
+//        wordStackViewVertical.addArrangedSubview(wordLabel)
+//        wordStackViewVertical.addArrangedSubview(definitionLabel)
+//
+//        stackViewVertical.addArrangedSubview(wordStackViewVertical)
+//        stackViewVertical.addArrangedSubview(showAnswerButton)
+//        stackViewVertical.addArrangedSubview(buttonStackView)
+//        addSubview(stackViewVertical)
+//
+//        wordLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+//        wordLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -200).isActive = true
+//
+//        wordStackViewVertical.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+////        wordStackViewVertical.widthAnchor.constraint(equalToConstant: 150).isActive = true
+//
+////        showAnswerButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+////        showAnswerButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+////        wordStackViewVertical.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30).isActive = true
+////        wordStackViewVertical.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
+//
+//        stackViewVertical.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+//        stackViewVertical.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
+        //new
+        
+        let buttonHeight: CGFloat = 40
+        
+        addSubview(wordStackViewVertical)
+        addSubview(showAnswerButton)
+        addSubview(buttonStackView)
+        
+        wordStackViewVertical.addArrangedSubview(wordLabel)
+        wordStackViewVertical.addArrangedSubview(definitionLabel)
+        
         buttonStackView.addArrangedSubview(easyButton)
         buttonStackView.addArrangedSubview(goodButton)
         buttonStackView.addArrangedSubview(hardButton)
         buttonStackView.addArrangedSubview(againButton)
         
-        wordStackViewVertical.addArrangedSubview(wordLabel)
-        wordStackViewVertical.addArrangedSubview(definitionLabel)
+        wordStackViewVertical.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        wordStackViewVertical.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        wordStackViewVertical.widthAnchor.constraint(equalToConstant: 400).isActive = true
         
-        stackViewVertical.addArrangedSubview(wordStackViewVertical)
-        stackViewVertical.addArrangedSubview(showAnswerButton)
-        stackViewVertical.addArrangedSubview(buttonStackView)
-        addSubview(stackViewVertical)
+        showAnswerButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        showAnswerButton.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 50).isActive = true
+        showAnswerButton.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
+        showAnswerButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
         
-        wordLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        wordLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -200).isActive = true
+        buttonStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        buttonStackView.topAnchor.constraint(equalTo: showAnswerButton.bottomAnchor, constant: 20).isActive = true
+        buttonStackView.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
+        buttonStackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
         
-        wordStackViewVertical.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-//        wordStackViewVertical.widthAnchor.constraint(equalToConstant: 150).isActive = true
+//        wordLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+//        wordLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -200).isActive = true
+//
+//        wordStackViewVertical.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+////        wordStackViewVertical.widthAnchor.constraint(equalToConstant: 150).isActive = true
+//
+////        showAnswerButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+////        showAnswerButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+////        wordStackViewVertical.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30).isActive = true
+////        wordStackViewVertical.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
+//
+//        stackViewVertical.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+//        stackViewVertical.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
-//        showAnswerButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-//        showAnswerButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
-//        wordStackViewVertical.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30).isActive = true
-//        wordStackViewVertical.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
-    
-        stackViewVertical.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        stackViewVertical.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-    
     }
     
     @objc func didTapShowAnswerButton() {

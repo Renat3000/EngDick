@@ -22,7 +22,7 @@ class CardViewController: UIViewController, CardViewDelegate {
         let count = models.count
         
         switch title {
-            case "Show Answers":
+            case "Show Answer":
             fillDefinitionLabel()
             case "Easy":
                guard currentNumberInArray < count else {
