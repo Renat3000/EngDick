@@ -12,18 +12,32 @@ class CardViewController: UIViewController, CardViewDelegate {
     let coreDataService = CoreDataService.shared
     private var models = CoreDataService.shared.getAllItems()
     private var currentNumberInArray = 0
-
+    fileprivate var JSONTopResult = [JSONStruct]() {
+        didSet {
+            cardView.setDefinitionLabelText(newText: JSONTopResult[0].meanings[0].definitions[0].definition)
+        }
+    }
+    
     func buttonPressed(withTitle title: String) {
         let count = models.count
-           guard currentNumberInArray < count else {
-               currentNumberInArray = 0
-               return
-           }
-
-           if let word = models[currentNumberInArray].word {
-               cardView.setLabelText(newText: word)
-               currentNumberInArray += 1
-           }
+        
+        switch title {
+            case "Show Answers":
+            fillDefinitionLabel()
+            case "Easy":
+               guard currentNumberInArray < count else {
+                   currentNumberInArray = 0
+                   return
+               }
+            
+            currentNumberInArray += 1
+               if let word = models[currentNumberInArray].word {
+                   cardView.setWordLabelText(newText: word)
+                   cardView.definitionLabel.text = ""
+               }
+            default:
+                break
+            }
     }
     
     private lazy var cardView: CardView = {
@@ -35,8 +49,33 @@ class CardViewController: UIViewController, CardViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let word = models[currentNumberInArray].word {
+            cardView.setWordLabelText(newText: word)
+        }
+        
         view.addSubview(cardView)
         cardView.fillSuperview()
+    }
+    
+    fileprivate func fetchDictionary(searchTerm: String) {
+        //get back json-fetched data from the JSONService file
+        print("firing off request, just wait!")
+        JSONService.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
+            
+            if let err = err {
+                print("failed to fetch dictionary entries", err)
+                return
+            }
+            DispatchQueue.main.async {
+                self.JSONTopResult = JSONStruct
+            }
+        }
+    }
+    
+    func fillDefinitionLabel() {
+        if let word = models[currentNumberInArray].word {
+            fetchDictionary(searchTerm: word)
+        }
     }
     
 }

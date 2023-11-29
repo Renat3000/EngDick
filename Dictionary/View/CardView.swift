@@ -22,10 +22,32 @@ class CardView: UIView {
         return view
     }()
     
+    let wordStackViewVertical: UIStackView = {
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .vertical
+        view.distribution = .fill
+        view.alignment = .fill
+        view.spacing = 8.0
+        
+        return view
+    }()
+    
     let wordLabel: UILabel = {
         let label = UILabel()
-        
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 2
+        label.textColor = .white
+        label.backgroundColor = .systemGray4
+        label.font = .systemFont(ofSize: 36)
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let definitionLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
         label.textColor = .white
         label.backgroundColor = .systemGray4
         label.font = .systemFont(ofSize: 24)
@@ -35,7 +57,7 @@ class CardView: UIView {
     
     let showAnswerButton: UIButton = {
         let button = UIButton(type: .system)
-        
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Show Answers", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -47,7 +69,7 @@ class CardView: UIView {
     
     let easyButton: UIButton = {
         let button = UIButton(type: .system)
-        
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Easy", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -59,7 +81,7 @@ class CardView: UIView {
     
     let goodButton: UIButton = {
         let button = UIButton(type: .system)
-        
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Good", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -71,7 +93,7 @@ class CardView: UIView {
     
     let hardButton: UIButton = {
         let button = UIButton(type: .system)
-        
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Hard", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -83,7 +105,7 @@ class CardView: UIView {
     
     let againButton: UIButton = {
         let button = UIButton(type: .system)
-        
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Again", for: .normal)
         button.titleLabel?.textColor = .black
         button.tintColor = .black
@@ -115,21 +137,35 @@ class CardView: UIView {
     
     func setupView() {
         backgroundColor = .systemGray5
-        
+        //old
         wordLabel.text = "some words"
         buttonStackView.addArrangedSubview(easyButton)
-//        buttonStackView.addArrangedSubview(goodButton)
-//        buttonStackView.addArrangedSubview(hardButton)
+        buttonStackView.addArrangedSubview(goodButton)
+        buttonStackView.addArrangedSubview(hardButton)
         buttonStackView.addArrangedSubview(againButton)
-    
-        stackViewVertical.addArrangedSubview(wordLabel)
+        
+        wordStackViewVertical.addArrangedSubview(wordLabel)
+        wordStackViewVertical.addArrangedSubview(definitionLabel)
+        
+        stackViewVertical.addArrangedSubview(wordStackViewVertical)
         stackViewVertical.addArrangedSubview(showAnswerButton)
         stackViewVertical.addArrangedSubview(buttonStackView)
         addSubview(stackViewVertical)
         
         wordLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        wordLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        wordLabel.translatesAutoresizingMaskIntoConstraints = false
+        wordLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -200).isActive = true
+        
+        wordStackViewVertical.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+//        wordStackViewVertical.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        
+//        showAnswerButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+//        showAnswerButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+//        wordStackViewVertical.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30).isActive = true
+//        wordStackViewVertical.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
+    
+        stackViewVertical.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        stackViewVertical.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+    
     }
     
     @objc func didTapShowAnswerButton() {
@@ -151,10 +187,13 @@ class CardView: UIView {
             delegate?.buttonPressed(withTitle: sender.currentTitle ?? "")
     }
     
-    func setLabelText(newText: String) {
+    func setWordLabelText(newText: String) {
         wordLabel.text = newText
     }
     
+    func setDefinitionLabelText(newText: String) {
+        definitionLabel.text = newText
+    }
 }
 
 protocol CardViewDelegate: AnyObject {
