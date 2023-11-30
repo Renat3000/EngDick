@@ -25,19 +25,17 @@ class CardViewController: UIViewController, CardViewDelegate {
             case "Show Answer":
             fillDefinitionLabel()
             case "Easy":
-               guard currentNumberInArray < count-1 else {
-                   currentNumberInArray = 0
-                   if let word = models[currentNumberInArray].word {
-                       cardView.setWordLabelText(newText: word)
-                   }
-                   return
-               }
-            
             currentNumberInArray += 1
-               if let word = models[currentNumberInArray].word {
-                   cardView.setWordLabelText(newText: word)
-                   cardView.definitionLabel.text = ""
-               }
+            
+            if currentNumberInArray == count {
+                currentNumberInArray = 0
+            }
+            
+            if let word = models[currentNumberInArray].word {
+                cardView.setWordLabelText(newText: word)
+                cardView.definitionLabel.text = ""
+            }
+            
             default:
                 break
             }
