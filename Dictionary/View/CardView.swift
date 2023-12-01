@@ -33,7 +33,8 @@ class CardView: UIView {
     func setupView() {
         backgroundColor = .systemGray5
         
-        wordLabel.numberOfLines = 2
+        wordLabel.numberOfLines = 3
+        wordLabel.font = .systemFont(ofSize: 40)
         definitionLabel.numberOfLines = 0
         wordStackViewVertical.axis = .vertical
         buttonStackView.axis = .horizontal
@@ -61,7 +62,7 @@ class CardView: UIView {
         
         wordStackViewVertical.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         wordStackViewVertical.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        wordStackViewVertical.widthAnchor.constraint(equalToConstant: 400).isActive = true
+        wordStackViewVertical.widthAnchor.constraint(equalToConstant: 350).isActive = true
         
         showAnswerButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         showAnswerButton.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 50).isActive = true
