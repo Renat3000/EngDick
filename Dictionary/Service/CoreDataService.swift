@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 class CoreDataService {
-    // CoreData functions
+    // MARK: CoreData functions
     
     static let shared = CoreDataService() //singleton object?
     private let context: NSManagedObjectContext
@@ -38,6 +38,11 @@ class CoreDataService {
     func createItem(name: String){
         let newItem = FavoritesItem(context: context)
         newItem.word = name
+        newItem.numberrOfRepetitions = 1.0
+        newItem.easinessFactor = 2.5
+        newItem.dateOfCreation = Date()
+        newItem.dateOfLastReview = Date()
+        
         do {
             try context.save()
         } catch {
@@ -54,6 +59,18 @@ class CoreDataService {
         }
     }
     
+    func updateItem(item: FavoritesItem, newNumberOfRepetitions: Double, newEasinessFactor: Double) {
+        item.numberrOfRepetitions = newNumberOfRepetitions
+        item.easinessFactor = newEasinessFactor
+        item.dateOfLastReview = Date()
+
+        do {
+            try context.save()
+        } catch {
+            print("Error updating item in Core Data: \(error)")
+        }
+    }
+
     func deleteItem(withName name: String) {
         let fetchRequest: NSFetchRequest<FavoritesItem> = FavoritesItem.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "word == %@", name)

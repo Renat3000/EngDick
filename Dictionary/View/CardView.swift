@@ -81,16 +81,6 @@ class CardView: UIView {
     }
     
     @objc func didTapButtonStack(sender: UIButton) {
-   
-        switch sender {
-            case easyButton:
-                print("Нажата кнопка Easy")
-            case againButton:
-                print("Нажата кнопка Again")
-            default:
-                break
-            }
-        
             delegate?.buttonPressed(withTitle: sender.currentTitle ?? "")
     }
     
