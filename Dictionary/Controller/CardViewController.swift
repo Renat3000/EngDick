@@ -11,6 +11,8 @@ class CardViewController: UIViewController, CardViewDelegate {
     
     let coreDataService = CoreDataService.shared
     private var models = CoreDataService.shared.getAllItems()
+    private var newArray = [FavoritesItem]()
+    
     private var currentNumberInArray = 0
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
@@ -45,10 +47,14 @@ class CardViewController: UIViewController, CardViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let word = models[currentNumberInArray].word {
-            cardView.setWordLabelText(newText: word)
+        if newArray.count > 0 {
+            newArray = checkItemsForToday(models: models)
+            if let word = newArray[currentNumberInArray].word {
+                cardView.setWordLabelText(newText: word)
+            }
+        } else {
+            cardView.setWordLabelText(newText: "NO WORDS")
         }
-        
         view.addSubview(cardView)
         cardView.fillSuperview()
     }
@@ -69,23 +75,24 @@ class CardViewController: UIViewController, CardViewDelegate {
     }
     
     func fillDefinitionLabel() {
-        if let word = models[currentNumberInArray].word {
+        if let word = newArray[currentNumberInArray].word {
             fetchDictionary(searchTerm: word)
         }
     }
     
     func answerButtonPushed(Name: String) {
 
-        let count = models.count
-        let item = models[currentNumberInArray]
+        let count = newArray.count
+        let item = newArray[currentNumberInArray]
         var qualityOfAnswer = 0
-        //        After each repetition assess the quality of repetition response in 0-5 grade scale:
-        //        5 – perfect response
-        //        4 – correct response after a hesitation
-        //        3 – correct response recalled with serious difficulty
-        //        2 – incorrect response; where the correct one seemed easy to recall
-        //        1 – incorrect response; the correct one remembered
-        //        0 – complete blackout.
+        
+//        After each repetition assess the quality of repetition response in 0-5 grade scale:
+//        5 – perfect response
+//        4 – correct response after a hesitation
+//        3 – correct response recalled with serious difficulty
+//        2 – incorrect response; where the correct one seemed easy to recall
+//        1 – incorrect response; the correct one remembered
+//        0 – complete blackout.
 
         switch Name {
         case "Easy":
@@ -116,7 +123,7 @@ class CardViewController: UIViewController, CardViewDelegate {
             currentNumberInArray = 0
         }
         
-        if let word = models[currentNumberInArray].word {
+        if let word = newArray[currentNumberInArray].word {
             cardView.setWordLabelText(newText: word)
             cardView.definitionLabel.text = ""
             print(item.easinessFactor)
@@ -138,6 +145,56 @@ class CardViewController: UIViewController, CardViewDelegate {
         if newEasinessFactor < 1.3 {
             newEasinessFactor = 1.3
         }
+        
         return newEasinessFactor
+    }
+    
+    func interepetitionInterval(numberOfRepetitions: Double, easinessFactor: Double, previousInterval: Double) -> Double {
+        
+//        Repeat items using the following intervals:
+//        I(1):=1
+//        I(2):=6
+//        for n>2: I(n):=I(n-1)*EF
+//        where:
+//        I(n) – inter-repetition interval after the n-th repetition (in days),
+//        EF – E-Factor of a given item
+//        If interval is a fraction, round it up to the nearest integer.
+        
+        var interval = Double()
+        
+        switch numberOfRepetitions {
+        case 1.0:
+            interval = 1
+        case 2.0:
+            interval = 1
+        default:
+            interval = previousInterval * easinessFactor
+        }
+        
+        print(round(interval))
+        return round(interval)  // we need to round it up
+    }
+    
+    func checkItemsForToday(models: [FavoritesItem]) -> [FavoritesItem] {
+        var currentArray = [FavoritesItem]()
+
+        for i in models {
+    
+            if let lastReviewDate = i.dateOfLastReview {
+                let targetDate = Calendar.current.date(byAdding: .day, value: Int(i.latestInterval), to: lastReviewDate) ?? Date()
+
+                let currentDate = Date()
+
+                // compare todays date with target date
+                if currentDate <= targetDate {
+                    currentArray.append(i)
+                }
+            } else {
+                print("There's no dateOfLastReview")
+            }
+
+        }
+        print(currentArray)
+        return currentArray
     }
 }

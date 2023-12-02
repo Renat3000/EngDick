@@ -42,6 +42,7 @@ class CoreDataService {
         newItem.easinessFactor = 2.5
         newItem.dateOfCreation = Date()
         newItem.dateOfLastReview = Date()
+        newItem.latestInterval = 1.0
         
         do {
             try context.save()
@@ -63,6 +64,16 @@ class CoreDataService {
         item.numberrOfRepetitions = newNumberOfRepetitions
         item.easinessFactor = newEasinessFactor
         item.dateOfLastReview = Date()
+
+        do {
+            try context.save()
+        } catch {
+            print("Error updating item in Core Data: \(error)")
+        }
+    }
+    
+    func updateItemInterval(item: FavoritesItem, newInterval: Double) {
+        item.latestInterval = newInterval
 
         do {
             try context.save()
