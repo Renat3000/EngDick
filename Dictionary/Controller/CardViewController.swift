@@ -12,7 +12,8 @@ class CardViewController: UIViewController, CardViewDelegate {
     let coreDataService = CoreDataService.shared
     private var models = CoreDataService.shared.getAllItems()
     private var newArray = [FavoritesItem]()
-    
+    // add exceptions
+    private var newArrayIsEmpty = true
     private var currentNumberInArray = 0
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
@@ -47,14 +48,21 @@ class CardViewController: UIViewController, CardViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if newArray.count > 0 {
+        if newArray.count != 0 {
+            newArrayIsEmpty = false
             newArray = checkItemsForToday(models: models)
             if let word = newArray[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
             }
+            cardView.setButtonsActive(active: true)
         } else {
-            cardView.setWordLabelText(newText: "NO WORDS")
+//            cardView.setWordLabelText(newText: "NO WORDS")
+//            cardView.setButtonsActive(active: false)
+            if let word = models[currentNumberInArray].word {
+                cardView.setWordLabelText(newText: word)
+            }
         }
+        
         view.addSubview(cardView)
         cardView.fillSuperview()
     }
@@ -81,34 +89,25 @@ class CardViewController: UIViewController, CardViewDelegate {
     }
     
     func answerButtonPushed(Name: String) {
-
-        let count = newArray.count
-        let item = newArray[currentNumberInArray]
+        
+        let count = (newArrayIsEmpty == true) ? models.count : newArray.count
+        let item = (newArrayIsEmpty == true) ? models[currentNumberInArray] : newArray[currentNumberInArray]
         var qualityOfAnswer = 0
         
-//        After each repetition assess the quality of repetition response in 0-5 grade scale:
-//        5 – perfect response
-//        4 – correct response after a hesitation
-//        3 – correct response recalled with serious difficulty
-//        2 – incorrect response; where the correct one seemed easy to recall
-//        1 – incorrect response; the correct one remembered
-//        0 – complete blackout.
-
+        //        After each repetition assess the quality of repetition response in 0-5 grade scale:
+        //        5 – perfect response
+        //        4 – correct response after a hesitation
+        //        3 – correct response recalled with serious difficulty
+        //        2 – incorrect response; where the correct one seemed easy to recall
+        //        1 – incorrect response; the correct one remembered
+        //        0 – complete blackout.
+        
         switch Name {
-        case "Easy":
-            qualityOfAnswer = 5
-            
-        case "Good":
-            qualityOfAnswer = 4
-            
-        case "Hard":
-            qualityOfAnswer = 2
-            
-        case "Again":
-            qualityOfAnswer = 0
-            
-        default:
-            break
+        case "Easy": qualityOfAnswer = 5
+        case "Good": qualityOfAnswer = 4
+        case "Hard": qualityOfAnswer = 2
+        case "Again": qualityOfAnswer = 0
+        default: break
         }
         
         let numberOfRepetitions = item.numberrOfRepetitions
@@ -117,18 +116,32 @@ class CardViewController: UIViewController, CardViewDelegate {
         let newEasinessFactor = calculateEasiness(qualityOfAnswer: qualityOfAnswer, easinessFactor: item.easinessFactor)
         coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor)
         
+        // probably need to check it twice... quite hard to understand
+        let newInterepetitionInterval = interepetitionInterval(numberOfRepetitions: newNumberOfRepetitions, easinessFactor: item.easinessFactor, previousInterval: item.latestInterval)
+        coreDataService.updateItemInterval(item: item, newInterval: newInterepetitionInterval)
+        
         currentNumberInArray += 1
         
         if currentNumberInArray == count {
             currentNumberInArray = 0
         }
         
-        if let word = newArray[currentNumberInArray].word {
-            cardView.setWordLabelText(newText: word)
-            cardView.definitionLabel.text = ""
-            print(item.easinessFactor)
-            print(item.numberrOfRepetitions)
+        if newArrayIsEmpty {
+            if let word = models[currentNumberInArray].word {
+                cardView.setWordLabelText(newText: word)
+            }
         }
+        
+        if !newArrayIsEmpty {
+            if let word = newArray[currentNumberInArray].word {
+                cardView.setWordLabelText(newText: word)
+                
+            }
+        }
+        cardView.definitionLabel.text = ""
+        print(item.easinessFactor)
+        print(item.numberrOfRepetitions)
+        
     }
     
     func calculateEasiness(qualityOfAnswer: Int, easinessFactor: Double) -> Double {

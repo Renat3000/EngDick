@@ -91,6 +91,22 @@ class CardView: UIView {
     func setDefinitionLabelText(newText: String) {
         definitionLabel.text = newText
     }
+    
+    func setButtonsActive(active: Bool) {
+        if active == true {
+            showAnswerButton.isEnabled = true
+            easyButton.isEnabled = true
+            goodButton.isEnabled = true
+            hardButton.isEnabled = true
+            againButton.isEnabled = true
+        } else {
+            showAnswerButton.isEnabled = false
+            easyButton.isEnabled = false
+            goodButton.isEnabled = false
+            hardButton.isEnabled = false
+            againButton.isEnabled = false
+        }
+    }
 }
 
 protocol CardViewDelegate: AnyObject {
