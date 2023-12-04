@@ -11,9 +11,10 @@ class CardViewController: UIViewController, CardViewDelegate {
     
     let coreDataService = CoreDataService.shared
     private var models = CoreDataService.shared.getAllItems()
-    private var newArray = [FavoritesItem]()
-    // add exceptions
-    private var newArrayIsEmpty = true
+    private var arrayForToday = [FavoritesItem]()
+    
+    private var modelsIsEmpty = true
+    private var arrayForTodayIsEmpty = true
     private var currentNumberInArray = 0
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
@@ -48,21 +49,7 @@ class CardViewController: UIViewController, CardViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if newArray.count != 0 {
-            newArrayIsEmpty = false
-            newArray = checkItemsForToday(models: models)
-            if let word = newArray[currentNumberInArray].word {
-                cardView.setWordLabelText(newText: word)
-            }
-            cardView.setButtonsActive(active: true)
-        } else {
-//            cardView.setWordLabelText(newText: "NO WORDS")
-//            cardView.setButtonsActive(active: false)
-            if let word = models[currentNumberInArray].word {
-                cardView.setWordLabelText(newText: word)
-            }
-        }
-        
+        setupArrays()
         view.addSubview(cardView)
         cardView.fillSuperview()
     }
@@ -82,16 +69,37 @@ class CardViewController: UIViewController, CardViewDelegate {
         }
     }
     
+    func setupArrays() {
+        arrayForToday = checkItemsForToday(models: models)
+        
+        if !arrayForTodayIsEmpty {
+            if let word = arrayForToday[currentNumberInArray].word {
+                cardView.setWordLabelText(newText: word)
+            }
+            cardView.setButtonsActive(active: true)
+            
+        } else {
+            if modelsIsEmpty {
+                cardView.setWordLabelText(newText: "NO WORDS")
+                cardView.setButtonsActive(active: false)
+            } else {
+                if let word = models[currentNumberInArray].word {
+                    cardView.setWordLabelText(newText: word)
+                }
+            }
+        }
+    }
+    
     func fillDefinitionLabel() {
-        if let word = newArray[currentNumberInArray].word {
+        if let word = arrayForToday[currentNumberInArray].word {
             fetchDictionary(searchTerm: word)
         }
     }
     
     func answerButtonPushed(Name: String) {
         
-        let count = (newArrayIsEmpty == true) ? models.count : newArray.count
-        let item = (newArrayIsEmpty == true) ? models[currentNumberInArray] : newArray[currentNumberInArray]
+        let count = (arrayForTodayIsEmpty == true) ? models.count : arrayForToday.count
+        let item = (arrayForTodayIsEmpty == true) ? models[currentNumberInArray] : arrayForToday[currentNumberInArray]
         var qualityOfAnswer = 0
         
         //        After each repetition assess the quality of repetition response in 0-5 grade scale:
@@ -126,21 +134,22 @@ class CardViewController: UIViewController, CardViewDelegate {
             currentNumberInArray = 0
         }
         
-        if newArrayIsEmpty {
+        if arrayForTodayIsEmpty {
             if let word = models[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
             }
         }
         
-        if !newArrayIsEmpty {
-            if let word = newArray[currentNumberInArray].word {
+        if !arrayForTodayIsEmpty {
+            if let word = arrayForToday[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
                 
             }
         }
         cardView.definitionLabel.text = ""
-        print(item.easinessFactor)
-        print(item.numberrOfRepetitions)
+        print("word", item.word)
+        print("item.easinessFactor is", item.easinessFactor)
+        print("item.numberrOfRepetitions is", item.numberrOfRepetitions)
         
     }
     
@@ -184,12 +193,15 @@ class CardViewController: UIViewController, CardViewDelegate {
             interval = previousInterval * easinessFactor
         }
         
-        print(round(interval))
+        print("rounded interval of repetitions", round(interval))
         return round(interval)  // we need to round it up
     }
     
     func checkItemsForToday(models: [FavoritesItem]) -> [FavoritesItem] {
         var currentArray = [FavoritesItem]()
+        if models.count > 0 {
+            modelsIsEmpty = false
+        }
 
         for i in models {
     
@@ -207,7 +219,10 @@ class CardViewController: UIViewController, CardViewDelegate {
             }
 
         }
-        print(currentArray)
+        if currentArray.count != 0 {
+            arrayForTodayIsEmpty = false
+        }
+//        print(currentArray)
         return currentArray
     }
 }
