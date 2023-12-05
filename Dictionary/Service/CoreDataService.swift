@@ -38,11 +38,11 @@ class CoreDataService {
     func createItem(name: String){
         let newItem = FavoritesItem(context: context)
         newItem.word = name
-        newItem.numberrOfRepetitions = 1.0
+        newItem.numberrOfRepetitions = 0.0
         newItem.easinessFactor = 2.5
         newItem.dateOfCreation = Date()
         newItem.dateOfLastReview = Date()
-        newItem.latestInterval = 1.0
+        newItem.latestInterval = 0.0
         
         do {
             try context.save()

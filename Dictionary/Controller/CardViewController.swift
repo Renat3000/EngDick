@@ -77,17 +77,17 @@ class CardViewController: UIViewController, CardViewDelegate {
                 cardView.setWordLabelText(newText: word)
             }
             cardView.setButtonsActive(active: true)
-            
-        } else {
-            if modelsIsEmpty {
-                cardView.setWordLabelText(newText: "NO WORDS")
-                cardView.setButtonsActive(active: false)
-            } else {
-                if let word = models[currentNumberInArray].word {
-                    cardView.setWordLabelText(newText: word)
-                }
-            }
         }
+//        else {
+//            if modelsIsEmpty {
+//                cardView.setWordLabelText(newText: "NO WORDS")
+//                cardView.setButtonsActive(active: false)
+//            } else {
+//                if let word = models[currentNumberInArray].word {
+//                    cardView.setWordLabelText(newText: word)
+//                }
+//            }
+//        }
     }
     
     func fillDefinitionLabel() {
@@ -102,13 +102,13 @@ class CardViewController: UIViewController, CardViewDelegate {
         let item = (arrayForTodayIsEmpty == true) ? models[currentNumberInArray] : arrayForToday[currentNumberInArray]
         var qualityOfAnswer = 0
         
-        //        After each repetition assess the quality of repetition response in 0-5 grade scale:
-        //        5 – perfect response
-        //        4 – correct response after a hesitation
-        //        3 – correct response recalled with serious difficulty
-        //        2 – incorrect response; where the correct one seemed easy to recall
-        //        1 – incorrect response; the correct one remembered
-        //        0 – complete blackout.
+//        After each repetition assess the quality of repetition response in 0-5 grade scale:
+//        5 – perfect response
+//        4 – correct response after a hesitation
+//        3 – correct response recalled with serious difficulty
+//        2 – incorrect response; where the correct one seemed easy to recall
+//        1 – incorrect response; the correct one remembered
+//        0 – complete blackout.
         
         switch Name {
         case "Easy": qualityOfAnswer = 5
@@ -199,30 +199,48 @@ class CardViewController: UIViewController, CardViewDelegate {
     
     func checkItemsForToday(models: [FavoritesItem]) -> [FavoritesItem] {
         var currentArray = [FavoritesItem]()
+        
         if models.count > 0 {
             modelsIsEmpty = false
         }
 
         for i in models {
-    
             if let lastReviewDate = i.dateOfLastReview {
-                let targetDate = Calendar.current.date(byAdding: .day, value: Int(i.latestInterval), to: lastReviewDate) ?? Date()
+                let calendar = Calendar.current
 
-                let currentDate = Date()
+                // extracting year, month and day
+                let lastReviewComponents = calendar.dateComponents([.year, .month, .day], from: lastReviewDate)
+                let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: Int(i.latestInterval), to: lastReviewDate) ?? Date())
 
-                // compare todays date with target date
-                if currentDate <= targetDate {
+                // new date only with year, month and day
+                let targetDate = calendar.date(from: targetDateComponents) ?? Date()
+                let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
+
+                print("word", i.word)
+                print("number of repetitions", i.numberrOfRepetitions)
+                print("latest interval", i.latestInterval)
+                print("date of last review", i.dateOfLastReview)
+                print("target date is", targetDate)
+                print("current date is", currentDate)
+                
+                // comparing the dates
+                if targetDate <= currentDate {
                     currentArray.append(i)
+                    print("pee pee poo poo")
                 }
             } else {
                 print("There's no dateOfLastReview")
             }
-
         }
+
         if currentArray.count != 0 {
             arrayForTodayIsEmpty = false
+        } else {
+            cardView.setButtonsActive(active: false)
         }
-//        print(currentArray)
+        
+        // need to add some kind of observer for the arrayForToday
+        
         return currentArray
     }
 }
