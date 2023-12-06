@@ -81,6 +81,16 @@ class CoreDataService {
             print("Error updating item in Core Data: \(error)")
         }
     }
+    
+    func updateItemNumberOfRepetitions(item: FavoritesItem, newNumber: Double) {
+        item.numberrOfRepetitions = newNumber
+
+        do {
+            try context.save()
+        } catch {
+            print("Error updating item in Core Data: \(error)")
+        }
+    }
 
     func deleteItem(withName name: String) {
         let fetchRequest: NSFetchRequest<FavoritesItem> = FavoritesItem.fetchRequest()

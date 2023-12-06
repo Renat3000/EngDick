@@ -15,6 +15,7 @@ class CardViewController: UIViewController, CardViewDelegate {
     
     private var modelsIsEmpty = true
     private var arrayForTodayIsEmpty = true
+    private var repeatTheWordAgain = false
     private var currentNumberInArray = 0
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
@@ -78,16 +79,6 @@ class CardViewController: UIViewController, CardViewDelegate {
             }
             cardView.setButtonsActive(active: true)
         }
-//        else {
-//            if modelsIsEmpty {
-//                cardView.setWordLabelText(newText: "NO WORDS")
-//                cardView.setButtonsActive(active: false)
-//            } else {
-//                if let word = models[currentNumberInArray].word {
-//                    cardView.setWordLabelText(newText: word)
-//                }
-//            }
-//        }
     }
     
     func fillDefinitionLabel() {
@@ -112,9 +103,15 @@ class CardViewController: UIViewController, CardViewDelegate {
         
         switch Name {
         case "Easy": qualityOfAnswer = 5
+            repeatTheWordAgain = false
         case "Good": qualityOfAnswer = 4
+            repeatTheWordAgain = false
         case "Hard": qualityOfAnswer = 2
+            repeatTheWordAgain = true
+            coreDataService.updateItemNumberOfRepetitions(item: item, newNumber: 1.0)
         case "Again": qualityOfAnswer = 0
+            repeatTheWordAgain = true
+            coreDataService.updateItemNumberOfRepetitions(item: item, newNumber: 0.0)
         default: break
         }
         
@@ -221,12 +218,11 @@ class CardViewController: UIViewController, CardViewDelegate {
                 print("latest interval", i.latestInterval)
                 print("date of last review", i.dateOfLastReview)
                 print("target date is", targetDate)
-                print("current date is", currentDate)
+                print("current date is", currentDate, "\n")
                 
                 // comparing the dates
                 if targetDate <= currentDate {
                     currentArray.append(i)
-                    print("pee pee poo poo")
                 }
             } else {
                 print("There's no dateOfLastReview")
