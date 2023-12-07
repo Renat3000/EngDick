@@ -60,10 +60,10 @@ class CoreDataService {
         }
     }
     
-    func updateItem(item: FavoritesItem, newNumberOfRepetitions: Double, newEasinessFactor: Double) {
+    func updateItem(item: FavoritesItem, newNumberOfRepetitions: Double, newEasinessFactor: Double, newDateOfReview: Date) {
         item.numberrOfRepetitions = newNumberOfRepetitions
         item.easinessFactor = newEasinessFactor
-        item.dateOfLastReview = Date()
+        item.dateOfLastReview = newDateOfReview
 
         do {
             try context.save()

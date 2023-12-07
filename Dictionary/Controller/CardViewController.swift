@@ -119,7 +119,20 @@ class CardViewController: UIViewController, CardViewDelegate {
         let newNumberOfRepetitions = numberOfRepetitions + 1.0
         
         let newEasinessFactor = calculateEasiness(qualityOfAnswer: qualityOfAnswer, easinessFactor: item.easinessFactor)
-        coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor)
+        
+        if let lastReview = item.dateOfLastReview {
+            switch Name {
+            case "Easy":
+                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date())
+            case "Good":
+                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date())
+            case "Hard":
+                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: lastReview)
+            case "Again":
+                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: lastReview)
+            default: break
+            }
+        }
         
         // probably need to check it twice... quite hard to understand
         let newInterepetitionInterval = interepetitionInterval(numberOfRepetitions: newNumberOfRepetitions, easinessFactor: item.easinessFactor, previousInterval: item.latestInterval)
@@ -206,8 +219,7 @@ class CardViewController: UIViewController, CardViewDelegate {
                 let calendar = Calendar.current
 
                 // extracting year, month and day
-                let lastReviewComponents = calendar.dateComponents([.year, .month, .day], from: lastReviewDate)
-                let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: Int(i.latestInterval), to: lastReviewDate) ?? Date())
+                let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: 0, to: lastReviewDate) ?? Date())
 
                 // new date only with year, month and day
                 let targetDate = calendar.date(from: targetDateComponents) ?? Date()
@@ -216,7 +228,7 @@ class CardViewController: UIViewController, CardViewDelegate {
                 print("word", i.word)
                 print("number of repetitions", i.numberrOfRepetitions)
                 print("latest interval", i.latestInterval)
-                print("date of last review", i.dateOfLastReview)
+                print("date of last review", i.dateOfLastReview) // не нужно менять это если у нас нажалась кнопка Again или Hard
                 print("target date is", targetDate)
                 print("current date is", currentDate, "\n")
                 
