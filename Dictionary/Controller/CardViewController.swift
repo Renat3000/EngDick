@@ -14,7 +14,6 @@ class CardViewController: UIViewController, CardViewDelegate {
     private var arrayForToday = [FavoritesItem]()
     
     private var modelsIsEmpty = true
-    private var arrayForTodayIsEmpty = true
     private var repeatTheWordAgain = false
     private var currentNumberInArray = 0
     fileprivate var JSONTopResult = [JSONStruct]() {
@@ -73,7 +72,7 @@ class CardViewController: UIViewController, CardViewDelegate {
     func setupArrays() {
         arrayForToday = checkItemsForToday(models: models)
         
-        if !arrayForTodayIsEmpty {
+        if !arrayForToday.isEmpty {
             if let word = arrayForToday[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
             }
@@ -89,8 +88,8 @@ class CardViewController: UIViewController, CardViewDelegate {
     
     func answerButtonPushed(Name: String) {
         
-        let count = (arrayForTodayIsEmpty == true) ? models.count : arrayForToday.count
-        let item = (arrayForTodayIsEmpty == true) ? models[currentNumberInArray] : arrayForToday[currentNumberInArray]
+        let count = (arrayForToday.isEmpty == true) ? models.count : arrayForToday.count
+        let item = (arrayForToday.isEmpty == true) ? models[currentNumberInArray] : arrayForToday[currentNumberInArray]
         var qualityOfAnswer = 0
         
 //        After each repetition assess the quality of repetition response in 0-5 grade scale:
@@ -104,8 +103,10 @@ class CardViewController: UIViewController, CardViewDelegate {
         switch Name {
         case "Easy": qualityOfAnswer = 5
             repeatTheWordAgain = false
+            arrayForToday.remove(at: currentNumberInArray)
         case "Good": qualityOfAnswer = 4
             repeatTheWordAgain = false
+            arrayForToday.remove(at: currentNumberInArray)
         case "Hard": qualityOfAnswer = 2
             repeatTheWordAgain = true
             coreDataService.updateItemNumberOfRepetitions(item: item, newNumber: 1.0)
@@ -113,6 +114,11 @@ class CardViewController: UIViewController, CardViewDelegate {
             repeatTheWordAgain = true
             coreDataService.updateItemNumberOfRepetitions(item: item, newNumber: 0.0)
         default: break
+        }
+        
+        if arrayForToday.isEmpty {
+            cardView.setButtonsActive(active: false)
+            cardView.definitionLabel.text = ""
         }
         
         let numberOfRepetitions = item.numberrOfRepetitions
@@ -144,13 +150,13 @@ class CardViewController: UIViewController, CardViewDelegate {
             currentNumberInArray = 0
         }
         
-        if arrayForTodayIsEmpty {
+        if arrayForToday.isEmpty {
             if let word = models[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
             }
         }
         
-        if !arrayForTodayIsEmpty {
+        if !arrayForToday.isEmpty {
             if let word = arrayForToday[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
                 
@@ -241,9 +247,7 @@ class CardViewController: UIViewController, CardViewDelegate {
             }
         }
 
-        if currentArray.count != 0 {
-            arrayForTodayIsEmpty = false
-        } else {
+        if currentArray.count == 0 {
             cardView.setButtonsActive(active: false)
         }
         
