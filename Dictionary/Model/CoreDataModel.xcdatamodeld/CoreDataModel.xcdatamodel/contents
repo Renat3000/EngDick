@@ -6,6 +6,7 @@
         <attribute name="easinessFactor" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="latestInterval" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="numberrOfRepetitions" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="targetDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="word" optional="YES" attributeType="String"/>
     </entity>
 </model>

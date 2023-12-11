@@ -126,16 +126,23 @@ class CardViewController: UIViewController, CardViewDelegate {
         
         let newEasinessFactor = calculateEasiness(qualityOfAnswer: qualityOfAnswer, easinessFactor: item.easinessFactor)
         
-        if let lastReview = item.dateOfLastReview {
+        let calendar = Calendar.current
+        let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
+        
+        if let lastReviewDate = item.dateOfLastReview {
+            
+            let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: Int(item.latestInterval), to: lastReviewDate) ?? Date())
+            let targetDate = calendar.date(from: targetDateComponents) ?? Date()
+            
             switch Name {
             case "Easy":
-                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date())
+                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date(), targetDate: targetDate)
             case "Good":
-                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date())
+                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date(), targetDate: targetDate)
             case "Hard":
-                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: lastReview)
+                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: lastReviewDate, targetDate: currentDate)
             case "Again":
-                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: lastReview)
+                coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: lastReviewDate, targetDate: currentDate)
             default: break
             }
         }
@@ -221,25 +228,18 @@ class CardViewController: UIViewController, CardViewDelegate {
         }
 
         for i in models {
-            if let lastReviewDate = i.dateOfLastReview {
+            if let targetDate = i.targetDate {
                 let calendar = Calendar.current
 
                 // extracting year, month and day
-                let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: 0, to: lastReviewDate) ?? Date())
+                let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: 0, to: targetDate) ?? Date())
 
                 // new date only with year, month and day
-                let targetDate = calendar.date(from: targetDateComponents) ?? Date()
+                let target = calendar.date(from: targetDateComponents) ?? Date()
                 let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
-
-                print("word", i.word)
-                print("number of repetitions", i.numberrOfRepetitions)
-                print("latest interval", i.latestInterval)
-                print("date of last review", i.dateOfLastReview) // не нужно менять это если у нас нажалась кнопка Again или Hard
-                print("target date is", targetDate)
-                print("current date is", currentDate, "\n")
                 
                 // comparing the dates
-                if targetDate <= currentDate {
+                if target <= currentDate {
                     currentArray.append(i)
                 }
             } else {
@@ -256,3 +256,38 @@ class CardViewController: UIViewController, CardViewDelegate {
         return currentArray
     }
 }
+
+//for i in models {
+//    if let lastReviewDate = i.dateOfLastReview {
+//        let calendar = Calendar.current
+//
+//        // extracting year, month and day
+//        let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: 0, to: lastReviewDate) ?? Date())
+//
+//        // new date only with year, month and day
+//        let targetDate = calendar.date(from: targetDateComponents) ?? Date()
+//        let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
+//
+//        print("word", i.word)
+//        print("number of repetitions", i.numberrOfRepetitions)
+//        print("latest interval", i.latestInterval)
+//        print("date of last review", i.dateOfLastReview) // не нужно менять это если у нас нажалась кнопка Again или Hard
+//        print("target date is", targetDate)
+//        print("current date is", currentDate, "\n")
+//
+//        // comparing the dates
+//        if targetDate <= currentDate {
+//            currentArray.append(i)
+//        }
+//    } else {
+//        print("There's no dateOfLastReview")
+//    }
+//}
+
+//                print("word", i.word)
+//                print("number of repetitions", i.numberrOfRepetitions)
+//                print("latest interval", i.latestInterval)
+//                print("date of last review", i.dateOfLastReview) // не нужно менять это если у нас нажалась кнопка Again или Hard
+//                print("target date is", targetDate)
+//                print("current date is", currentDate, "\n")
+                
