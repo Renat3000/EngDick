@@ -13,8 +13,6 @@ class CardViewController: UIViewController, CardViewDelegate {
     private var models = CoreDataService.shared.getAllItems()
     private var arrayForToday = [FavoritesItem]()
     
-    private var modelsIsEmpty = true
-    private var repeatTheWordAgain = false
     private var currentNumberInArray = 0
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
@@ -102,22 +100,19 @@ class CardViewController: UIViewController, CardViewDelegate {
         
         switch Name {
         case "Easy": qualityOfAnswer = 5
-            repeatTheWordAgain = false
             arrayForToday.remove(at: currentNumberInArray)
         case "Good": qualityOfAnswer = 4
-            repeatTheWordAgain = false
             arrayForToday.remove(at: currentNumberInArray)
         case "Hard": qualityOfAnswer = 2
-            repeatTheWordAgain = true
             coreDataService.updateItemNumberOfRepetitions(item: item, newNumber: 1.0)
         case "Again": qualityOfAnswer = 0
-            repeatTheWordAgain = true
             coreDataService.updateItemNumberOfRepetitions(item: item, newNumber: 0.0)
         default: break
         }
         
         if arrayForToday.isEmpty {
             cardView.setButtonsActive(active: false)
+            cardView.setWordLabelText(newText: "No words for review today!")
             cardView.definitionLabel.text = ""
         }
         
@@ -222,20 +217,12 @@ class CardViewController: UIViewController, CardViewDelegate {
     
     func checkItemsForToday(models: [FavoritesItem]) -> [FavoritesItem] {
         var currentArray = [FavoritesItem]()
-        
-        if models.count > 0 {
-            modelsIsEmpty = false
-        }
 
         for i in models {
             if let targetDate = i.targetDate {
                 let calendar = Calendar.current
 
-                // extracting year, month and day
-                let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: 0, to: targetDate) ?? Date())
-
-                // new date only with year, month and day
-                let target = calendar.date(from: targetDateComponents) ?? Date()
+                let target = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: targetDate)) ?? Date()
                 let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
                 
                 // comparing the dates
@@ -249,45 +236,9 @@ class CardViewController: UIViewController, CardViewDelegate {
 
         if currentArray.count == 0 {
             cardView.setButtonsActive(active: false)
+            cardView.setWordLabelText(newText: "No words for review today!")
         }
-        
-        // need to add some kind of observer for the arrayForToday
         
         return currentArray
     }
 }
-
-//for i in models {
-//    if let lastReviewDate = i.dateOfLastReview {
-//        let calendar = Calendar.current
-//
-//        // extracting year, month and day
-//        let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: 0, to: lastReviewDate) ?? Date())
-//
-//        // new date only with year, month and day
-//        let targetDate = calendar.date(from: targetDateComponents) ?? Date()
-//        let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
-//
-//        print("word", i.word)
-//        print("number of repetitions", i.numberrOfRepetitions)
-//        print("latest interval", i.latestInterval)
-//        print("date of last review", i.dateOfLastReview) // не нужно менять это если у нас нажалась кнопка Again или Hard
-//        print("target date is", targetDate)
-//        print("current date is", currentDate, "\n")
-//
-//        // comparing the dates
-//        if targetDate <= currentDate {
-//            currentArray.append(i)
-//        }
-//    } else {
-//        print("There's no dateOfLastReview")
-//    }
-//}
-
-//                print("word", i.word)
-//                print("number of repetitions", i.numberrOfRepetitions)
-//                print("latest interval", i.latestInterval)
-//                print("date of last review", i.dateOfLastReview) // не нужно менять это если у нас нажалась кнопка Again или Hard
-//                print("target date is", targetDate)
-//                print("current date is", currentDate, "\n")
-                
