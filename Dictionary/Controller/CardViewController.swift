@@ -152,18 +152,15 @@ class CardViewController: UIViewController, CardViewDelegate {
             currentNumberInArray = 0
         }
         
-        if arrayForToday.isEmpty {
-            if let word = models[currentNumberInArray].word {
-                cardView.setWordLabelText(newText: word)
-            }
-        }
-        
         if !arrayForToday.isEmpty {
             if let word = arrayForToday[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
-                
             }
+        } else {
+            cardView.setButtonsActive(active: false)
+            cardView.setWordLabelText(newText: "No words for review today!")
         }
+
         cardView.definitionLabel.text = ""
         print("word", item.word)
         print("item.easinessFactor is", item.easinessFactor)
@@ -234,6 +231,7 @@ class CardViewController: UIViewController, CardViewDelegate {
             }
         }
 
+        cardView.setCardsNumbers(cardsForToday: currentArray.count, cardsTotal: models.count)
         if currentArray.count == 0 {
             cardView.setButtonsActive(active: false)
             cardView.setWordLabelText(newText: "No words for review today!")

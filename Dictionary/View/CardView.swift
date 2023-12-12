@@ -21,6 +21,12 @@ class CardView: UIView {
     let againButton = makeButtonForSets(withText: "Again")
     let buttonStackView = makeStackView()
     
+    let cardsForTodayLabel = makeLabel()
+    let cardsTotalLabel = makeLabel()
+    let cardsNumbersStackView = makeStackView()
+    var cardsForToday = 0
+    var cardsTotal = 0
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -40,6 +46,19 @@ class CardView: UIView {
         buttonStackView.axis = .horizontal
         buttonStackView.distribution = .fillEqually
         
+        cardsForTodayLabel.numberOfLines = 0
+        cardsTotalLabel.numberOfLines = 0
+        
+        cardsForTodayLabel.textAlignment = .left
+        cardsTotalLabel.textAlignment = .left
+        
+        cardsForTodayLabel.font = .systemFont(ofSize: 25)
+        cardsTotalLabel.font = .systemFont(ofSize: 25)
+        
+        cardsForTodayLabel.text = "Cards to repeat today: \(cardsForToday)"
+        cardsTotalLabel.text = "Cards in the deck: \(cardsTotal)"
+        cardsNumbersStackView.axis = .vertical
+        
         showAnswerButton.addTarget(self, action: #selector(didTapShowAnswerButton), for: .touchUpInside)
         easyButton.addTarget(self, action: #selector(didTapButtonStack), for: .touchUpInside)
         goodButton.addTarget(self, action: #selector(didTapButtonStack), for: .touchUpInside)
@@ -51,6 +70,7 @@ class CardView: UIView {
         addSubview(wordStackViewVertical)
         addSubview(showAnswerButton)
         addSubview(buttonStackView)
+        addSubview(cardsNumbersStackView)
         
         wordStackViewVertical.addArrangedSubview(wordLabel)
         wordStackViewVertical.addArrangedSubview(definitionLabel)
@@ -59,6 +79,9 @@ class CardView: UIView {
         buttonStackView.addArrangedSubview(goodButton)
         buttonStackView.addArrangedSubview(hardButton)
         buttonStackView.addArrangedSubview(againButton)
+        
+        cardsNumbersStackView.addArrangedSubview(cardsForTodayLabel)
+        cardsNumbersStackView.addArrangedSubview(cardsTotalLabel)
         
         wordStackViewVertical.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         wordStackViewVertical.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -73,6 +96,10 @@ class CardView: UIView {
         buttonStackView.topAnchor.constraint(equalTo: showAnswerButton.bottomAnchor, constant: 20).isActive = true
         buttonStackView.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
         buttonStackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        
+        cardsNumbersStackView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 20).isActive = true
+        cardsNumbersStackView.leadingAnchor.constraint(equalTo: buttonStackView.leadingAnchor).isActive = true
+        cardsNumbersStackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
     }
     
     @objc func didTapShowAnswerButton() {
@@ -90,6 +117,14 @@ class CardView: UIView {
     
     func setDefinitionLabelText(newText: String) {
         definitionLabel.text = newText
+    }
+    
+    func setCardsNumbers(cardsForToday: Int, cardsTotal: Int) {
+        self.cardsForToday = cardsForToday
+        self.cardsTotal = cardsTotal
+        
+        cardsForTodayLabel.text = "Cards to repeat today: \(self.cardsForToday)"
+        cardsTotalLabel.text = "Cards in the deck: \(self.cardsTotal)"
     }
     
     func setButtonsActive(active: Bool) {
