@@ -169,6 +169,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             headerView.wordLabel.text = items[0].word
             headerView.phoneticsLabel.text = items[0].phonetic ?? "no phonetics"
             headerView.setAudioButtonEnabled(audioIsAvailable)
+            checkIfBookmarked(word: items[0].word)
             headerView.isBookmarked = isBookmarked
             
             return headerView
@@ -229,6 +230,16 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
     func audioDidFinishNotification() {
             NotificationCenter.default.post(name: NSNotification.Name("AudioDidFinishPlaying"), object: nil)
+    }
+    
+    func checkIfBookmarked(word: String) {
+        let models = CoreDataService.shared.getAllItems()
+        for i in models {
+            if word == i.word {
+                isBookmarked = true
+                return
+            }
+        }
     }
 }
 
