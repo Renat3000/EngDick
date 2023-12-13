@@ -12,6 +12,7 @@ class CardViewController: UIViewController, CardViewDelegate {
     let coreDataService = CoreDataService.shared
     private var models = CoreDataService.shared.getAllItems()
     private var arrayForToday = [FavoritesItem]()
+    private let calendar = Calendar.current
     
     private var currentNumberInArray = 0
     fileprivate var JSONTopResult = [JSONStruct]() {
@@ -19,6 +20,12 @@ class CardViewController: UIViewController, CardViewDelegate {
             cardView.setDefinitionLabelText(newText: JSONTopResult[0].meanings[0].definitions[0].definition)
         }
     }
+    
+    private lazy var cardView: CardView = {
+        let view = CardView()
+        view.delegate = self
+        return view
+    }()
     
     func buttonPressed(withTitle title: String) {
         
@@ -38,20 +45,6 @@ class CardViewController: UIViewController, CardViewDelegate {
         }
     }
     
-    private lazy var cardView: CardView = {
-        let view = CardView()
-        view.delegate = self
-        return view
-    }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupArrays()
-        view.addSubview(cardView)
-        cardView.fillSuperview()
-    }
-    
     fileprivate func fetchDictionary(searchTerm: String) {
         //get back json-fetched data from the JSONService file
         print("firing off request, just wait!")
@@ -67,6 +60,14 @@ class CardViewController: UIViewController, CardViewDelegate {
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupArrays()
+        view.addSubview(cardView)
+        cardView.fillSuperview()
+    }
+    
     func setupArrays() {
         arrayForToday = checkItemsForToday(models: models)
         
@@ -75,17 +76,42 @@ class CardViewController: UIViewController, CardViewDelegate {
                 cardView.setWordLabelText(newText: word)
             }
             cardView.setButtonsActive(active: true)
+        } else {
+            setButtonsInactive()
         }
+        
+        cardView.setCardsNumbers(cardsForToday: arrayForToday.count, cardsTotal: models.count)
     }
     
     func fillDefinitionLabel() {
         if let word = arrayForToday[currentNumberInArray].word {
             fetchDictionary(searchTerm: word)
+        } else {
+            cardView.definitionLabel.text = ""
         }
     }
     
+    func checkItemsForToday(models: [FavoritesItem]) -> [FavoritesItem] {
+        var currentArray = [FavoritesItem]()
+
+        for i in models {
+            if let targetDate = i.targetDate {
+
+                let target = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: targetDate)) ?? Date()
+                let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
+                
+                // comparing the dates
+                if target <= currentDate {
+                    currentArray.append(i)
+                }
+            }
+        }
+//        print(currentArray)
+        return currentArray
+    }
+    
     func answerButtonPushed(Name: String) {
-        
+        cardView.definitionLabel.text = ""
         let count = (arrayForToday.isEmpty == true) ? models.count : arrayForToday.count
         let item = (arrayForToday.isEmpty == true) ? models[currentNumberInArray] : arrayForToday[currentNumberInArray]
         var qualityOfAnswer = 0
@@ -110,18 +136,15 @@ class CardViewController: UIViewController, CardViewDelegate {
         default: break
         }
         
-        if arrayForToday.isEmpty {
-            cardView.setButtonsActive(active: false)
-            cardView.setWordLabelText(newText: "No words for review today!")
-            cardView.definitionLabel.text = ""
-        }
+        cardView.setCardsNumbers(cardsForToday: arrayForToday.count, cardsTotal: models.count)
         
         let numberOfRepetitions = item.numberrOfRepetitions
         let newNumberOfRepetitions = numberOfRepetitions + 1.0
-        
         let newEasinessFactor = calculateEasiness(qualityOfAnswer: qualityOfAnswer, easinessFactor: item.easinessFactor)
+        let newInterepetitionInterval = interepetitionInterval(numberOfRepetitions: newNumberOfRepetitions, easinessFactor: item.easinessFactor, previousInterval: item.latestInterval)
         
-        let calendar = Calendar.current
+        coreDataService.updateItemInterval(item: item, newInterval: newInterepetitionInterval)
+        
         let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
         
         if let lastReviewDate = item.dateOfLastReview {
@@ -142,10 +165,6 @@ class CardViewController: UIViewController, CardViewDelegate {
             }
         }
         
-        // probably need to check it twice... quite hard to understand
-        let newInterepetitionInterval = interepetitionInterval(numberOfRepetitions: newNumberOfRepetitions, easinessFactor: item.easinessFactor, previousInterval: item.latestInterval)
-        coreDataService.updateItemInterval(item: item, newInterval: newInterepetitionInterval)
-        
         currentNumberInArray += 1
         
         if currentNumberInArray == count {
@@ -157,17 +176,15 @@ class CardViewController: UIViewController, CardViewDelegate {
                 cardView.setWordLabelText(newText: word)
             }
         } else {
-            cardView.setButtonsActive(active: false)
-            cardView.setWordLabelText(newText: "No words for review today!")
+            setButtonsInactive()
         }
 
-        cardView.definitionLabel.text = ""
-        print("word", item.word)
-        print("item.easinessFactor is", item.easinessFactor)
-        print("item.numberrOfRepetitions is", item.numberrOfRepetitions)
-        
+//        print("word", item.word)
+//        print("item.easinessFactor is", item.easinessFactor)
+//        print("item.numberrOfRepetitions is", item.numberrOfRepetitions)
     }
     
+  // MARK: calculcations of EF and I(n) below
     func calculateEasiness(qualityOfAnswer: Int, easinessFactor: Double) -> Double {
         
 //        EF’:=EF+(0.1-(5-q)*(0.08+(5-q)*0.02)), where:
@@ -208,35 +225,14 @@ class CardViewController: UIViewController, CardViewDelegate {
             interval = previousInterval * easinessFactor
         }
         
-        print("rounded interval of repetitions", round(interval))
+//        print("rounded interval of repetitions", round(interval))
         return round(interval)  // we need to round it up
     }
     
-    func checkItemsForToday(models: [FavoritesItem]) -> [FavoritesItem] {
-        var currentArray = [FavoritesItem]()
-
-        for i in models {
-            if let targetDate = i.targetDate {
-                let calendar = Calendar.current
-
-                let target = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: targetDate)) ?? Date()
-                let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
-                
-                // comparing the dates
-                if target <= currentDate {
-                    currentArray.append(i)
-                }
-            } else {
-                print("There's no dateOfLastReview")
-            }
-        }
-
-        cardView.setCardsNumbers(cardsForToday: currentArray.count, cardsTotal: models.count)
-        if currentArray.count == 0 {
-            cardView.setButtonsActive(active: false)
-            cardView.setWordLabelText(newText: "No words for review today!")
-        }
-        
-        return currentArray
+// MARK: misk functions
+    func setButtonsInactive() {
+        cardView.setButtonsActive(active: false)
+        cardView.setWordLabelText(newText: "No words for review today!")
+        cardView.definitionLabel.text = ""
     }
 }
