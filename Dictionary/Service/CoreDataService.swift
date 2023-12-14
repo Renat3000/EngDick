@@ -22,7 +22,6 @@ class CoreDataService {
     }
     
     func getAllItems() -> [FavoritesItem] {
-//        var models = [FavoritesItem]()
         do {
             return try context.fetch(FavoritesItem.fetchRequest())
             

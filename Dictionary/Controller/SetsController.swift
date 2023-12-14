@@ -42,7 +42,7 @@ class SetsController: UIViewController {
         let noteLabel: UILabel = {
             let label = UILabel()
             
-            label.numberOfLines = 2
+            label.numberOfLines = 3
             label.textColor = .white
             label.backgroundColor = .systemGray4
             label.font = .systemFont(ofSize: 24)
@@ -56,12 +56,12 @@ class SetsController: UIViewController {
 
         // Pinning to the sides of view
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 200).isActive = true
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         // Padding and spacing
         stackView.isLayoutMarginsRelativeArrangement = true
     
-        noteLabel.text = "Practice Active Learning with the spaced repetition method!"
+        noteLabel.text = "Practice Active Learning with the spaced repetition method! Learn words that were saved to Favorites"
     }
 
     
