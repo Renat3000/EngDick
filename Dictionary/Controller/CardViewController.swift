@@ -81,6 +81,7 @@ class CardViewController: UIViewController, CardViewDelegate {
         }
         
         cardView.setCardsNumbers(cardsForToday: arrayForToday.count, cardsTotal: models.count)
+        print(arrayForToday)
     }
     
     func fillDefinitionLabel() {
@@ -126,17 +127,13 @@ class CardViewController: UIViewController, CardViewDelegate {
         
         switch Name {
         case "Easy": qualityOfAnswer = 5
-            arrayForToday.remove(at: currentNumberInArray)
         case "Good": qualityOfAnswer = 4
-            arrayForToday.remove(at: currentNumberInArray)
         case "Hard": qualityOfAnswer = 2
             coreDataService.updateItemNumberOfRepetitions(item: item, newNumber: 1.0)
         case "Again": qualityOfAnswer = 0
             coreDataService.updateItemNumberOfRepetitions(item: item, newNumber: 0.0)
         default: break
         }
-        
-        cardView.setCardsNumbers(cardsForToday: arrayForToday.count, cardsTotal: models.count)
         
         let numberOfRepetitions = item.numberrOfRepetitions
         let newNumberOfRepetitions = numberOfRepetitions + 1.0
@@ -155,23 +152,33 @@ class CardViewController: UIViewController, CardViewDelegate {
             switch Name {
             case "Easy":
                 coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date(), targetDate: targetDate)
+                arrayForToday = checkItemsForToday(models: models)
+                currentNumberInArray = 0
+//                print(arrayForToday[currentNumberInArray].targetDate)
+//                arrayForToday.remove(at: currentNumberInArray)
             case "Good":
                 coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date(), targetDate: targetDate)
+                currentNumberInArray += 1
             case "Hard":
                 coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: lastReviewDate, targetDate: currentDate)
+                currentNumberInArray += 1
             case "Again":
                 coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: lastReviewDate, targetDate: currentDate)
+                currentNumberInArray += 1
             default: break
             }
         }
         
-        currentNumberInArray += 1
-        
+        cardView.setCardsNumbers(cardsForToday: arrayForToday.count, cardsTotal: models.count)
         if currentNumberInArray == count {
             currentNumberInArray = 0
         }
         
         if !arrayForToday.isEmpty {
+            print(arrayForToday)
+            print("array for today count is", arrayForToday.count)
+            print(currentNumberInArray)
+            
             if let word = arrayForToday[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
             }

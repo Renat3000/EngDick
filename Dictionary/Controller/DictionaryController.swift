@@ -88,6 +88,7 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
         filteredSearchOptions = searchOptions.filter { $0.lowercased().starts(with: searchText.lowercased()) }
         suggestionsTableView.reloadData()
         filtered = true
+        scrollToTop()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -101,6 +102,11 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
         filteredSearchOptions.removeAll()
         filtered = false
         suggestionsTableView.reloadData()
+    }
+    
+    private func scrollToTop() {
+        let topRow = IndexPath(row: 0, section: 0)
+        suggestionsTableView.scrollToRow(at: topRow, at: .top, animated: true)
     }
     
     // MARK: - UITableViewDataSource
