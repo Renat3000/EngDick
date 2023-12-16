@@ -81,7 +81,14 @@ class CardViewController: UIViewController, CardViewDelegate {
         }
         
         cardView.setCardsNumbers(cardsForToday: arrayForToday.count, cardsTotal: models.count)
-        print(arrayForToday)
+//        print("print at the start of app", arrayForToday)
+        var joinedArray = [String]()
+        arrayForToday.forEach{
+            if let w = $0.word {
+                joinedArray.append(w)
+            }
+        }
+        print("array for today at the startup is:", joinedArray)
     }
     
     func fillDefinitionLabel() {
@@ -175,9 +182,16 @@ class CardViewController: UIViewController, CardViewDelegate {
         }
         
         if !arrayForToday.isEmpty {
-            print(arrayForToday)
+//            print(arrayForToday)
+            var joinedArrayCheck = [String]()
+            arrayForToday.forEach{
+                if let w = $0.word {
+                    joinedArrayCheck.append(w)
+                }
+            }
+            print("array for today:", joinedArrayCheck)
             print("array for today count is", arrayForToday.count)
-            print(currentNumberInArray)
+            print("current Number In Array is", currentNumberInArray)
             
             if let word = arrayForToday[currentNumberInArray].word {
                 cardView.setWordLabelText(newText: word)
