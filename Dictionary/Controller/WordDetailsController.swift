@@ -81,10 +81,15 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             partOfSpeech = JSONMeanings[number].partOfSpeech ?? "no info"
             
                 for (index, definition) in JSONMeanings[number].definitions.enumerated() {
-                    let content = "\(index + 1). \(definition.definition)"
-                    let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
-                    NSMutableText.append(contentText)
-                    
+                    if JSONMeanings[number].definitions.count == 1 {
+                        let content = "\(definition.definition)"
+                        let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+                        NSMutableText.append(contentText)
+                    } else {
+                        let content = "\(index + 1). \(definition.definition)"
+                        let contentText = NSAttributedString(string: content, attributes: [.font: UIFont.systemFont(ofSize: 18)])
+                        NSMutableText.append(contentText)
+                    }
                     if let example = definition.example {
                         let exampleText = NSAttributedString(string: " \(example)", attributes: [.font: UIFont.italicSystemFont(ofSize: 18)])
                         NSMutableText.append(exampleText)
@@ -156,6 +161,21 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         return cell
     }
 
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            if cell.isSelected {
+                cell.backgroundColor = .systemGray6
+            }
+        }
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            if !cell.isSelected {
+                cell.backgroundColor = .systemGray5
+            }
+        }
+    }
     
     // MARK:  UICollectionViewDelegateFlowLayout protocol
     
