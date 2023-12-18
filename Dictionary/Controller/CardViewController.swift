@@ -17,7 +17,8 @@ class CardViewController: UIViewController, CardViewDelegate {
     private var currentNumberInArray = 0
     fileprivate var JSONTopResult = [JSONStruct]() {
         didSet {
-            cardView.setDefinitionLabelText(newText: JSONTopResult[0].meanings[0].definitions[0].definition)
+            print("lalalala")
+//            cardView.setDefinitionLabelText(newText: JSONTopResult[0].meanings[0].definitions[0].definition)
         }
     }
     
@@ -92,8 +93,9 @@ class CardViewController: UIViewController, CardViewDelegate {
     }
     
     func fillDefinitionLabel() {
-        if let word = arrayForToday[currentNumberInArray].word {
-            fetchDictionary(searchTerm: word)
+        if let definition = arrayForToday[currentNumberInArray].definition {
+            cardView.definitionLabel.attributedText = definition
+//            fetchDictionary(searchTerm: word)
         } else {
             cardView.definitionLabel.text = ""
         }
@@ -152,6 +154,8 @@ class CardViewController: UIViewController, CardViewDelegate {
         let currentDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
         
         if let lastReviewDate = item.dateOfLastReview {
+            
+            //need to add function to randomize deck, or take the latest reviewed card to the back of the deck after pressing easy. because sometimes you press easy button and it shows the words again...
             
             let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: Int(item.latestInterval), to: lastReviewDate) ?? Date())
             let targetDate = calendar.date(from: targetDateComponents) ?? Date()

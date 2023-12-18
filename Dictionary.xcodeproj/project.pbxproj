@@ -13,6 +13,7 @@
 		CE23883B2B10EBA900CA5F03 /* SetsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE23883A2B10EBA900CA5F03 /* SetsController.swift */; };
 		CE2A8CCC2AFEBA84004A06CE /* english.txt in Resources */ = {isa = PBXBuildFile; fileRef = CE2A8CCB2AFEBA84004A06CE /* english.txt */; };
 		CE3EEAC72B15EE7E00876F0C /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3EEAC62B15EE7E00876F0C /* CardView.swift */; };
+		CE620BAA2B30759700729CAE /* AttributedStringTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE620BA92B30759700729CAE /* AttributedStringTransformer.swift */; };
 		CE651A062AE6A2E700378430 /* ErrorDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE651A052AE6A2E700378430 /* ErrorDictionary.swift */; };
 		CE72C82E2AE42DBE0002B516 /* DictionaryEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */; };
 		CE7F86F22B077B6100B41B47 /* WordDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7F86F12B077B6100B41B47 /* WordDetailsHeaderView.swift */; };
@@ -36,6 +37,7 @@
 		CE23883A2B10EBA900CA5F03 /* SetsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetsController.swift; sourceTree = "<group>"; };
 		CE2A8CCB2AFEBA84004A06CE /* english.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = english.txt; sourceTree = "<group>"; };
 		CE3EEAC62B15EE7E00876F0C /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		CE620BA92B30759700729CAE /* AttributedStringTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringTransformer.swift; sourceTree = "<group>"; };
 		CE651A052AE6A2E700378430 /* ErrorDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDictionary.swift; sourceTree = "<group>"; };
 		CE72C82D2AE42DBE0002B516 /* DictionaryEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEntryCell.swift; sourceTree = "<group>"; };
 		CE7F86F12B077B6100B41B47 /* WordDetailsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordDetailsHeaderView.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				CEBCDE9E2AE00819003E039C /* JSONStruct.swift */,
 				CEC7DADA2AE7F44300290575 /* CoreDataModel.xcdatamodeld */,
 				CE651A052AE6A2E700378430 /* ErrorDictionary.swift */,
+				CE620BA92B30759700729CAE /* AttributedStringTransformer.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -222,6 +225,7 @@
 				CEBCDEA52AE0158B003E039C /* FavoritesController.swift in Sources */,
 				CE72C82E2AE42DBE0002B516 /* DictionaryEntryCell.swift in Sources */,
 				CE06D65E2AE5715F00D12DCC /* JSONService.swift in Sources */,
+				CE620BAA2B30759700729CAE /* AttributedStringTransformer.swift in Sources */,
 				CE23883B2B10EBA900CA5F03 /* SetsController.swift in Sources */,
 				CEF48D2C2ADFF48800852997 /* AppDelegate.swift in Sources */,
 				CEBD8BB72B14C120002B6DAF /* CardViewController.swift in Sources */,

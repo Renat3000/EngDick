@@ -51,6 +51,24 @@ class CoreDataService {
         }
     }
     
+    func createItemWithDefinition(name: String, definition: NSMutableAttributedString){
+        let newItem = FavoritesItem(context: context)
+        newItem.word = name
+        newItem.numberrOfRepetitions = 0.0
+        newItem.easinessFactor = 2.5
+        newItem.dateOfCreation = Date()
+        newItem.dateOfLastReview = Date()
+        newItem.latestInterval = 0.0
+        newItem.targetDate = Date()
+        newItem.definition = definition
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error creating item in Core Data: \(error)")
+        }
+    }
+    
     func deleteItem(item: FavoritesItem) {
         context.delete(item)
         do {

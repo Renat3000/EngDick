@@ -23,6 +23,9 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     
     var isBookmarked: Bool = false
     var audioIsAvailable: Bool = false
+    var selectedCell = Int()
+    var cellIsCelected = false
+    var definitionForFavorites = NSMutableAttributedString()
     
     init(items: [JSONStruct], isBookmarked: Bool) {
         
@@ -165,6 +168,8 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         if let cell = collectionView.cellForItem(at: indexPath) {
             if cell.isSelected {
                 cell.backgroundColor = .systemGray6
+                selectedCell = indexPath.item
+                cellIsCelected = true
             }
         }
     }
@@ -173,6 +178,10 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         if let cell = collectionView.cellForItem(at: indexPath) {
             if !cell.isSelected {
                 cell.backgroundColor = .systemGray5
+                cellIsCelected = false
+                if selectedCell == indexPath.item {
+                    selectedCell = 0
+                }
             }
         }
     }
@@ -208,7 +217,12 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         let word = items[0].word
         
         if isBookmarked {
-            CoreDataService.shared.createItem(name: word) // а так работает мразь!
+            if cellIsCelected {
+//                partOfSpeechArray[selectedCell]
+                CoreDataService.shared.createItemWithDefinition(name: word, definition: wordDefinitionArray[selectedCell])
+            } else {
+                CoreDataService.shared.createItem(name: word) // а так работает мразь!
+            }
         } else {
             CoreDataService.shared.deleteItem(withName: word)
         }
