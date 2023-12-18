@@ -169,6 +169,7 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
             if cell.isSelected {
                 cell.backgroundColor = .systemGray6
                 selectedCell = indexPath.item
+                print(selectedCell)
                 cellIsCelected = true
             }
         }
@@ -215,14 +216,10 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
     @objc func didTapStar() {
         isBookmarked.toggle()
         let word = items[0].word
-        
+        print(selectedCell)
         if isBookmarked {
-            if cellIsCelected {
-//                partOfSpeechArray[selectedCell]
-                CoreDataService.shared.createItemWithDefinition(name: word, definition: wordDefinitionArray[selectedCell])
-            } else {
-                CoreDataService.shared.createItem(name: word) // а так работает мразь!
-            }
+        CoreDataService.shared.createItemWithDefinition(name: word, definition: wordDefinitionArray[selectedCell])
+// note: works only from WordDetailesController (as it should). need to add exceptions what to show if it wasn't highlighted but was added to the favorites...
         } else {
             CoreDataService.shared.deleteItem(withName: word)
         }
