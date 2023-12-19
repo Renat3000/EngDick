@@ -15,12 +15,6 @@ class CardViewController: UIViewController, CardViewDelegate {
     private let calendar = Calendar.current
     
     private var currentNumberInArray = 0
-    fileprivate var JSONTopResult = [JSONStruct]() {
-        didSet {
-            print("lalalala")
-//            cardView.setDefinitionLabelText(newText: JSONTopResult[0].meanings[0].definitions[0].definition)
-        }
-    }
     
     private lazy var cardView: CardView = {
         let view = CardView()
@@ -43,21 +37,6 @@ class CardViewController: UIViewController, CardViewDelegate {
             answerButtonPushed(Name: "Again")
         default:
             break
-        }
-    }
-    
-    fileprivate func fetchDictionary(searchTerm: String) {
-        //get back json-fetched data from the JSONService file
-        print("firing off request, just wait!")
-        JSONService.shared.fetchJSON(searchTerm: searchTerm) { (JSONStruct, err)  in
-            
-            if let err = err {
-                print("failed to fetch dictionary entries", err)
-                return
-            }
-            DispatchQueue.main.async {
-                self.JSONTopResult = JSONStruct
-            }
         }
     }
     
@@ -95,7 +74,6 @@ class CardViewController: UIViewController, CardViewDelegate {
     func fillDefinitionLabel() {
         if let definition = arrayForToday[currentNumberInArray].definition {
             cardView.definitionLabel.attributedText = definition
-//            fetchDictionary(searchTerm: word)
         } else {
             cardView.definitionLabel.text = ""
         }
@@ -116,6 +94,7 @@ class CardViewController: UIViewController, CardViewDelegate {
                 }
             }
         }
+        currentArray.shuffle()
 //        print(currentArray)
         return currentArray
     }
@@ -162,7 +141,9 @@ class CardViewController: UIViewController, CardViewDelegate {
             
             switch Name {
             case "Easy":
+                print("before button is pressed, word is", item.word, "number of repetitions", item.numberrOfRepetitions, "EF = ", item.easinessFactor, "date of last review = ", item.dateOfLastReview, "target date = ", item.targetDate, "latestInterval is",  item.latestInterval)
                 coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date(), targetDate: targetDate)
+                print("after, word is", item.word, "new number of repetitions", item.numberrOfRepetitions, "new EF = ", item.easinessFactor, "new date of last review = ", item.dateOfLastReview, "new target date = ", item.targetDate, "latestInterval is",  item.latestInterval)
                 arrayForToday = checkItemsForToday(models: models)
                 currentNumberInArray = 0
 //                print(arrayForToday[currentNumberInArray].targetDate)
