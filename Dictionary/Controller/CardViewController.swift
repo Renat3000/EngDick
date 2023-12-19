@@ -141,9 +141,9 @@ class CardViewController: UIViewController, CardViewDelegate {
             
             switch Name {
             case "Easy":
-                print("before button is pressed, word is", item.word, "number of repetitions", item.numberrOfRepetitions, "EF = ", item.easinessFactor, "date of last review = ", item.dateOfLastReview, "target date = ", item.targetDate, "latestInterval is",  item.latestInterval)
+                print("before button is pressed, word is", item.word ?? "no value if absent", "number of repetitions", item.numberrOfRepetitions, "EF = ", item.easinessFactor, "date of last review = ", item.dateOfLastReview ?? "no value if absent", "target date = ", item.targetDate ?? "no value if absent", "latestInterval is",  item.latestInterval)
                 coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date(), targetDate: targetDate)
-                print("after, word is", item.word, "new number of repetitions", item.numberrOfRepetitions, "new EF = ", item.easinessFactor, "new date of last review = ", item.dateOfLastReview, "new target date = ", item.targetDate, "latestInterval is",  item.latestInterval)
+                print("after, word is", item.word ?? "no value if absent", "new number of repetitions", item.numberrOfRepetitions, "new EF = ", item.easinessFactor, "new date of last review = ", item.dateOfLastReview ?? "no value if absent", "new target date = ", item.targetDate ?? "no value if absent", "latestInterval is",  item.latestInterval)
                 arrayForToday = checkItemsForToday(models: models)
                 currentNumberInArray = 0
 //                print(arrayForToday[currentNumberInArray].targetDate)
