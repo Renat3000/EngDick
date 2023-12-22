@@ -148,6 +148,7 @@ class CardViewController: UIViewController, CardViewDelegate {
                 currentNumberInArray = 0
 //                print(arrayForToday[currentNumberInArray].targetDate)
 //                arrayForToday.remove(at: currentNumberInArray)
+//                  still have to press EASY button 2 times even on the old cards...
             case "Good":
                 coreDataService.updateItem(item: item, newNumberOfRepetitions: newNumberOfRepetitions, newEasinessFactor: newEasinessFactor, newDateOfReview: Date(), targetDate: targetDate)
                 currentNumberInArray += 1
