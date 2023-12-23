@@ -41,7 +41,7 @@ class CardView: UIView {
         
         wordLabel.numberOfLines = 3
         wordLabel.font = .systemFont(ofSize: 40)
-        definitionLabel.numberOfLines = 0
+        definitionLabel.numberOfLines = 15
         definitionLabel.textAlignment = .left
         wordStackViewVertical.axis = .vertical
         buttonStackView.axis = .horizontal
