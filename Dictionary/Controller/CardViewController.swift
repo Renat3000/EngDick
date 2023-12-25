@@ -136,7 +136,7 @@ class CardViewController: UIViewController, CardViewDelegate {
             
             //need to add function to randomize deck, or take the latest reviewed card to the back of the deck after pressing easy. because sometimes you press easy button and it shows the words again...
             
-            let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: Int(item.latestInterval), to: lastReviewDate) ?? Date())
+            let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .day, value: Int(item.latestInterval), to: Date()) ?? Date())
             let targetDate = calendar.date(from: targetDateComponents) ?? Date()
             
             switch Name {
