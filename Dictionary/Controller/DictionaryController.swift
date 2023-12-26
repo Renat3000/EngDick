@@ -22,6 +22,10 @@ class DictionaryController: UIViewController, UITableViewDelegate, UITableViewDa
             return tableView
     }()
     
+    deinit {
+        print("no retain cycles / leaks in DictionaryController")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray4

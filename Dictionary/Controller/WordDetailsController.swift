@@ -38,6 +38,11 @@ class WordDetailsController: UICollectionViewController, UICollectionViewDelegat
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        print("no retain cycles / leaks in WordDetailsController")
+    }
+    
 // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()

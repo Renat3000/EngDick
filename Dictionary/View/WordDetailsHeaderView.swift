@@ -113,6 +113,7 @@ class WordDetailsHeaderView: UICollectionReusableView {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        print("no retain cycle in WordDetailsHeaderView")
     }
 }
 

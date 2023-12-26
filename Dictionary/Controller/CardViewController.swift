@@ -22,6 +22,9 @@ class CardViewController: UIViewController, CardViewDelegate {
         return view
     }()
     
+    deinit {
+        print("os reclaiming memory for CardViewController - no retain cycles / leaks")
+    }
     func buttonPressed(withTitle title: String) {
         
         switch title {
