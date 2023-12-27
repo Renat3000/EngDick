@@ -10,7 +10,7 @@ import UIKit
 class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDataSource, passInfoToFavorites {
 
     let coreDataService = CoreDataService.shared
-    
+    let activityIndicator = UIActivityIndicatorView(style: .large) // throbber
     let tableView: UITableView = {
         let table = UITableView()
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -31,6 +31,9 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.frame = view.bounds
         tableView.backgroundColor = .systemGray4
         tableView.reloadData()
+        activityIndicator.center = view.center // throbber
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap)) decided to ditch this function for a while
     }
     
@@ -62,6 +65,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
                     wdController.wordDetailsDelegate = self
                     self.navigationController?.pushViewController(wdController, animated: true)
                 }
+            stopLoading()
         }
     } // need to study how I can get rid of it...
     
@@ -85,6 +89,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         let selectedCoreDataItem = models[indexPath.row]
         if let word = selectedCoreDataItem.word {
             fetchDictionary(searchTerm: word.replacingOccurrences(of: " ", with: "%20"))
+            startLoading()
         }
     }
     
@@ -95,4 +100,18 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     func refreshList() { // just for the test, this function isn't called
         print(models)
     }
+    
+    //MARK: throbber functions
+    
+    func startLoading() {
+        DispatchQueue.main.async { [weak self] in
+                self?.activityIndicator.startAnimating()
+            }
+       }
+
+       func stopLoading() {
+           DispatchQueue.main.async { [weak self] in
+                   self?.activityIndicator.stopAnimating()
+            }
+       }
 }
